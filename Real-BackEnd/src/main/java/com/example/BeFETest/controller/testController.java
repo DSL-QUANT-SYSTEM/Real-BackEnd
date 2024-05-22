@@ -42,19 +42,6 @@ public class testController {
     // 구글 API를 호출하여 유저 정보를 가져오는 로직
     // 유저 정보를 JSON 형태로 구성하여 프론트엔드로 전달
 
-    @Autowired
-    private authService authService = new authService();
-    @GetMapping("/login/oauth2/code/kakao")
-    public ResponseEntity<LoginResponseDto> login(@RequestParam("code") String code, HttpServletResponse response) throws URISyntaxException {
-        //String accessToken = authService.getKakaoAccessToken(code);
-
-
-        System.out.println("code :" + code); //파라미터로 받아온 code 확인
-        //String kakaoAccessToken = String.valueOf(authService.getKakaoAccessToken(code));
-        String kakaoAccessToken = authService.getKakaoAccessToken(code);
-        System.out.println("Token :" + kakaoAccessToken);
-        return authService.kakaoLogin(kakaoAccessToken);
-    }
 
 
     @Autowired

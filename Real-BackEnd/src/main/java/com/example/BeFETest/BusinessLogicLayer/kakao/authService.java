@@ -21,7 +21,7 @@ import com.example.BeFETest.DTO.kakaoDTO.KakaoAccountDto;
 import com.example.BeFETest.DTO.kakaoDTO.LoginResponseDto;
 import com.example.BeFETest.DTO.kakaoDTO.KakaoTokenDto;
 
-import com.example.BeFETest.Repository.accountRepo;
+import com.example.BeFETest.Repository.kakao.accountRepo;
 
 @Service
 public class authService {
@@ -77,7 +77,6 @@ public class authService {
     public ResponseEntity<LoginResponseDto> kakaoLogin(String kakaoAccessToken) {
         HttpHeaders headers = new HttpHeaders();
         Account account = getKakaoInfo(kakaoAccessToken);
-        System.out.println("hello from kakaoLogin function: " + account.getId() +"    " + account.getEmail());
 
         LoginResponseDto loginResponseDto = new LoginResponseDto();
         loginResponseDto.setLoginSuccess(true);
@@ -85,8 +84,8 @@ public class authService {
 
         Account existOwner = accountRepo.findById(account.getId()).orElse(null);
         try {
-            if (existOwner == null) {
-                System.out.println("first time login user");
+            if (existOwner == null) {//처음 로그인
+                //System.out.println("first time login user");
                 accountRepo.save(account);
             }
             loginResponseDto.setLoginSuccess(true);
@@ -114,7 +113,7 @@ public class authService {
                 accountInfoRequest,
                 String.class
         );
-        System.out.println("내용" + accountInfoResponse.getBody());
+        System.out.println("받아올 수 있는 것들: " + accountInfoResponse.getBody());
 
         // JSON Parsing (-> kakaoAccountDto)
         ObjectMapper objectMapper = new ObjectMapper();
@@ -131,26 +130,10 @@ public class authService {
         Long kakaoId = kakaoAccountDto.getId();
 
         String username = kakaoAccountDto.getProperties().getNickname();
-        System.out.println("kakao ID: " + kakaoId);
-        System.out.println("kakao UserName" + username);
+        //System.out.println("kakao ID: " + kakaoId); //userID확인용
+        //System.out.println("kakao UserName" + username);//user name 확인용
         Account existOwner = accountRepo.findById(kakaoId).orElse(null);
 
-        // 처음 로그인이 아닌 경우
-//        if (existOwner != null) {
-//            return Account.builder()
-//                    .id(kakaoAccountDto.getId())
-//                    .email(kakaoAccountDto.getKakao_account().getEmail())
-//                    .username(kakaoAccountDto.getProperties().getNickname())
-//                    .build();
-//        }
-//        // 처음 로그인 하는 경우(kakaoId = null)
-//        else {
-//            return Account.builder()
-//                    .id(kakaoAccountDto.getId())
-//                    .email(kakaoAccountDto.getKakao_account().getEmail())
-//                    .username(kakaoAccountDto.getProperties().getNickname())
-//                    .build();
-//        }
         return Account.builder()
                 .id(kakaoAccountDto.getId())
                 .email(kakaoAccountDto.getKakao_account().getEmail())

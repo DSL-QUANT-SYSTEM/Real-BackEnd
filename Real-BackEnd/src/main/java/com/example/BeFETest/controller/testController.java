@@ -10,6 +10,7 @@ import com.example.BeFETest.Error.ErrorCode;
 import com.example.BeFETest.Error.ErrorResponse;
 import com.example.BeFETest.Error.InternalServerErrorException;
 import com.example.BeFETest.Repository.*;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.web.bind.annotation.*;
+import com.example.BeFETest.BusinessLogicLayer.kakao.authService;
+import com.example.BeFETest.DTO.kakaoDTO.LoginResponseDto;
 
+import java.net.URISyntaxException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -37,6 +41,20 @@ public class testController {
     private final KosdakRepository kosdakRepository;
     // 구글 API를 호출하여 유저 정보를 가져오는 로직
     // 유저 정보를 JSON 형태로 구성하여 프론트엔드로 전달
+
+    @Autowired
+    private authService authService = new authService();
+    @GetMapping("/login/oauth2/code/kakao")
+    public ResponseEntity<LoginResponseDto> login(@RequestParam("code") String code, HttpServletResponse response) throws URISyntaxException {
+        //String accessToken = authService.getKakaoAccessToken(code);
+
+
+        System.out.println("code :" + code); //파라미터로 받아온 code 확인
+        //String kakaoAccessToken = String.valueOf(authService.getKakaoAccessToken(code));
+        String kakaoAccessToken = authService.getKakaoAccessToken(code);
+        System.out.println("Token :" + kakaoAccessToken);
+        return authService.kakaoLogin(kakaoAccessToken);
+    }
 
 
     @Autowired

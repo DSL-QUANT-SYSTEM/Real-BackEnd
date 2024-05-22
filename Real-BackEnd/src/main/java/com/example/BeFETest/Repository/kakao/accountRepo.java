@@ -1,4 +1,4 @@
-package com.example.BeFETest.Repository;
+package com.example.BeFETest.Repository.kakao;
 
 import com.example.BeFETest.DTO.kakaoDTO.Account;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,5 +1,6 @@
 package com.example.BeFETest.BusinessLogicLayer.kakao;
 
+import com.example.BeFETest.JWT.JwtUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,6 +36,10 @@ public class authService {
 
     @Autowired
     private accountRepo accountRepo;
+
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
 
     @Transactional
@@ -78,9 +83,12 @@ public class authService {
         HttpHeaders headers = new HttpHeaders();
         Account account = getKakaoInfo(kakaoAccessToken);
 
+        String jwtToken = jwtUtil.generateToken(account.getId());
+
         LoginResponseDto loginResponseDto = new LoginResponseDto();
         loginResponseDto.setLoginSuccess(true);
         loginResponseDto.setAccount(account);
+        loginResponseDto.setJwtToken(jwtToken);
 
         Account existOwner = accountRepo.findById(account.getId()).orElse(null);
         try {

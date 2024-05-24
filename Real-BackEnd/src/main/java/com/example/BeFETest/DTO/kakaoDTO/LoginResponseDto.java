@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class LoginResponseDto {
-    public boolean loginSuccess;
-    public Account account;
+    private boolean loginSuccess;
+    private Account account;
+    private String jwtToken;
 }

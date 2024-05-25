@@ -37,6 +37,121 @@ public class authService {
     @Autowired
     private accountRepo accountRepo;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Transactional
+    public String getKakaoAccessToken(String code) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", "authorization_code");
+        params.add("client_id", CLIENT_ID);
+        params.add("redirect_uri", REDIRECT_URI);
+        params.add("code", code);
+
+        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
+
+        RestTemplate rt = new RestTemplate();
+        ResponseEntity<String> accessTokenResponse = rt.exchange(
+                KAKAO_TOKEN_URI,
+                HttpMethod.POST,
+                kakaoTokenRequest,
+                String.class
+        );
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        KakaoTokenDto kakaoTokenDto = null;
+        try {
+            kakaoTokenDto = objectMapper.readValue(accessTokenResponse.getBody(), KakaoTokenDto.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return kakaoTokenDto.getAccess_token();
+    }
+
+    public ResponseEntity<LoginResponseDto> kakaoLogin(String kakaoAccessToken) {
+        HttpHeaders headers = new HttpHeaders();
+        Account account = getKakaoInfo(kakaoAccessToken);
+
+        LoginResponseDto loginResponseDto = new LoginResponseDto();
+        loginResponseDto.setLoginSuccess(true);
+        loginResponseDto.setAccount(account);
+
+        Account existOwner = accountRepo.findById(account.getId()).orElse(null);
+        try {
+            if (existOwner == null) {
+                accountRepo.save(account);
+            }
+
+            // JWT 토큰 생성
+            String jwtToken = jwtUtil.generateToken(account);
+            loginResponseDto.setJwtToken(jwtToken);
+
+            return ResponseEntity.ok().headers(headers).body(loginResponseDto);
+
+        } catch (Exception e) {
+            loginResponseDto.setLoginSuccess(false);
+            return ResponseEntity.badRequest().body(loginResponseDto);
+        }
+    }
+
+    public Account getKakaoInfo(String kakaoAccessToken) {
+        HttpHeaders headers = new HttpHeaders();
+        RestTemplate rt = new RestTemplate();
+        headers.add("Authorization", "Bearer " + kakaoAccessToken);
+        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+        HttpEntity<MultiValueMap<String, String>> accountInfoRequest = new HttpEntity<>(headers);
+
+        ResponseEntity<String> accountInfoResponse = rt.exchange(
+                "https://kapi.kakao.com/v2/user/me",
+                HttpMethod.POST,
+                accountInfoRequest,
+                String.class
+        );
+        System.out.println("받아올 수 있는 것들: " + accountInfoResponse.getBody());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        KakaoAccountDto kakaoAccountDto = null;
+        try {
+            kakaoAccountDto = objectMapper.readValue(accountInfoResponse.getBody(), KakaoAccountDto.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        Long kakaoId = kakaoAccountDto.getId();
+        String username = kakaoAccountDto.getProperties().getNickname();
+        Account existOwner = accountRepo.findById(kakaoId).orElse(null);
+
+        return Account.builder()
+                .id(kakaoAccountDto.getId())
+                .email(kakaoAccountDto.getKakao_account().getEmail())
+                .username(kakaoAccountDto.getProperties().getNickname())
+                .build();
+    }
+}
+
+/*
+@Service
+public class authService {
+
+    @Value("${kakao.client-id}")
+    private String CLIENT_ID;
+    @Value("${kakao.redirect-uri}")
+    private String REDIRECT_URI;
+    @Value("${kakao.token-uri}")
+    private String KAKAO_TOKEN_URI;
+
+    @Autowired
+    private accountRepo accountRepo;
+
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -149,3 +264,5 @@ public class authService {
                 .build();
     }
 }
+
+ */

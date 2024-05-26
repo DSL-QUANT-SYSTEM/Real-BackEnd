@@ -48,6 +48,7 @@ public class testController {
     private UserRepository userRepository;
 
 
+    /*
     @PostMapping("/mypage")
     public UserInfo checkUserInfo(@RequestBody UserRequest request) {
         UserEntity userEntity = userRepository.findByBirthDate(request.getUser_birth());
@@ -61,6 +62,35 @@ public class testController {
         userInfo.setBirthDate(userEntity.getBirthDate());
         userInfo.setGender(userEntity.getGender());
         userInfo.setBacktestingRecords(userEntity.getRecords().toArray(new String[0]));
+        return userInfo;
+    }
+    */
+
+
+    @PostMapping("/mypage")
+    public UserInfo checkUserInfo(@RequestBody UserRequest request) {
+        UserEntity userEntity = userRepository.findByBirthDate(request.getUser_birth());
+        if (userEntity == null) {
+            throw new RuntimeException("사용자 정보를 찾을 수 없습니다.");
+        }
+        System.out.println("Found User!");
+        UserInfo userInfo = new UserInfo();
+        userInfo.setName(userEntity.getName());
+        userInfo.setPhone(userEntity.getPhoneNumber());
+        userInfo.setBirthDate(userEntity.getBirthDate());
+        userInfo.setGender(userEntity.getGender());
+
+        // BacktestingHistory 객체를 문자열 배열로 변환
+        String[] records = userEntity.getRecords().stream()
+                .map(record -> "Date: " + record.getDate() +
+                        ", Universe: " + record.getUniverse() +
+                        ", Weight: " + record.getWeight() +
+                        ", Initial Investment: " + record.getInitialInvestment() +
+                        ", Period: " + record.getPeriod() +
+                        ", File HTML: " + record.getFileHtml())
+                .toArray(String[]::new);
+
+        userInfo.setBacktestingRecords(records);
         return userInfo;
     }
 

@@ -14,6 +14,7 @@ import com.example.BeFETest.Repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -61,37 +62,39 @@ public class DataInitializer implements CommandLineRunner {
         user.setPhoneNumber("010-7110-0441");
         user.setBirthDate("010418");
         user.setGender("여자");
-        user.setRecords(Arrays.asList("기록1", "기록2"));
+
+        List<BacktestingHistory> testDataList = new ArrayList<>();
+        for (int i = 0; i < 15; i++) {
+            BacktestingHistory testData = new BacktestingHistory();
+            testData.setDate(LocalDate.parse("2024-04-" + String.format("%02d", i + 1)));
+            testData.setUniverse("Universe " + (i + 1));
+            testData.setWeight("0.1 * " + (i + 1));
+            testData.setInitialInvestment(1000.0 * (i + 1));
+            testData.setPeriod(String.valueOf(30 + (i % 3)));
+            testData.setFileHtml("backtesting" + (i + 1) + ".html");
+            testData.setUser(user);
+            testDataList.add(testData);
+        }
+
+        user.setRecords(testDataList);
 
         // UserRepository에 저장
         userRepository.save(user);
 
         // 나머지 샘플 데이터 생성 (기존 코드)
-        HistoryEntity testData = new HistoryEntity();
-        testData.setDate("2024-04-14");
-        testData.setStock("ABC");
-        testData.setClosePrice(100.0);
-        testData.setOpenPrice(110.0);
-        testData.setHighestPrice(120.0);
-        testData.setLowestPrice(90.0);
-        testData.setAdjClosePrice(95.0);
-        testData.setVolume(10000.0);
+        HistoryEntity testData2 = new HistoryEntity();
+        testData2.setDate("2024-04-14");
+        testData2.setStock("ABC");
+        testData2.setClosePrice(100.0);
+        testData2.setOpenPrice(110.0);
+        testData2.setHighestPrice(120.0);
+        testData2.setLowestPrice(90.0);
+        testData2.setAdjClosePrice(95.0);
+        testData2.setVolume(10000.0);
 
         // Repository에 저장
-        historyRepo.save(testData);
+        historyRepo.save(testData2);
 
-        List<BacktestingHistory> testDataList = new ArrayList<>();
-        for (int i = 0; i < 15; i++) {
-            BacktestingHistory testData2 = new BacktestingHistory();
-            testData2.setDate("2024-04-" + (i + 1));
-            testData2.setUniverse("Universe " + (i + 1));
-            testData2.setWeight(0.1 * (i + 1));
-            testData2.setInitialInvestment(1000.0 * (i + 1));
-            testData2.setPeriod(30 + (i % 3)); // 30, 31, 32, 30, 31, ...
-            testData2.setFileHtml("backtesting" + (i + 1) + ".html");
-            testDataList.add(testData2);
-        }
-        backtestingHistoryRepository.saveAll(testDataList);
 
         // Sample data for KospiResponse
         KospiResponse response = new KospiResponse();

@@ -40,6 +40,7 @@ public class SecurityConfig {
                         authorizeRequests
                                 .requestMatchers("/login/**").permitAll()
                                 .requestMatchers("/signup/**").permitAll()
+                                .requestMatchers("/").permitAll()
                                 .anyRequest().authenticated()
                                 //.anyRequest().permitAll()
                 );

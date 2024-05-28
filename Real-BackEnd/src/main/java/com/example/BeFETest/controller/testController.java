@@ -94,16 +94,6 @@ public class testController {
         return userInfo;
     }
 
-    @GetMapping("/api/data")
-//    public String springDataTest(){
-   //     return "hello from spring!";
-    //}
-    public ResponseEntity loginWithGoogle(){
-        return ResponseEntity.ok("Hello World");
-    }
-
-
-
     @GetMapping("/home/kospi")
     public ResponseEntity getKospi() {
         try {

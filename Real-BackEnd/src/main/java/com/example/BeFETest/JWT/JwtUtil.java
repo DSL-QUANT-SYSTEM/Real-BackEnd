@@ -17,6 +17,72 @@ public class JwtUtil {
     @Value("${jwt.expiration-time}")
     private long jwtExpirationInMs;
 
+    @Value("${jwt.refresh-expiration-time}")
+    private long refreshJwtExpirationInMs;
+
+    public String generateToken(Long userId) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
+
+        return Jwts.builder()
+                .setSubject(Long.toString(userId))
+                .setIssuedAt(new Date())
+                .setExpiration(expiryDate)
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
+    }
+
+    public String generateRefreshToken(Long userId) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + refreshJwtExpirationInMs);
+
+        return Jwts.builder()
+                .setSubject(Long.toString(userId))
+                .setIssuedAt(new Date())
+                .setExpiration(expiryDate)
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
+    }
+
+    public Long getUserIdFromToken(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody();
+
+        return Long.parseLong(claims.getSubject());
+    }
+
+    public boolean validateToken(String authToken) {
+        try {
+            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    public boolean isTokenExpired(String token) {
+        Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+        return claims.getExpiration().before(new Date());
+    }
+
+    public long getRefreshExpirationInMs() {
+        return refreshJwtExpirationInMs;
+    }
+}
+
+
+/*
+@Component
+public class JwtUtil {
+
+    @Value("${jwt.secret}")
+    private String jwtSecret;
+
+    @Value("${jwt.expiration-time}")
+    private long jwtExpirationInMs;
+
     public String generateToken(Long userId) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
@@ -48,6 +114,8 @@ public class JwtUtil {
         }
     }
 }
+
+ */
 
 /*
 @Component

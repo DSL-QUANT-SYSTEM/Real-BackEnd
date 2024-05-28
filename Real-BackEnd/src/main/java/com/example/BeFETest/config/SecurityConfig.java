@@ -44,6 +44,7 @@ public class SecurityConfig {
                                 .requestMatchers("/login/**").permitAll()
                                 .requestMatchers("/signup/**").permitAll()
                                 .requestMatchers("/").permitAll()
+                                .requestMatchers(HttpMethod.OPTIONS, "/api/**", "/mypage/**").permitAll()
                                 .anyRequest().authenticated()
                                 //.anyRequest().permitAll()
                 );

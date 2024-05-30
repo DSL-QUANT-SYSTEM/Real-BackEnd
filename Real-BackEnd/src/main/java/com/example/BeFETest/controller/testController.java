@@ -91,6 +91,9 @@ public class testController {
                 .toArray(String[]::new);
 
         userInfo.setBacktestingRecords(records);
+
+        System.out.println("Test-!!!");
+
         return userInfo;
     }
 

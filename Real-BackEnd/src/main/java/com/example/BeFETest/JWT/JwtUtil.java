@@ -70,6 +70,13 @@ public class JwtUtil {
     public long getRefreshExpirationInMs() {
         return refreshJwtExpirationInMs;
     }
+
+    public Claims getClaimsFromToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody();
+    }
 }
 
 

@@ -101,12 +101,54 @@ public class authService {
             loginResponseDto.setAccount(account);
             loginResponseDto.setJwtToken(jwt);
             loginResponseDto.setRefreshToken(refreshJwt);
+
+            // 응답에 Authorization 헤더를 포함
             return ResponseEntity.ok().headers(headers).body(loginResponseDto);
         } catch (Exception e) {
             loginResponseDto.setLoginSuccess(false);
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(loginResponseDto);
         }
+
+        /*
+        HttpHeaders headers = new HttpHeaders();
+        LoginResponseDto loginResponseDto = new LoginResponseDto();
+        Account account;
+
+        try {
+            account = getKakaoInfo(kakaoAccessToken);
+            if (account == null) {
+                throw new IllegalArgumentException("Failed to fetch account information from Kakao");
+            }
+        } catch (Exception e) {
+            loginResponseDto.setLoginSuccess(false);
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(loginResponseDto);
+        }
+
+        try {
+            Account existOwner = accountRepo.findById(account.getId()).orElse(null);
+            if (existOwner == null) {
+                accountRepo.save(account);
+            }
+
+            String jwt = jwtUtil.generateToken(account.getId());
+            String refreshJwt = jwtUtil.generateRefreshToken(account.getId());
+            saveRefreshToken(account.getId(), refreshJwt);
+            headers.add("Authorization", "Bearer " + jwt);
+
+            loginResponseDto.setLoginSuccess(true);
+            loginResponseDto.setAccount(account);
+            loginResponseDto.setJwtToken(jwt);
+            loginResponseDto.setRefreshToken(refreshJwt);
+            return ResponseEntity.ok().headers(headers).body(loginResponseDto);
+        } catch (Exception e) {
+            loginResponseDto.setLoginSuccess(false);
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(loginResponseDto);
+        }
+
+         */
     }
 
     private void saveRefreshToken(Long userId, String refreshToken) {

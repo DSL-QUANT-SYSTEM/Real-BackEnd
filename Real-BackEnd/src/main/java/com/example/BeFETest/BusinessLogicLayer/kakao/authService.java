@@ -71,6 +71,7 @@ public class authService {
     }
 
     public ResponseEntity<LoginResponseDto> kakaoLogin(String kakaoAccessToken) {
+
         HttpHeaders headers = new HttpHeaders();
         LoginResponseDto loginResponseDto = new LoginResponseDto();
         Account account;
@@ -86,9 +87,61 @@ public class authService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(loginResponseDto);
         }
 
+        System.out.println("Kakao ID : " + account.getKakaoId());
+        System.out.println("Account Name : " + account.getUsername());
+        System.out.println("Account Email : " + account.getEmail());
+
+        try {
+            Account existOwner = accountRepo.findByKakaoId(account.getKakaoId()).orElse(null);
+            //Account existOwner = accountRepo.findById(account.getId()).orElse(null);
+            if (existOwner == null) {
+                System.out.println("FOR TEST!!");
+                accountRepo.save(account);
+            } else {
+                account = existOwner;
+            }
+
+            String jwt = jwtUtil.generateToken(account.getId(), account.getEmail(), account.getUsername());
+            String refreshJwt = jwtUtil.generateRefreshToken(account.getId());
+            saveRefreshToken(account.getId(), refreshJwt);
+            headers.add("Authorization", "Bearer " + jwt);
+
+            loginResponseDto.setLoginSuccess(true);
+            loginResponseDto.setAccount(account);
+            loginResponseDto.setJwtToken(jwt);
+            loginResponseDto.setRefreshToken(refreshJwt);
+
+            // 응답에 Authorization 헤더를 포함
+            return ResponseEntity.ok().headers(headers).body(loginResponseDto);
+        } catch (Exception e) {
+            loginResponseDto.setLoginSuccess(false);
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(loginResponseDto);
+        }
+        /*
+        HttpHeaders headers = new HttpHeaders();
+        LoginResponseDto loginResponseDto = new LoginResponseDto();
+        Account account;
+
+        try {
+            account = getKakaoInfo(kakaoAccessToken);
+            if (account == null) {
+                throw new IllegalArgumentException("Failed to fetch account information from Kakao");
+            }
+        } catch (Exception e) {
+            loginResponseDto.setLoginSuccess(false);
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(loginResponseDto);
+        }
+
+        System.out.println("Account ID : " + account.getId());
+        System.out.println("Account Name : " + account.getUsername());
+        System.out.println("Account Email : " + account.getEmail());
+
         try {
             Account existOwner = accountRepo.findById(account.getId()).orElse(null);
             if (existOwner == null) {
+                System.out.println("FOR TEST!!");
                 accountRepo.save(account);
             }
 
@@ -109,6 +162,7 @@ public class authService {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(loginResponseDto);
         }
+        */
 
         /*
         HttpHeaders headers = new HttpHeaders();
@@ -162,7 +216,9 @@ public class authService {
     public ResponseEntity<?> refreshToken(String refreshToken) {
         if (jwtUtil.validateToken(refreshToken) && !jwtUtil.isTokenExpired(refreshToken)) {
             Long userId = jwtUtil.getUserIdFromToken(refreshToken);
-            String newJwt = jwtUtil.generateToken(userId);
+            String email = jwtUtil.getEmailFromToken(refreshToken);
+            String username = jwtUtil.getUsernameFromToken(refreshToken);
+            String newJwt = jwtUtil.generateToken(userId, email, username);
             return ResponseEntity.ok(new JwtResponse(newJwt, refreshToken));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired refresh token");
@@ -196,11 +252,46 @@ public class authService {
         }
 
         return Account.builder()
+                .kakaoId(kakaoAccountDto.getId())  // Kakao ID를 kakaoId 필드에 저장
+                .email(kakaoAccountDto.getKakao_account().getEmail())
+                .username(kakaoAccountDto.getProperties().getNickname())
+                .build();
+    }
+
+        /*
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + kakaoAccessToken);
+        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+        HttpEntity<MultiValueMap<String, String>> accountInfoRequest = new HttpEntity<>(headers);
+
+        RestTemplate rt = new RestTemplate();
+        ResponseEntity<String> accountInfoResponse = rt.exchange(
+                "https://kapi.kakao.com/v2/user/me",
+                HttpMethod.POST,
+                accountInfoRequest,
+                String.class
+        );
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        KakaoAccountDto kakaoAccountDto = null;
+        try {
+            kakaoAccountDto = objectMapper.readValue(accountInfoResponse.getBody(), KakaoAccountDto.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return Account.builder()
                 .id(kakaoAccountDto.getId())
                 .email(kakaoAccountDto.getKakao_account().getEmail())
                 .username(kakaoAccountDto.getProperties().getNickname())
                 .build();
     }
+
+    */
 }
 
 

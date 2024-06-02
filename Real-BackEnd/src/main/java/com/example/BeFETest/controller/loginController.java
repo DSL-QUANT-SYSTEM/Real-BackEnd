@@ -83,7 +83,7 @@ public class loginController {
     public UserInfo getUserInfo(@RequestAttribute("claims") Claims claims) {
         logger.info("Received claims: " + claims);
         System.out.println("Received claims: " + claims);
-        String username = claims.getSubject();
+        String username = claims.get("username", String.class);
         String email = claims.get("email", String.class);
         return new UserInfo(username, email);
     }

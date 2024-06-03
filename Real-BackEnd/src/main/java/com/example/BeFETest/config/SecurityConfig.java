@@ -46,7 +46,7 @@ public class SecurityConfig {
                                 //.requestMatchers("/").permitAll()
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 //.anyRequest().authenticated()
-                                //.requestMatchers("/api/user-info").authenticated()
+                                .requestMatchers("/api/user-info").authenticated()
                                 .anyRequest().permitAll()
                 );
 

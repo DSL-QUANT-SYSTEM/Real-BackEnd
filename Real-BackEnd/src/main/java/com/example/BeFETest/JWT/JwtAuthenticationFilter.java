@@ -29,29 +29,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         String jwt = getJwtFromRequest(request);
-        System.out.println("JWT : " + jwt);
         if(jwt != null && jwtUtil.validateToken(jwt)){
             Claims claims = jwtUtil.getClaimsFromToken(jwt);
-            logger.info("JWT Claims: " + claims);
-            System.out.println("JWT Claims: " + claims);
-            request.setAttribute("claims", claims);
-        }else{
-            System.out.println("Test-!!!1232313");
+            String username = claims.get("username", String.class);
+            if(username != null){
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null, null);
+                authentication.setDetails(claims);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+            //request.setAttribute("claims", claims);
+        //}else{
+        //    System.out.println("Test-!!!1232313");
         }
 
 
-        /*
-        if (StringUtils.hasText(jwt) && jwtUtil.validateToken(jwt)) {
-            Long userId = jwtUtil.getUserIdFromToken(jwt);
 
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    userId, null, null);
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        }
-
-         */
 
         filterChain.doFilter(request, response);
     }

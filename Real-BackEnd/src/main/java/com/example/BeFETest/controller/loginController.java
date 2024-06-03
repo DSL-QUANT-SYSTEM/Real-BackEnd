@@ -12,7 +12,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URISyntaxException;
 
@@ -80,12 +83,18 @@ public class loginController {
     }
 
     @GetMapping("/api/user-info")
-    public UserInfo getUserInfo(@RequestAttribute("claims") Claims claims) {
-        logger.info("Received claims: " + claims);
-        System.out.println("Received claims: " + claims);
-        String username = claims.get("username", String.class);
-        String email = claims.get("email", String.class);
-        return new UserInfo(username, email);
+    public UserInfo getUserInfo() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof String) {
+            String username = (String) authentication.getPrincipal();
+            Claims claims = (Claims) authentication.getDetails();
+            logger.info("Received claims: " + claims);
+            System.out.println("Received claims: " + claims);
+            String email = claims.get("email", String.class);
+            return new UserInfo(username, email);
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
+        }
     }
 
     @Getter

@@ -43,10 +43,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
                                 //.requestMatchers("/login/**").permitAll()
-                                //.requestMatchers("/signup/**").permitAll()
                                 //.requestMatchers("/").permitAll()
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 //.anyRequest().authenticated()
+                                //.requestMatchers("/api/user-info").authenticated()
                                 .anyRequest().permitAll()
                 );
 

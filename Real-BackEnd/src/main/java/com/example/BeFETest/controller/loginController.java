@@ -46,35 +46,6 @@ public class loginController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new LoginResponseDto());
         }
-
-        /*
-        try {
-            String kakaoAccessToken = authService.getKakaoAccessToken(code);
-            LoginResponseDto loginResponseDto = authService.kakaoLogin(kakaoAccessToken).getBody();
-
-            if (loginResponseDto.isLoginSuccess()) {
-                // 헤더에 JWT 토큰 설정
-                response.setHeader("Authorization", "Bearer " + loginResponseDto.getJwtToken());
-                return ResponseEntity.ok(loginResponseDto);
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(loginResponseDto);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new LoginResponseDto());
-        }
-
-         */
-        /*
-        try {
-            String kakaoAccessToken = authService.getKakaoAccessToken(code);
-            return authService.kakaoLogin(kakaoAccessToken);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new LoginResponseDto());
-        }
-
-         */
     }
 
     @PostMapping("/refresh-token")
@@ -88,8 +59,10 @@ public class loginController {
         if (authentication != null && authentication.getPrincipal() instanceof String) {
             String username = (String) authentication.getPrincipal();
             Claims claims = (Claims) authentication.getDetails();
-            logger.info("Received claims: " + claims);
-            System.out.println("Received claims: " + claims);
+
+            //logger.info("Received claims: " + claims);
+            //System.out.println("Received claims: " + claims);
+            
             String email = claims.get("email", String.class);
             return new UserInfo(username, email);
         } else {
@@ -108,35 +81,7 @@ public class loginController {
             this.email = email;
         }
 
-
-        // Getters and Setters
     }
 
-    /*
-    public ResponseEntity<LoginResponseDto> login(@RequestParam("code") String code, HttpServletResponse response) {
-        try {
-            String kakaoAccessToken = authService.getKakaoAccessToken(code);
-            return authService.kakaoLogin(kakaoAccessToken);
-        } catch (Exception e) {
-            // 에러 처리 및 로그 기록
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new LoginResponseDto());
-        }
-    }
-
-     */
-
-    /*
-    @Autowired
-    private authService authService = new authService();
-
-    @GetMapping("/login/oauth2/code/kakao")
-    public ResponseEntity<LoginResponseDto> login(@RequestParam("code") String code, HttpServletResponse response) throws URISyntaxException {
-        //System.out.println("code :" + code); //인가 코드 확인용
-        String kakaoAccessToken = authService.getKakaoAccessToken(code);
-        //System.out.println("Token :" + kakaoAccessToken);//token 확인용
-        return authService.kakaoLogin(kakaoAccessToken);
-    }
-
-     */
+   
 }

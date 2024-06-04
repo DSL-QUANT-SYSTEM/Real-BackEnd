@@ -14,6 +14,7 @@ public class ErrorResponse {
     private int status;
     private String detail;
 
+    /*
     public ErrorResponse(ErrorCode code){
         this.message = code.getMessage();
         this.status = code.getStatus();
@@ -23,5 +24,5 @@ public class ErrorResponse {
 
     public static ErrorResponse of(ErrorCode code){
         return new ErrorResponse(code);
-    }
+    }*/
 }

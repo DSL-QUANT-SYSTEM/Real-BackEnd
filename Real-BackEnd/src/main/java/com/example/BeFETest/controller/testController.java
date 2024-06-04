@@ -97,6 +97,7 @@ public class testController {
         return userInfo;
     }
 
+    /*
     @GetMapping("/home/kospi")
     public ResponseEntity getKospi() {
         try {
@@ -106,8 +107,8 @@ public class testController {
             if (!kospiResponses.isEmpty()) {
                 return new ResponseEntity<>(kospiResponses, HttpStatus.OK);
             } else {
-                ErrorResponse errorResponse = new ErrorResponse(ErrorCode.RESOURCE_NOT_FOUND);
-                return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+                //ErrorResponse errorResponse = new ErrorResponse(ErrorCode.RESOURCE_NOT_FOUND);
+               // return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(ErrorCode.INTERNAL_ERROR);
@@ -150,11 +151,14 @@ public class testController {
             return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    */
 
+    /*
     @ExceptionHandler(InternalServerErrorException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleInternalServerErrorException(InternalServerErrorException ex){
         return ErrorResponse.of(ErrorCode.INTERNAL_ERROR);
 
     }
+    */
 }

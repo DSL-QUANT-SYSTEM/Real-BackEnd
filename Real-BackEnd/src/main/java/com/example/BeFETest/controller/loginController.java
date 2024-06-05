@@ -3,6 +3,7 @@ package com.example.BeFETest.controller;
 import com.example.BeFETest.BusinessLogicLayer.kakao.authService;
 import com.example.BeFETest.DTO.kakaoDTO.LoginResponseDto;
 import com.example.BeFETest.DTO.kakaoDTO.RefreshTokenRequest;
+import com.example.BeFETest.Error.CustomExceptions;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
@@ -39,7 +40,7 @@ public class loginController {
                 response.setHeader("Authorization", jwtToken);
                 return loginResponse;
             } else {
-                throw new CustomExceptions.UnauthorizedException());
+                throw new CustomExceptions.UnauthorizedException();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,6 +102,7 @@ public class loginController {
             String email = claims.get("email", String.class);
             return new UserInfo(username, email);
         } else {
+            System.out.println("Error 발생!");
             throw new CustomExceptions.UnauthorizedException();
         }
     }

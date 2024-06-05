@@ -6,6 +6,23 @@ import lombok.Setter;
 
 @Getter
 @Setter
+public class ErrorResponse {
+    private int status;
+    private String message;
+    private String errorCode;
+
+    public ErrorResponse(int status, String message, String errorCode) {
+        this.status = status;
+        this.message = message;
+        this.errorCode = errorCode;
+    }
+
+    // Getters and Setters
+}
+
+/*
+@Getter
+@Setter
 @NoArgsConstructor
 public class ErrorResponse {
 
@@ -25,4 +42,5 @@ public class ErrorResponse {
     public static ErrorResponse of(ErrorCode code){
         return new ErrorResponse(code);
     }*/
-}
+//}
+

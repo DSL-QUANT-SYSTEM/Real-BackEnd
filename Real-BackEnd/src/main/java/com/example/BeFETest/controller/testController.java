@@ -6,24 +6,17 @@ import com.example.BeFETest.Entity.UserRequest;
 import com.example.BeFETest.Entity.kosdak.KosdakResponse;
 import com.example.BeFETest.Entity.kosdak2000.Kosdak2000Response;
 import com.example.BeFETest.Entity.kospi.KospiResponse;
-import com.example.BeFETest.Error.ErrorCode;
-import com.example.BeFETest.Error.ErrorResponse;
-import com.example.BeFETest.Error.InternalServerErrorException;
+import com.example.BeFETest.Error.CustomExceptions;
+
 import com.example.BeFETest.Repository.*;
-import jakarta.servlet.http.HttpServletResponse;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.web.bind.annotation.*;
-import com.example.BeFETest.BusinessLogicLayer.kakao.authService;
-import com.example.BeFETest.DTO.kakaoDTO.LoginResponseDto;
 
-import java.net.URISyntaxException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.springframework.web.bind.annotation.*;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -75,10 +68,10 @@ public class testController {
         try{
             LocalDate currentDate = LocalDate.now();
             String currentDateString = currentDate.toString();
-            List<KospiResposne> kospiResponses = 
+            List<KospiResponse> kospiResponses =
                 kospiRepository.findByDate(currentDateString);
             if(!kospiResponses.isEmpty()) {
-                return new ResponseEntity<>(kospiResposne, HttpStatus.OK);
+                return new ResponseEntity<>(kospiResponses, HttpStatus.OK);
             } else {
                 throw new CustomExceptions.ResourceNotFoundException();
             }

@@ -1,5 +1,6 @@
 package com.example.BeFETest.Error;
 
+/*
 public class InternalServerErrorException extends RuntimeException{
 
     public InternalServerErrorException(String message){
@@ -10,3 +11,4 @@ public class InternalServerErrorException extends RuntimeException{
         super(message, cause);
     }
 }
+*/

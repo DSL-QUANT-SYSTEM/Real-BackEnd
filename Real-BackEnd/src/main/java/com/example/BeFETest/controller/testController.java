@@ -39,14 +39,89 @@ public class testController {
     private final Kosdak2000Repository kosdak2000Repository;
 
     private final KosdakRepository kosdakRepository;
-    // 구글 API를 호출하여 유저 정보를 가져오는 로직
-    // 유저 정보를 JSON 형태로 구성하여 프론트엔드로 전달
-
-
 
     @Autowired
     private UserRepository userRepository;
 
+    @PostMapping("/mypage")
+    public UserInfo checkUserInfo(@RequestBody UserRequest request) {
+        UserEntity userEntity = userRepository.findByBirthDate(request.getUser_birth());
+        if(userEntity == null) {
+            throw new CustomExceptions.ResourceNotFoundException();
+        }
+        UserInfo userInfo = new UserInfo();
+        userInfo.setName(userEntity.getName());
+        userInfo.setPhone(userEntity.getPhoneNumber());
+        userInfo.setBirthDate(userEntity.getBirthDate());
+        userInfo.setGender(userEntity.getGender());
+
+        // BacktestingHistory 객체를 문자열 배열로 변환
+        String[] records = userEntity.getRecords().stream()
+                .map(record -> "Date: " + record.getDate() +
+                     ", Universe: " + record.getUniverse() +
+                     ", weight: " + record.getWeight() +
+                     ", Initial Investment: " + record.getInitialInvestment() + 
+                     ", Period: " + record.getPeriod() +
+                     ", File HTML: " + record.getFileHtml())
+                .toArray(String[]::new);
+
+        userInfo.setBacktestingRecords(records);
+
+        return userInfo;
+    }
+    
+    @GetMapping("/home/kospi")
+    public ResponseEntity<?> getKospi() {
+        try{
+            LocalDate currentDate = LocalDate.now();
+            String currentDateString = currentDate.toString();
+            List<KospiResposne> kospiResponses = 
+                kospiRepository.findByDate(currentDateString);
+            if(!kospiResponses.isEmpty()) {
+                return new ResponseEntity<>(kospiResposne, HttpStatus.OK);
+            } else {
+                throw new CustomExceptions.ResourceNotFoundException();
+            }
+        } catch (Exception e) {
+            throw new CustomExceptions.InternalServerErrorException();
+        }
+    }
+
+    @GetMapping("/home/kosdak")
+    public ResponseEntity<?> getKosdak() {
+        try {
+            LocalDate currentDate = LocalDate.now();
+            String currentDateString = currentDate.toString();
+            List<KosdakResponse> kosdakResponses = 
+                kosdakRepository.findByDate(currentDateString);
+            if(!kosdakResponses.isEmpty()) {
+                return new ResponseEntity<>(kosdakResponses, HttpStatus.OK);
+            } else {
+                throw new CustomExceptions.ResourceNotFoundException();
+            }
+        } catch (Exception e) {
+            throw new CustomExceptions.InternalServerErrorException();
+        }
+    }
+    
+    @GetMapping("/home/kosdak2000")
+    public ResponseEntity<?> getKosdak2000() {
+        try {
+            LocalDate currentDate = LocalDate.now();
+            String currentDateString = currentDate.toString();
+            List<Kosdak2000Response> kosdak2000Responses = 
+                kosdak2000Repository.findByDate(currentDateString);
+            if (!kosdak2000Responses.isEmpty()) {
+                return new ResponseEntity<>(kosdak2000Responses, HttpStatus.OK);
+            } else {
+                throw new CustomExceptions.ResourceNotFoundException();
+            }
+        } catch (Exception e) {
+            throw new CustomExceptions.InternalServerErrorException();
+        }
+    }    
+        
+        
 
     /*
     @PostMapping("/mypage")
@@ -66,6 +141,7 @@ public class testController {
     }
     */
 
+    /*
 
     @PostMapping("/mypage")
     public UserInfo checkUserInfo(@RequestBody UserRequest request) {
@@ -96,6 +172,7 @@ public class testController {
 
         return userInfo;
     }
+    */
 
     /*
     @GetMapping("/home/kospi")

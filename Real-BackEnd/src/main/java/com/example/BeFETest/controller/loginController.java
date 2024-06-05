@@ -33,6 +33,30 @@ public class loginController {
             String kakaoAccessToken = authService.getKakaoAccessToken(code);
             ResponseEntity<LoginResponseDto> loginResponse = authService.kakaoLogin(kakaoAccessToken);
 
+            if(loginResponse.getBody().isLoginSuccess()) {
+                //헤더에 JWT 토큰 설정
+                String jwtToken = loginResponse.getHeaders().getFirst("Authorization");
+                response.setHeader("Authorization", jwtToken);
+                return loginResponse;
+            } else {
+                throw new CustomExceptions.UnauthorizedException());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CustomExceptions.InternalServerErrorException();
+        }
+    }
+        
+            
+
+    
+    /*
+    @GetMapping("/login/oauth2/code/kakao")
+    public ResponseEntity<LoginResponseDto> login(@RequestParam("code") String code, HttpServletResponse response) {
+        try {
+            String kakaoAccessToken = authService.getKakaoAccessToken(code);
+            ResponseEntity<LoginResponseDto> loginResponse = authService.kakaoLogin(kakaoAccessToken);
+
             if (loginResponse.getBody().isLoginSuccess()) {
                 // 헤더에 JWT 토큰 설정
                 String jwtToken = loginResponse.getHeaders().getFirst("Authorization");
@@ -47,12 +71,42 @@ public class loginController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new LoginResponseDto());
         }
     }
+    */
 
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
+        try {
+            return authService.refreshToken(refreshTokenRequest.getRefreshToken());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CustomExceptions.InternalServerErrorException();
+        }
+    }
+        
+
+    /*
     @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
         return authService.refreshToken(refreshTokenRequest.getRefreshToken());
     }
+    */
 
+    @GetMapping("/api/user-info")
+    public UserInfo getUserInfo() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication != null && authentication.getPrincipal() instanceof String) {
+            String username = (String) authentication.getPrincipal();
+            Claims claims = (Claims) authentication.getDetails();
+
+            String email = claims.get("email", String.class);
+            return new UserInfo(username, email);
+        } else {
+            throw new CustomExceptions.UnauthorizedException();
+        }
+    }
+        
+
+    /*
     @GetMapping("/api/user-info")
     public UserInfo getUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -69,6 +123,7 @@ public class loginController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
         }
     }
+    */
 
     @Getter
     @Setter

@@ -16,6 +16,7 @@ import org.springframework.web.server.MethodNotAllowedException;
 
 import javax.naming.ServiceUnavailableException;
 
+/*
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -86,8 +87,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
+*/
 
-/*
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -142,4 +144,4 @@ public class GlobalExceptionHandler {
       }
 }
 
- */
+ 

@@ -1,7 +1,8 @@
 package com.example.BeFETest.Error;
 
-public class CustomExceptions {
 
+/*
+public class CustomExceptions {
 
     public static class CustomException extends RuntimeException {
         private final ErrorCode errorCode;
@@ -76,10 +77,9 @@ public class CustomExceptions {
         }
     }
 }
+*/
 
 
-
-/*
 public class CustomExceptions {
 
   public static class BadRequestException extends CustomException{
@@ -154,13 +154,7 @@ public class CustomExceptions {
             return errorCode;
         }
   }
-
-        
-      
-  
-        
-      
     
 }
 
- */
+ 

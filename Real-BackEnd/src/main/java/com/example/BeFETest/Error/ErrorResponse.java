@@ -9,12 +9,18 @@ import lombok.Setter;
 public class ErrorResponse {
     private int status;
     private String message;
-    private String errorCode;
 
-    public ErrorResponse(int status, String message, String errorCode) {
+    public ErrorResponse(int status, String message) {
         this.status = status;
         this.message = message;
-        this.errorCode = errorCode;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public String getMessage() {
+        return message;
     }
 
     // Getters and Setters

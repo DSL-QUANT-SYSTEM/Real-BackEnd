@@ -153,6 +153,11 @@ public class CustomExceptions {
         public ErrorCode getErrorCode() {
             return errorCode;
         }
+
+      @Override
+      public String getMessage() {
+          return errorCode.getMessage();
+      }
   }
     
 }

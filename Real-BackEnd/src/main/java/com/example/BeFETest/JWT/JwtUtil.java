@@ -85,10 +85,14 @@ public class JwtUtil {
         return claims.getExpiration().before(new Date());
     }
 
-    public long getRefreshExpirationInMs() {
+    public Long getRefreshExpirationInMs() {
         return refreshJwtExpirationInMs;
     }
 
+    public Long getExpiration(String token) {
+        Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+        return claims.getExpiration().getTime();
+    }
 
 
     public Claims getClaimsFromToken(String token) {

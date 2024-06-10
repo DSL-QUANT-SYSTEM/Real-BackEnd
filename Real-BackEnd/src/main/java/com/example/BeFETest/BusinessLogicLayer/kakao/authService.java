@@ -258,6 +258,15 @@ public class authService {
                 .build();
     }
 
+    @Transactional
+    public void logout(Long userId) {
+        refreshTokenRepository.deleteByUserId(userId);
+    }
+
+    public JwtUtil getJwtUtil() {
+        return jwtUtil;
+    }
+
         /*
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + kakaoAccessToken);

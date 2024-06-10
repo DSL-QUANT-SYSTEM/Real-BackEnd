@@ -46,9 +46,17 @@ public class SecurityConfig {
                                 //.requestMatchers("/").permitAll()
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 //.anyRequest().authenticated()
+                                .requestMatchers("/").permitAll()
+                                .requestMatchers("/logout").authenticated()
                                 .requestMatchers("/api/user-info").authenticated()
-                                .anyRequest().permitAll()
+                                .requestMatchers("/login/**").permitAll()
+                                .requestMatchers("/refresh-token").permitAll()
+                                .anyRequest().authenticated()
+                                //.anyRequest().permitAll()
                 );
+                //.exceptionHandling(exceptionHandling ->
+                //        exceptionHandling.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                //);
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

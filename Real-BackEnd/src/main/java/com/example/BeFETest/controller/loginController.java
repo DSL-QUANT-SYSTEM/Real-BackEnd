@@ -3,8 +3,10 @@ package com.example.BeFETest.controller;
 import com.example.BeFETest.BusinessLogicLayer.kakao.authService;
 import com.example.BeFETest.DTO.kakaoDTO.LoginResponseDto;
 import com.example.BeFETest.DTO.kakaoDTO.RefreshTokenRequest;
+import com.example.BeFETest.Entity.RefreshToken;
 import com.example.BeFETest.Error.CustomExceptions;
 import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +29,8 @@ public class loginController {
 
     @Autowired
     private authService authService;
+
+
 
     @GetMapping("/login/oauth2/code/kakao")
     public ResponseEntity<LoginResponseDto> login(@RequestParam("code") String code, HttpServletResponse response) {
@@ -96,6 +100,7 @@ public class loginController {
     public UserInfo getUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication != null && authentication.getPrincipal() instanceof String) {
+            System.out.println("Error 발생X!");
             String username = (String) authentication.getPrincipal();
             Claims claims = (Claims) authentication.getDetails();
 
@@ -103,10 +108,25 @@ public class loginController {
             return new UserInfo(username, email);
         } else {
             System.out.println("Error 발생!");
-            throw new CustomExceptions.UnauthorizedException();
+            throw new CustomExceptions.ForbiddenException();
         }
     }
-        
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
+        try {
+            if (token.startsWith("Bearer ")) {
+                token = token.substring(7);
+            }
+            Long userId = authService.getJwtUtil().getUserIdFromToken(token);
+            authService.logout(userId);
+            return ResponseEntity.ok().body("Successfully logged out");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CustomExceptions.InternalServerErrorException();
+        }
+    }
+
 
     /*
     @GetMapping("/api/user-info")

@@ -1,20 +1,11 @@
 package com.example.BeFETest.handler;
 
 
+import com.example.BeFETest.Error.CustomExceptions;
 import com.example.BeFETest.Error.ErrorResponse;
-import org.apache.coyote.BadRequestException;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.server.MethodNotAllowedException;
-
-import javax.naming.ServiceUnavailableException;
 
 /*
 @ControllerAdvice
@@ -98,14 +89,23 @@ public class GlobalExceptionHandler {
           return ResponseEntity.status(ex.getErrorCode().getStatus()).body(ex.getErrorCode().getMessage());
       }
 
+      /*
       @ExceptionHandler(CustomExceptions.UnauthorizedException.class)
       public ResponseEntity<String> handleUnauthorized(CustomExceptions.UnauthorizedException ex) {
           return ResponseEntity.status(ex.getErrorCode().getStatus()).body(ex.getErrorCode().getMessage());
       }
+      */
+
+      @ExceptionHandler(CustomExceptions.UnauthorizedException.class)
+      public ResponseEntity<ErrorResponse> handleUnauthorized(CustomExceptions.UnauthorizedException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode().getStatus(), ex.getErrorCode().getMessage());
+        return ResponseEntity.status(ex.getErrorCode().getStatus()).body(errorResponse);
+      }
 
       @ExceptionHandler(CustomExceptions.ForbiddenException.class)
-      public ResponseEntity<String> handleForbidden(CustomExceptions.ForbiddenException ex) {
-          return ResponseEntity.status(ex.getErrorCode().getStatus()).body(ex.getErrorCode().getMessage());
+      public ResponseEntity<ErrorResponse> handleForbidden(CustomExceptions.ForbiddenException ex) {
+          ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode().getStatus(), ex.getErrorCode().getMessage());
+          return ResponseEntity.status(ex.getErrorCode().getStatus()).body(errorResponse);
       }
 
       @ExceptionHandler(CustomExceptions.ResourceNotFoundException.class)

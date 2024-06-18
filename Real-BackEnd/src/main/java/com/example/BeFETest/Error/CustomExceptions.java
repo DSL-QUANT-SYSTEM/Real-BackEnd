@@ -82,6 +82,7 @@ public class CustomExceptions {
 
 public class CustomExceptions {
 
+
   public static class BadRequestException extends CustomException{
       public BadRequestException() {
           super(ErrorCode.BAD_REQUEST);

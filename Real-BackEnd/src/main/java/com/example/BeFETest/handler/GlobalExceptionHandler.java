@@ -3,9 +3,11 @@ package com.example.BeFETest.handler;
 
 import com.example.BeFETest.Error.CustomExceptions;
 import com.example.BeFETest.Error.ErrorResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 
 /*
 @ControllerAdvice
@@ -83,6 +85,11 @@ public class GlobalExceptionHandler {
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> globalExceptionHandler(Exception ex, WebRequest request) {
+        return new ResponseEntity<>(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal Server Error!!"), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
       @ExceptionHandler(CustomExceptions.BadRequestException.class)
       public ResponseEntity<String> handleBadRequest(CustomExceptions.BadRequestException ex) {

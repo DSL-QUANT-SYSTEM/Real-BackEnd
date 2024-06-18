@@ -100,14 +100,11 @@ public class loginController {
     public UserInfo getUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication != null && authentication.getPrincipal() instanceof String) {
-            System.out.println("Error 발생X!");
             String username = (String) authentication.getPrincipal();
             Claims claims = (Claims) authentication.getDetails();
-
             String email = claims.get("email", String.class);
             return new UserInfo(username, email);
         } else {
-            System.out.println("Error 발생!");
             throw new CustomExceptions.ForbiddenException();
         }
     }

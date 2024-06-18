@@ -1,7 +1,10 @@
 package com.example.BeFETest.config;
 
+import com.example.BeFETest.Error.CustomAccessDeniedHandler;
+import com.example.BeFETest.Error.CustomAuthenticationEntryPoint;
 import com.example.BeFETest.JWT.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,6 +18,80 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
+public class SecurityConfig {
+
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
+
+    @Autowired
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
+                          CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
+                          CustomAccessDeniedHandler customAccessDeniedHandler) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring()
+                .requestMatchers("/error", "/favicon.ico");
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable())
+                .cors(withDefaults())  // Enable CORS
+                //.cors(cors -> cors.disable())
+                .httpBasic(httpBasic -> httpBasic.disable())
+                .formLogin(formLogin -> formLogin.disable())
+                .logout(logout -> logout.disable())
+                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))
+                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests((authorizeRequests) ->
+                        authorizeRequests
+                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                                .requestMatchers("/").permitAll()
+                                .requestMatchers("/logout").authenticated()
+                                .requestMatchers("/api/user-info").authenticated()
+                                .requestMatchers("/login/**").permitAll()
+                                .requestMatchers("/refresh-token").permitAll()
+                                .anyRequest().authenticated()
+                )
+                .exceptionHandling(exceptionHandling ->
+                        exceptionHandling
+                                .authenticationEntryPoint(customAuthenticationEntryPoint)
+                                .accessDeniedHandler(customAccessDeniedHandler)
+                );
+
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("http://localhost:5173")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
+            }
+        };
+    }
+}
+
+/*
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
@@ -104,4 +181,6 @@ public class SecurityConfig {
         return http.build();
     }
     */
+/*
 }
+*/

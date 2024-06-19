@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class historyInDTO {
 
+
     private String stock;
     private String date;
 

@@ -12,6 +12,7 @@ import java.util.List;
 @Table(name = "kospi_response")
 public class KospiResponse {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class UserInfo {
 
+
     private String name;
     private String phone;
     private String birthDate;

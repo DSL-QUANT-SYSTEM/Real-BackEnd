@@ -12,6 +12,7 @@ import lombok.Setter;
 @Table(name = "kospi_data")
 public class KospiEntity {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

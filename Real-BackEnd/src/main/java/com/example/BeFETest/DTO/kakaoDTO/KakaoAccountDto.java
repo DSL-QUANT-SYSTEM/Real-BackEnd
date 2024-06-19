@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class KakaoAccountDto{
+
     private Long id;
     private Account kakao_account;
     private Properties properties;

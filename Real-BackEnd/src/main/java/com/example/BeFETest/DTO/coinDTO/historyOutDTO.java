@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class historyOutDTO {
 
+
     private double closePrice;
     private double openPrice;
     private double highestPrice;

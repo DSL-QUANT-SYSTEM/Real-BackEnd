@@ -8,5 +8,6 @@ import lombok.Setter;
 @Setter
 public class UserRequest {
 
+
     private String user_birth;
 }

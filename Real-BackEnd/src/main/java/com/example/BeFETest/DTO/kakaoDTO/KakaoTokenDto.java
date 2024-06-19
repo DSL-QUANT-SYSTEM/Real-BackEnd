@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class KakaoTokenDto {
+
     private String access_token;
     private String token_type;
     private String refresh_token;

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class logOutDTO {
 
+
     private double signalLog;
 
     private double amount;

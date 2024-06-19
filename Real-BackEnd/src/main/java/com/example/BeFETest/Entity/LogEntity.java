@@ -13,6 +13,7 @@ import lombok.Setter;
 @Entity
 @NoArgsConstructor
 public class LogEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -16,8 +16,9 @@ public class UserEntity {
     private String birthDate;
     private String gender;
 
-    @ElementCollection
-    private List<String> records;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BacktestingHistory> records;
+
 
     // Getters and setters
     public Long getId() {
@@ -60,11 +61,11 @@ public class UserEntity {
         this.gender = gender;
     }
 
-    public List<String> getRecords() {
+    public List<BacktestingHistory> getRecords() {
         return records;
     }
 
-    public void setRecords(List<String> records) {
+    public void setRecords(List<BacktestingHistory> records) {
         this.records = records;
     }
 }

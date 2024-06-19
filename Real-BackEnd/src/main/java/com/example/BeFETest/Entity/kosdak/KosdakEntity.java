@@ -11,6 +11,7 @@ import lombok.Setter;
 @Table(name = "kosdak_data")
 public class KosdakEntity {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

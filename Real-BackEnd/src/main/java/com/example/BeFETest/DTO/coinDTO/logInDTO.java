@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class logInDTO{
 
+
     private String date;
 
     private String symbol;

@@ -1,6 +1,7 @@
 package com.example.BeFETest.Strategy;
 
 import java.security.InvalidKeyException;
+import java.util.*;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.logging.ConsoleHandler;
@@ -10,21 +11,20 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.List;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.nimbusds.jose.Algorithm;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.util.UUID;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
+import java.util.stream.Collectors;
+
+
+import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 
 public class upbit {
 
@@ -426,7 +426,6 @@ public class upbit {
             String url = serverUrl + "/v1/candles/" + targetUrl + "?market=" + targetItem + "&count=" + inqRange;
 
             String response = sendRequest("GET", url);
-
             List<Map<String, Object>> parsedData = parseJson(response);
             // Candle 객체로 변환
             List<Candle> candleData = new ArrayList<>();
@@ -443,7 +442,7 @@ public class upbit {
                 candle.setTimestamp(((Number) item.get("timestamp")).longValue());
                 candle.setCandleAccTradePrice(((Number) item.get("candle_acc_trade_price")).doubleValue());
                 candle.setCandleAccTradeVolume(((Number) item.get("candle_acc_trade_volume")).doubleValue());
-                candle.setUnit(((Number) item.get("unit")).intValue());
+//                candle.setUnit(((Number) item.get("unit")).intValue()); //추후에 UNIT 필요시 추가
                 candleData.add(candle);
             }
             return candleData;
@@ -470,6 +469,236 @@ public class upbit {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static List<Double> getRSI(List<Candle> candles, int period) {
+        List<Double> rsiValues = new ArrayList<>();
+
+        if (candles.size() < period + 1) {
+            return rsiValues; // Not enough data to calculate RSI
+        }
+
+        List<Double> gains = new ArrayList<>(); // 상승 리스트
+        List<Double> losses = new ArrayList<>();// 하락 리스트
+
+        // 데이터 정렬 (과거부터 현재 순서로)
+        candles = candles.stream()
+                .sorted(Comparator.comparing(c -> c.candleDateTimeKst))
+                .collect(Collectors.toList());
+
+        for (int i = 0; i < candles.size()-1; i++) {
+            double gap = candles.get(i+1).tradePrice - candles.get(i).tradePrice;
+            if (gap > 0) {// 종가가 전일 종가보다 상승일 경우
+                gains.add(gap);
+                losses.add(0.0);
+            } else if(gap < 0){// 종가가 전일 종가보다 하락일 경우
+                gains.add(0.0);
+                losses.add(gap * -1); // 음수를 양수로 변환해준다.
+            }else{// 상승, 하락이 없을 경우 종가 - 전일 종가 = gap은 0이므로 0값을 넣어줍니다.
+                gains.add(0.0);
+                losses.add(0.0);
+            }
+        }
+
+        double avgGain = gains.subList(0, period).stream().mapToDouble(a -> a).average().orElse(0.0);
+        double avgLoss = losses.subList(0, period).stream().mapToDouble(a -> a).average().orElse(0.0);
+
+        for (int i = period; i < gains.size(); i++) {
+            avgGain = (avgGain * (period - 1) + gains.get(i)) / period;
+            avgLoss = (avgLoss * (period - 1) + losses.get(i)) / period;
+
+            double rs = avgGain / avgLoss;
+            double rsi = 100*(rs/(1+rs));
+            rsiValues.add(rsi);
+        }
+
+        return rsiValues;
+    }
+
+
+    private static List<Double> getMFI(String targetItem, String tickKind, int inqRange, int loopCnt) {
+        try {
+            List<List<Candle>> candleDatas = new ArrayList<>();
+            List<Double> mfiList = new ArrayList<>();
+
+            // 캔들 데이터를 가져옴
+            List<Candle> candleData = getCandle(targetItem, tickKind, inqRange);
+
+            // 조회 횟수별 candle 데이터 조합
+            for (int i = 0; i < loopCnt; i++) {
+                candleDatas.add(candleData.subList(i, candleData.size()));
+            }
+
+            // 캔들 데이터만큼 MFI 계산
+            for (List<Candle> candles : candleDatas) {
+                if (candles.size() < 15) continue;  // 최소 15개의 데이터 필요
+
+                double positiveMF = 0;
+                double negativeMF = 0;
+
+                for (int i = 0; i < 14; i++) {
+                    Candle current = candles.get(i);
+                    Candle previous = candles.get(i + 1);
+
+                    double typicalPriceCurrent = (current.tradePrice + current.highPrice + current.lowPrice) / 3;
+                    double typicalPricePrevious = (previous.tradePrice + previous.highPrice + previous.lowPrice) / 3;
+                    double moneyFlow = typicalPriceCurrent * current.candleAccTradeVolume;
+
+                    if (typicalPriceCurrent > typicalPricePrevious) {
+                        positiveMF += moneyFlow;
+                    } else if (typicalPriceCurrent < typicalPricePrevious) {
+                        negativeMF += moneyFlow;
+                    }
+                }
+
+                double mfi = (negativeMF > 0) ? 100 - (100 / (1 + (positiveMF / negativeMF))) : 100;
+                mfiList.add(mfi);
+
+            }
+
+            return mfiList;
+        } catch
+        (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // 이동평균을 계산하는 함수
+    public static List<Double> calculateMovingAverage(List<Double> closePrices, int period) {
+        List<Double> movingAverage = new ArrayList<>();
+        for (int i = period - 1; i < closePrices.size(); i++) {
+            double sum = 0;
+            for (int j = i; j > i - period; j--) {
+                sum += closePrices.get(j);
+            }
+            movingAverage.add(sum / period);
+        }
+        return movingAverage;
+    }
+
+    // 골든크로스 및 데드크로스를 찾는 함수
+    public static List<Boolean> findCrosses(List<Double> fastMovingAverage, List<Double> slowMovingAverage) {
+        List<Boolean> crosses = new ArrayList<>();
+        int size = Math.min(fastMovingAverage.size(), slowMovingAverage.size());
+        System.out.println("////////////////////////////////////GD RESULT////////////////////////////////////////////");
+        if (size < 2) {
+            // slowMovingAverage의 크기가 1이면 비교할 수 없음
+            System.out.println("Not enough data points to find crosses.");
+            return crosses;
+        }
+        for (int i = 1; i < size; i++) {
+            if (fastMovingAverage.get(i) > slowMovingAverage.get(i) && fastMovingAverage.get(i - 1) <= slowMovingAverage.get(i - 1)) {
+                crosses.add(true); // Golden Cross
+            } else if (fastMovingAverage.get(i) < slowMovingAverage.get(i) && fastMovingAverage.get(i - 1) >= slowMovingAverage.get(i - 1)) {
+                crosses.add(false); // Death Cross
+            } else {
+                crosses.add(null); // No Cross
+            }
+        }
+        return crosses;
+    }
+
+    // 표준편차 계산
+    public static List<Double> calculateStandardDeviation(List<Double> closePrices, int period) {
+        List<Double> standardDeviations = new ArrayList<>();
+        for (int i = period - 1; i < closePrices.size(); i++) {
+            double sum = 0;
+            double mean = calculateMovingAverage(closePrices.subList(i - period + 1, i + 1), period).get(0);
+            for (int j = i; j > i - period; j--) {
+                sum += Math.pow(closePrices.get(j) - mean, 2);
+            }
+            standardDeviations.add(Math.sqrt(sum / period));
+        }
+        return standardDeviations;
+    }
+
+    // 상한 밴드 계산
+    public static List<Double> calculateUpperBand(List<Double> ma, List<Double> std) {
+        List<Double> upperBand = new ArrayList<>();
+        for (int i = 0; i < ma.size(); i++) {
+            upperBand.add(ma.get(i) + (2 * std.get(i)));
+        }
+        return upperBand;
+    }
+
+    // 하한 밴드 계산
+    public static List<Double> calculateLowerBand(List<Double> ma, List<Double> std) {
+        List<Double> lowerBand = new ArrayList<>();
+        for (int i = 0; i < ma.size(); i++) {
+            lowerBand.add(ma.get(i) - (2 * std.get(i)));
+        }
+        return lowerBand;
+    }
+
+    // 밴드폭 계산
+    public static List<Double> calculateBandWidth(List<Double> upperBand, List<Double> lowerBand, List<Double> ma) {
+        List<Double> bandWidth = new ArrayList<>();
+        for (int i = 0; i < upperBand.size(); i++) {
+            bandWidth.add((upperBand.get(i) - lowerBand.get(i)) / ma.get(i));
+        }
+        return bandWidth;
+    }
+
+    // 매수 신호 생성
+    public static List<Boolean> generateBuySignals(List<Double> closePrices, List<Double> upperBand, List<Double> bandWidth) {
+        List<Boolean> buySignals = new ArrayList<>();
+        for (int i = 0; i < upperBand.size(); i++) {
+            if (bandWidth.get(i) < 0.05 && closePrices.get(i) > upperBand.get(i)) { // 밴드폭 축소 후 상한 밴드 돌파
+                buySignals.add(true);
+            } else {
+                buySignals.add(false);
+            }
+        }
+        return buySignals;
+    }
+
+    // 매도 신호 생성
+    public static List<Boolean> generateSellSignals(List<Double> closePrices, List<Double> lowerBand) {
+        List<Boolean> sellSignals = new ArrayList<>();
+        for (int i = 0; i < lowerBand.size(); i++) {
+            if (closePrices.get(i) < lowerBand.get(i)) { // 하한 밴드 하향 이탈
+                sellSignals.add(true);
+            } else {
+                sellSignals.add(false);
+            }
+        }
+        return sellSignals;
+    }
+
+    public static List<Double> calculateMACD(List<Double> closePrices) {
+        List<Double> shortEma = calculateEMA(closePrices, 12);
+        List<Double> longEma = calculateEMA(closePrices, 26);
+        List<Double> macValues = new ArrayList<>();
+
+        int minSize = Math.min(shortEma.size(), longEma.size());
+        for (int i = 0; i < minSize; i++) {
+            macValues.add(shortEma.get(i) - longEma.get(i));
+        }
+        return macValues;
+    }
+
+    public static List<Double> calculateSignal(List<Double> macd, int period) {
+        return calculateEMA(macd, period);
+    }
+
+    public static List<Double> calculateEMA(List<Double> prices, int period) {
+        List<Double> ema = new ArrayList<>();
+        double multiplier = 2.0 / (period + 1);
+        double sum = 0;
+
+        for (int i = 0; i < prices.size(); i++) {
+            if (i < period) {
+                sum += prices.get(i);
+                if (i == period - 1) {
+                    ema.add(sum / period);
+                }
+            } else {
+                double emaValue = ((prices.get(i) - ema.get(ema.size() - 1)) * multiplier) + ema.get(ema.size() - 1);
+                ema.add(emaValue);
+            }
+        }
+        return ema;
     }
 
     public static void main(String[] args) {
@@ -506,7 +735,6 @@ public class upbit {
                 System.out.println("Candle Accumulated Trade Volume: " + candle.getCandleAccTradeVolume());
                 System.out.println("Candle Accumulated Trade Price: " + candle.getCandleAccTradePrice());
                 System.out.println("Timestamp: " + candle.getTimestamp());
-                System.out.println("Unit: " + candle.getUnit());
                 System.out.println("------------------------------------------");
             }
         } else {
@@ -527,6 +755,134 @@ public class upbit {
             System.out.println("Failed to get Ticker Data.");
         }
 
+        //RSI 보조지표 조회
+        String marketRSI = "KRW-BTC";
+        String tickKindRSI = "D";  // 일간 캔들
+        int period = 14;  // RSI 계산을 위한 기간
+        int inqRangeRSI = 20; // 조회 범위
+
+        List<Candle> candlesRSI = getCandle(marketRSI, tickKindRSI, inqRangeRSI);
+        if (candlesRSI != null) {
+            List<Double> rsiValues = getRSI(candlesRSI, period);
+            System.out.println("////////////////////////////////////RSI Data////////////////////////////////////////////");
+            for (int i = 0; i < rsiValues.size(); i++) {
+                System.out.println("Date: " + candlesRSI.get(i).candleDateTimeKst + " - RSI: " + rsiValues.get(i));
+            }
+        }
+
+        // MFI 지표 조회
+        String marketMFI = "KRW-BTC";
+        String tickKindMFI = "D";  // 일간 캔들
+        int inqRangeMFI = 20;  // 조회 범위
+        int loopCnt = 5;  // 반복 계산 횟수
+        //loopCnt와 period(14)를 더한 값 이상의 값으로 조회 범위를 설정해야함
+
+        List<Double> mfiValues = getMFI(marketMFI, tickKindMFI, inqRangeMFI, loopCnt);
+        if (mfiValues != null) {
+            System.out.println("////////////////////////////////////MFI Data////////////////////////////////////////////");
+            for (int i = 0; i < mfiValues.size(); i++) {
+                assert candlesRSI != null;
+                System.out.println("Date: " + candlesRSI.get(i).candleDateTimeKst + " - MFI: " + mfiValues.get(i));
+            }
+        }
+
+        //MACD 지표 조회
+        String marketMACD = "KRW-BTC";
+        String tickKindMACD = "D";  // 일간 캔들
+        int inqRangeMACD = 20;  // 조회 범위
+
+        List<Candle> candlesMACD=getCandle(marketMACD,tickKindMACD,inqRangeMACD);
+
+        // 가격 데이터를 추출하여 closePrices 리스트에 추가
+        List<Double> closePricesMACD = new ArrayList<>();
+        assert candlesMACD != null;
+        for (Candle candle : candlesMACD) {
+            closePricesMACD.add(candle.getTradePrice());
+        }
+
+        if (!closePricesMACD.isEmpty()) {
+            List<Double> macValues = calculateMACD(closePricesMACD);
+            List<Double> macSignal = calculateSignal(macValues, 9); // 9-period signal line
+            System.out.println("////////////////////////////////////MACD Data////////////////////////////////////////////");
+            // Print MACD and Signal values
+            for (int i = 0; i < macValues.size(); i++) {
+                System.out.println("MACD: " + macValues.get(i) + ", Signal: " + macSignal.get(i));
+            }
+        }
+
+
+        //골든데드크로스 전략 예시
+        // 이동평균 기간 설정
+        int fastPeriod = 10;
+        int slowPeriod = 50;
+
+        // 캔들 데이터 가져오기
+        List<Candle> candlesGD = getCandle("KRW-BTC", "D", 200);
+
+        // 가격 데이터를 추출하여 closePrices 리스트에 추가
+        List<Double> closePricesGD = new ArrayList<>();
+        assert candlesGD != null;
+        for (Candle candle : candlesGD) {
+            closePricesGD.add(candle.getTradePrice());
+        }
+
+        // 이동평균 계산
+        List<Double> fastMovingAverage = calculateMovingAverage(closePricesGD, fastPeriod);
+        List<Double> slowMovingAverage = calculateMovingAverage(closePricesGD, slowPeriod);
+        // 골든크로스 및 데드크로스 찾기
+        List<Boolean> crosses = findCrosses(fastMovingAverage, slowMovingAverage);
+
+        // 전략에 따른 매수 및 매도
+        for (int i = 0; i < crosses.size(); i++) {
+            if (crosses.get(i) != null) {
+                if (crosses.get(i)) {
+                    System.out.println("Golden Cross at index " + (i + slowPeriod - 1) + ", Buy");
+                } else {
+                    System.out.println("Death Cross at index " + (i + slowPeriod - 1) + ", Sell");
+                }
+            }
+        }
+
+        //볼린저밴드 전략 예시
+        List<Candle> candlesBB= getCandle("KRW-BTC", "D", 100);
+        int length = 20; // 이동평균 기간
+
+        List<Double> closePricesBB =new ArrayList<>();
+        assert candlesBB != null;
+        for (Candle candle : candlesBB) {
+            closePricesBB.add(candle.getTradePrice());
+        }
+
+        // 이동평균선(ma) 구하기
+        List<Double> ma = calculateMovingAverage(closePricesBB, length);
+        // 표준편차로 상한하한 계산
+        List<Double> std = calculateStandardDeviation(closePricesBB, length);
+        List<Double> upperBand = calculateUpperBand(ma, std);
+        List<Double> lowerBand = calculateLowerBand(ma, std);
+
+        // 밴드폭 계산
+        List<Double> bandWidth = calculateBandWidth(upperBand, lowerBand, ma);
+        // 밴드폭 축소 후 밀집구간 거치고 상한 돌파 시 -> 매수, 반대로 하향 이탈하면 -> 매도
+        List<Boolean> buySignals = generateBuySignals(closePricesBB, upperBand, bandWidth);
+        List<Boolean> sellSignals = generateSellSignals(closePricesBB, lowerBand);
+        System.out.println("////////////////////////////////////BB Data////////////////////////////////////////////");
+        int check=0;
+        // 매수 및 매도 신호 출력
+        for (int i = 0; i < closePricesBB.size(); i++) {
+            if (i >= length - 1) { // 이동평균 및 표준편차 계산을 위해 최소 기간 길이 이후부터 출력
+                if (buySignals.get(i - (length - 1))) {
+                    System.out.println("Buy Signals: " + closePricesBB.get(i - (length - 1)));
+                    check=1;
+                }
+                if (sellSignals.get(i - (length - 1))) {
+                    System.out.println("Sell Signals: " + closePricesBB.get(i - (length - 1)));
+                    check=1;
+                }
+            }
+        }
+        if(check==0){
+            System.out.println("There are no Buy/Sell Signals");
+        }
     }
 }
 

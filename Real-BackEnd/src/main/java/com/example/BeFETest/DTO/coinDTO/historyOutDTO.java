@@ -3,6 +3,7 @@ package com.example.BeFETest.DTO.coinDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Repository;
 
+/*
 @Repository
 public class historyOutDTO {
 
@@ -14,13 +15,6 @@ public class historyOutDTO {
     private double adjClosePrice;
     private double volume;
 
-
-    /*
-    public String getDataFromDatabase() {
-        // DAO3에서는 데이터베이스와 상호 작용을 위한 로직을 구현합니다.
-        return "Data from Database (Dao1)";
-    }
-    */
 
     //데이터 객체 JSON데이터 형식으로 변환 위한 함수
     public String toJson() {
@@ -85,3 +79,5 @@ public class historyOutDTO {
 
 
 }
+
+ */

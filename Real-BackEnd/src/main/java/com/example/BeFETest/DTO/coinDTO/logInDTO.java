@@ -2,6 +2,7 @@ package com.example.BeFETest.DTO.coinDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Repository;
 
+/*
 @Repository
 public class logInDTO{
 
@@ -36,3 +37,4 @@ public class logInDTO{
 
 
 }
+ */

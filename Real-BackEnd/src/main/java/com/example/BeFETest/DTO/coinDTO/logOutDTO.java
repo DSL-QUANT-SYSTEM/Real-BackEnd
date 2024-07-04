@@ -3,6 +3,7 @@ package com.example.BeFETest.DTO.coinDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Repository;
 
+/*
 @Repository
 public class logOutDTO {
 
@@ -66,3 +67,5 @@ public class logOutDTO {
 
 
 }
+
+ */

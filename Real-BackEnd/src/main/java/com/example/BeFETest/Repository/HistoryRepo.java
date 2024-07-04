@@ -1,6 +1,6 @@
 package com.example.BeFETest.Repository;
 
-
+/*
 import com.example.BeFETest.Entity.HistoryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -12,3 +12,5 @@ public interface HistoryRepo extends JpaRepository<HistoryEntity, Long> {
     //custom query method 추가 가능
     
 }
+
+ */

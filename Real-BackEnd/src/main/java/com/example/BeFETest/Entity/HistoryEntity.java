@@ -1,6 +1,6 @@
 package com.example.BeFETest.Entity;
 
-
+/*
 import com.example.BeFETest.DTO.coinDTO.historyInDTO;
 import com.example.BeFETest.DTO.coinDTO.historyOutDTO;
 import jakarta.persistence.*;
@@ -63,3 +63,5 @@ public class HistoryEntity {
 //        historyRepo.save(testData);
 //    }
 }
+
+ */

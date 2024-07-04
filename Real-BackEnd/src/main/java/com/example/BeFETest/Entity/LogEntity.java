@@ -1,6 +1,6 @@
 package com.example.BeFETest.Entity;
 
-
+/*
 import com.example.BeFETest.DTO.coinDTO.logInDTO;
 import com.example.BeFETest.DTO.coinDTO.logOutDTO;
 import jakarta.persistence.*;
@@ -41,3 +41,6 @@ public class LogEntity {
     }
 
 }
+
+
+ */

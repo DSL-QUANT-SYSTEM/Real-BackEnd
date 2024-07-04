@@ -12,25 +12,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class Backtesting {
-    public static void main(String[] args) {
-        String market = "KRW-BTC";
-        int period = 14;  // RSI 계산을 위한 기간
-        int inqRange = 200; // 조회 범위
-
-        // 초기 자본과 자산 설정
-        double initialCash = 1000000;  // 초기 자본 (1,000,000 KRW)
-        double initialAsset = 0;       // 초기 자산 (BTC)
-
-        List<Candle> candles = getCandle(market, "D", inqRange);
-        if (candles != null) {
-            List<Double> rsiValues = calculateRSI(candles, period);
-            backtest(candles, rsiValues, initialCash, initialAsset);
-        }
-    }
-    // Keys
+public class commonFunction {
     private static final String accessKey = "78lGs0QBrcPzJry5zDO8XhcTT7H98txHkyZBeHoT";
     private static final String secretKey = "nTOf48sFQxIyD5xwChtFxEnMKwqBsxxWCQx8G1KS";
     private static final String serverUrl = "https://api.upbit.com";
@@ -50,7 +35,7 @@ public class Backtesting {
     //Output
     //4) reponse : 응답 데이터
     //-----------------------------------------------------------------------------
-    public static String sendRequest(String reqType, String reqUrl) {
+    private static String sendRequest(String reqType, String reqUrl) {
         try {
             // Create URL object
             URL url = new URL(reqUrl);
@@ -192,61 +177,4 @@ public class Backtesting {
         }
     }
 
-
-    private static List<Double> calculateRSI(List<Candle> candles, int period) {
-        List<Double> rsiValues = new ArrayList<>();
-        List<Double> gains = new ArrayList<>();
-        List<Double> losses = new ArrayList<>();
-
-        for (int i = 1; i < candles.size(); i++) {
-            double change = candles.get(i).tradePrice - candles.get(i - 1).tradePrice;
-            if (change > 0) {
-                gains.add(change);
-                losses.add(0.0);
-            } else {
-                gains.add(0.0);
-                losses.add(-change);
-            }
-        }
-
-        double avgGain = gains.subList(0, period).stream().mapToDouble(a -> a).average().orElse(0.0);
-        double avgLoss = losses.subList(0, period).stream().mapToDouble(a -> a).average().orElse(0.0);
-
-        for (int i = period; i < gains.size(); i++) {
-            avgGain = (avgGain * (period - 1) + gains.get(i)) / period;
-            avgLoss = (avgLoss * (period - 1) + losses.get(i)) / period;
-
-            double rs = avgGain / avgLoss;
-            double rsi = 100 - (100 / (1 + rs));
-            rsiValues.add(rsi);
-        }
-
-        return rsiValues;
-    }
-
-    private static void backtest(List<Candle> candles, List<Double> rsiValues, double initialCash, double initialAsset) {
-        double cash = initialCash;  // 초기 자본
-        double asset = initialAsset;  // 초기 자산 (BTC)
-        double lastPrice = candles.get(candles.size() - rsiValues.size()).tradePrice;
-
-        for (int i = candles.size() - rsiValues.size(); i < candles.size(); i++) {
-            double rsi = rsiValues.get(i - (candles.size() - rsiValues.size()));
-            double currentPrice = candles.get(i).tradePrice;
-
-            if (rsi < 30 && cash > 0) {
-                asset = cash / currentPrice;
-                cash = 0;
-                System.out.printf("Buy: %.2f, RSI: %.2f\n", currentPrice, rsi);
-            } else if (rsi > 70 && asset > 0) {
-                cash = asset * currentPrice;
-                asset = 0;
-                System.out.printf("Sell: %.2f, RSI: %.2f\n", currentPrice, rsi);
-            }
-
-            lastPrice = currentPrice;
-        }
-
-        double total = cash + asset * lastPrice;
-        System.out.printf("Final Finance: %.2f\n", total);
-    }
 }

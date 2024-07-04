@@ -25,6 +25,8 @@ import java.util.stream.Collectors;
 
 
 import com.nimbusds.oauth2.sdk.util.CollectionUtils;
+import lombok.Getter;
+import lombok.Setter;
 
 public class upbit {
 
@@ -276,7 +278,10 @@ public class upbit {
 //        }
 //    }
 
+    @Setter
+    @Getter
     public static class Candle {
+        // Getters and Setters
         private String market;
         private String candleDateTimeUtc;
         private String candleDateTimeKst;
@@ -288,95 +293,6 @@ public class upbit {
         private Double candleAccTradePrice;
         private Double candleAccTradeVolume;
         private Integer unit;
-
-        // Getters and Setters
-        public String getMarket() {
-            return market;
-        }
-
-        public void setMarket(String market) {
-            this.market = market;
-        }
-
-        public String getCandleDateTimeUtc() {
-            return candleDateTimeUtc;
-        }
-
-        public void setCandleDateTimeUtc(String candleDateTimeUtc) {
-            this.candleDateTimeUtc = candleDateTimeUtc;
-        }
-
-        public String getCandleDateTimeKst() {
-            return candleDateTimeKst;
-        }
-
-        public void setCandleDateTimeKst(String candleDateTimeKst) {
-            this.candleDateTimeKst = candleDateTimeKst;
-        }
-
-        public Double getOpeningPrice() {
-            return openingPrice;
-        }
-
-        public void setOpeningPrice(Double openingPrice) {
-            this.openingPrice = openingPrice;
-        }
-
-        public Double getHighPrice() {
-            return highPrice;
-        }
-
-        public void setHighPrice(Double highPrice) {
-            this.highPrice = highPrice;
-        }
-
-        public Double getLowPrice() {
-            return lowPrice;
-        }
-
-        public void setLowPrice(Double lowPrice) {
-            this.lowPrice = lowPrice;
-        }
-
-        public Double getTradePrice() {
-            return tradePrice;
-        }
-
-        public void setTradePrice(Double tradePrice) {
-            this.tradePrice = tradePrice;
-        }
-
-        public Long getTimestamp() {
-            return timestamp;
-        }
-
-        public void setTimestamp(Long timestamp) {
-            this.timestamp = timestamp;
-        }
-
-        public Double getCandleAccTradePrice() {
-            return candleAccTradePrice;
-        }
-
-        public void setCandleAccTradePrice(Double candleAccTradePrice) {
-            this.candleAccTradePrice = candleAccTradePrice;
-        }
-
-        public Double getCandleAccTradeVolume() {
-            return candleAccTradeVolume;
-        }
-
-        public void setCandleAccTradeVolume(Double candleAccTradeVolume) {
-            this.candleAccTradeVolume = candleAccTradeVolume;
-        }
-
-        public Integer getUnit() {
-            return unit;
-        }
-
-        public void setUnit(Integer unit) {
-            this.unit = unit;
-        }
 
         @Override
         public String toString() {

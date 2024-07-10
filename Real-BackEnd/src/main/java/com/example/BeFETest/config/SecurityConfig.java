@@ -1,9 +1,8 @@
 package com.example.BeFETest.config;
 
-import com.example.BeFETest.Error.CustomAccessDeniedHandler;
-import com.example.BeFETest.Error.CustomAuthenticationEntryPoint;
-import com.example.BeFETest.JWT.JwtAuthenticationFilter;
-import lombok.RequiredArgsConstructor;
+import com.example.BeFETest.error.CustomAccessDeniedHandler;
+import com.example.BeFETest.error.CustomAuthenticationEntryPoint;
+import com.example.BeFETest.jwt.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

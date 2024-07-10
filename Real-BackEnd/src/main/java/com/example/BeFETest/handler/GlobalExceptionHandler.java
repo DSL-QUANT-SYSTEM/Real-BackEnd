@@ -1,8 +1,8 @@
 package com.example.BeFETest.handler;
 
 
-import com.example.BeFETest.Error.CustomExceptions;
-import com.example.BeFETest.Error.ErrorResponse;
+import com.example.BeFETest.error.CustomExceptions;
+import com.example.BeFETest.error.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

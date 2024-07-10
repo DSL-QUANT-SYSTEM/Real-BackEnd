@@ -1,23 +1,7 @@
 package com.example.BeFETest;
 
-
-import com.example.BeFETest.Entity.BacktestingHistory;
-import com.example.BeFETest.Entity.HistoryEntity;
-import com.example.BeFETest.Entity.UserEntity;
-import com.example.BeFETest.Entity.kosdak.KosdakEntity;
-import com.example.BeFETest.Entity.kosdak.KosdakResponse;
-import com.example.BeFETest.Entity.kosdak2000.Kosdak2000Entity;
-import com.example.BeFETest.Entity.kosdak2000.Kosdak2000Response;
-import com.example.BeFETest.Entity.kospi.KospiEntity;
-import com.example.BeFETest.Entity.kospi.KospiResponse;
-import com.example.BeFETest.Repository.*;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 /*
+import com.example.BeFETest.entity.HistoryEntity;
 @Component
 public class DataInitializer implements CommandLineRunner {
 

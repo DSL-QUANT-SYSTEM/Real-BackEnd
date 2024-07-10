@@ -1,26 +1,20 @@
 package com.example.BeFETest.controller;
 
-import com.example.BeFETest.BusinessLogicLayer.kakao.authService;
-import com.example.BeFETest.DTO.kakaoDTO.LoginResponseDto;
-import com.example.BeFETest.DTO.kakaoDTO.RefreshTokenRequest;
-import com.example.BeFETest.Entity.RefreshToken;
-import com.example.BeFETest.Error.CustomExceptions;
+import com.example.BeFETest.businessLogicLayer.kakao.authService;
+import com.example.BeFETest.dto.kakaoDTO.LoginResponseDto;
+import com.example.BeFETest.dto.kakaoDTO.RefreshTokenRequest;
+import com.example.BeFETest.error.CustomExceptions;
 import io.jsonwebtoken.Claims;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.net.URISyntaxException;
 
 @RestController
 public class loginController {

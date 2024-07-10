@@ -1,14 +1,14 @@
 package com.example.BeFETest.controller;
 
-import com.example.BeFETest.Entity.UserEntity;
-import com.example.BeFETest.Entity.UserInfo;
-import com.example.BeFETest.Entity.UserRequest;
-import com.example.BeFETest.Entity.kosdak.KosdakResponse;
-import com.example.BeFETest.Entity.kosdak2000.Kosdak2000Response;
-import com.example.BeFETest.Entity.kospi.KospiResponse;
-import com.example.BeFETest.Error.CustomExceptions;
+import com.example.BeFETest.entity.UserEntity;
+import com.example.BeFETest.entity.UserInfo;
+import com.example.BeFETest.entity.UserRequest;
+import com.example.BeFETest.entity.kosdak.KosdakResponse;
+import com.example.BeFETest.entity.kosdak2000.Kosdak2000Response;
+import com.example.BeFETest.entity.kospi.KospiResponse;
+import com.example.BeFETest.error.CustomExceptions;
 
-import com.example.BeFETest.Repository.*;
+import com.example.BeFETest.repository.*;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

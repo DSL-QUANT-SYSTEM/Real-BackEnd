@@ -442,6 +442,7 @@ public class upbit {
 
             // 조회 횟수별 candle 데이터 조합
             for (int i = 0; i < loopCnt; i++) {
+                assert candleData != null;
                 candleDatas.add(candleData.subList(i, candleData.size()));
             }
 

@@ -1,6 +1,6 @@
 package com.example.BeFETest;
 
-
+/*
 import com.example.BeFETest.Entity.BacktestingHistory;
 import com.example.BeFETest.Entity.HistoryEntity;
 import com.example.BeFETest.Entity.UserEntity;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-/*
+
 @Component
 public class DataInitializer implements CommandLineRunner {
 

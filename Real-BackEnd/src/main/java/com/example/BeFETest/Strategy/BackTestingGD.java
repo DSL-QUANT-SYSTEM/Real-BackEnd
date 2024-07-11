@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BackTestingGD extends commonFunction {
+public class BackTestingGD extends CommonFunction {
     //골든데드크로스 전략 백테스팅 예시
     public static void main(String[] args) {
         // 객체 생성

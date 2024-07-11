@@ -1,6 +1,5 @@
 package com.example.BeFETest.Strategy;
 
-import java.security.InvalidKeyException;
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -14,21 +13,14 @@ import java.io.InputStreamReader;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.nimbusds.jose.Algorithm;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.stream.Collectors;
 
 
-import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 import lombok.Getter;
 import lombok.Setter;
 
-public class upbit {
+public class Upbit {
 
     // Keys
     private static final String accessKey = "78lGs0QBrcPzJry5zDO8XhcTT7H98txHkyZBeHoT";

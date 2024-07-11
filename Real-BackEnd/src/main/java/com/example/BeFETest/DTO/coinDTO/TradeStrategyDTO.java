@@ -1,7 +1,9 @@
 package com.example.BeFETest.DTO.coinDTO;
-
+import lombok.Getter;
+import lombok.Setter;
 import java.time.LocalDate;
-
+@Getter
+@Setter
 public abstract class TradeStrategyDTO {
 
     protected double initialInvestment;

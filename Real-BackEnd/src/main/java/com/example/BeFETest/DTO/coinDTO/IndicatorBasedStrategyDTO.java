@@ -10,14 +10,12 @@ import java.time.LocalDate;
 public class IndicatorBasedStrategyDTO extends TradeStrategyDTO {
 
     private int rsiPeriod;
-    private int mfiLoopCount;
 
     public IndicatorBasedStrategyDTO(double initialInvestment, double transactionFee, LocalDate startDate, LocalDate endDate,
                                   String targetItem, String tickKind, int inquiryRange,
-                                  int rsiPeriod, int mfiLoopCount) {
+                                  int rsiPeriod) {
         super(initialInvestment, transactionFee, startDate, endDate, targetItem, tickKind, inquiryRange);
         this.rsiPeriod = rsiPeriod;
-        this.mfiLoopCount = mfiLoopCount;
     }
 
 

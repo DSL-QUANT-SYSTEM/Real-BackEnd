@@ -1,12 +1,17 @@
 package com.example.BeFETest.Strategy;
-
+import com.example.BeFETest.DTO.coinDTO.BollingerBandsStrategyDTO;
+import com.example.BeFETest.DTO.coinDTO.IndicatorBasedStrategyDTO;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BackTestingIndicator extends commonFunction {
     // 초기 자본과 자산 설정
     public static void main(String[] args) {
-        double initialCash = 1000000;  // 초기 자본 (1,000,000 KRW)
+        IndicatorBasedStrategyDTO IB =new IndicatorBasedStrategyDTO(1000000, 0.01,
+                LocalDate.of(2023, 1, 1), LocalDate.of(2024, 1, 1),
+                "KRW-BTC", "5", 200, 14);
+
         double asset = 0;  // 초기 자산 (BTC)
         boolean bought = false; // 매수 상태를 추적하는 변수
 
@@ -20,13 +25,13 @@ public class BackTestingIndicator extends commonFunction {
             closePrices.add(candle.getTradePrice());
         }
 
-        int period = 14; // MFI 기간 설정
+        int period = 14;
         List<Double> rsiValues = calculateRSI(candles, period);
         List<Double> mfiValues = calculateMFI(candles,period);
         List<Double> macdValues = calculateMACD(closePrices);
         List<Double> signalValues = calculateSignal(macdValues, 9);
 
-        executeTrades(rsiValues, mfiValues, macdValues, signalValues, closePrices, initialCash, asset, initialCash, bought);
+        executeTrades(rsiValues, mfiValues, macdValues, signalValues, closePrices, IB.getInitialInvestment(), asset, IB.getInitialInvestment(), bought, IB.getTransactionFee());
     }
 
     // RSI 계산 메소드
@@ -145,7 +150,7 @@ public class BackTestingIndicator extends commonFunction {
 
     // 매수 및 매도 로직
     public static void executeTrades(List<Double> rsiValues, List<Double> mfiValues, List<Double> macdValues, List<Double> signalValues,
-                                     List<Double> closePrices, double cash, double asset, double initialCash, boolean bought) {
+                                     List<Double> closePrices, double cash, double asset, double initialCash, boolean bought, double transactionFee) {
         int minSize = Math.min(Math.min(rsiValues.size(), mfiValues.size()), Math.min(macdValues.size(), signalValues.size()));
         for (int i = 3; i < minSize; i++) {
             double currentPrice = closePrices.get(i + closePrices.size() - minSize - 1); // 현재 가격
@@ -170,6 +175,8 @@ public class BackTestingIndicator extends commonFunction {
                 System.out.println("Buy Signal at index " + (i + closePrices.size() - minSize - 1) + ", Buy at " + currentPrice);
                 // 매수 로직 (모든 자본으로 BTC 구매)
                 if (cash > 0) {
+                    double fee = cash * transactionFee; // 수수료 계산
+                    cash -= fee; // 수수료 차감
                     asset += cash / currentPrice;
                     cash = 0;
                     bought = true; // 매수 상태로 설정
@@ -178,7 +185,10 @@ public class BackTestingIndicator extends commonFunction {
                 System.out.println("Sell Signal at index " + (i + closePrices.size() - minSize - 1) + ", Sell at " + currentPrice);
                 // 매도 로직 (모든 BTC 판매)
                 if (asset > 0) {
-                    cash += asset * currentPrice;
+                    double proceeds = asset * currentPrice;
+                    double fee = proceeds * transactionFee; // 수수료 계산
+                    proceeds -= fee; // 수수료 차감
+                    cash += proceeds;
                     asset = 0;
                     bought = false; // 매도 상태로 설정
                 }

@@ -1,18 +1,20 @@
 package com.example.BeFETest.Strategy;
-
+import com.example.BeFETest.DTO.coinDTO.BollingerBandsStrategyDTO;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BackTestingBB extends commonFunction{
     //볼린저밴드 전략 백테스팅 예시
     public static void main(String[] args) {
-        // 초기 자본과 자산 설정
-        double initialCash = 1000000;  // 초기 자본 (1,000,000 KRW)
+        BollingerBandsStrategyDTO BB=new BollingerBandsStrategyDTO(1000000, 0.01,
+                LocalDate.of(2023, 1, 1), LocalDate.of(2024, 1, 1),
+                "KRW-STMX", "60", 100, 20);
+        // 초기 자산 설정
         double asset  = 0;       // 초기 자산 (BTC)
 
         //볼린저밴드 전략 예시
-        List<Candle> candlesBB= getCandle("KRW-STMX", "60", 100);
-        int length = 20; // 이동평균 기간
+        List<Candle> candlesBB= getCandle(BB.getTargetItem(), BB.getTickKind(), BB.getInquiryRange());
 
         List<Double> closePricesBB =new ArrayList<>();
         assert candlesBB != null;
@@ -21,9 +23,9 @@ public class BackTestingBB extends commonFunction{
         }
 
         // 이동평균선(ma) 구하기
-        List<Double> ma = calculateMovingAverage(closePricesBB, length);
+        List<Double> ma = calculateMovingAverage(closePricesBB, BB.getMovingAveragePeriod());
         // 표준편차로 상한하한 계산
-        List<Double> std = calculateStandardDeviation(closePricesBB, length);
+        List<Double> std = calculateStandardDeviation(closePricesBB, BB.getMovingAveragePeriod());
         List<Double> upperBand = calculateUpperBand(ma, std);
         List<Double> lowerBand = calculateLowerBand(ma, std);
 
@@ -36,13 +38,13 @@ public class BackTestingBB extends commonFunction{
         int check=0;
         // 매수 및 매도 신호 출력
         for (int i = 0; i < closePricesBB.size(); i++) {
-            if (i >= length - 1) { // 이동평균 및 표준편차 계산을 위해 최소 기간 길이 이후부터 출력
-                if (buySignals.get(i - (length - 1))) {
-                    System.out.println("Buy Signals: " + closePricesBB.get(i - (length - 1)));
+            if (i >= BB.getMovingAveragePeriod() - 1) { // 이동평균 및 표준편차 계산을 위해 최소 기간 길이 이후부터 출력
+                if (buySignals.get(i - (BB.getMovingAveragePeriod() - 1))) {
+                    System.out.println("Buy Signals: " + closePricesBB.get(i - (BB.getMovingAveragePeriod() - 1)));
                     check=1;
                 }
-                if (sellSignals.get(i - (length - 1))) {
-                    System.out.println("Sell Signals: " + closePricesBB.get(i - (length - 1)));
+                if (sellSignals.get(i - (BB.getMovingAveragePeriod() - 1))) {
+                    System.out.println("Sell Signals: " + closePricesBB.get(i - (BB.getMovingAveragePeriod() - 1)));
                     check=1;
                 }
             }
@@ -52,12 +54,12 @@ public class BackTestingBB extends commonFunction{
         }
 
         // 백테스팅 실행
-        double finalBalance = executeBackTest(buySignals, sellSignals, closePricesBB, length, initialCash, asset);
-        double profit = finalBalance - initialCash;
-        double profitRate = (profit / initialCash) * 100;
+        double finalBalance = executeBackTest(buySignals, sellSignals, closePricesBB, BB.getMovingAveragePeriod(), BB.getInitialInvestment(), asset, BB.getTransactionFee());
+        double profit = finalBalance - BB.getInitialInvestment();
+        double profitRate = (profit / BB.getInitialInvestment()) * 100;
 
         // 결과 출력
-        System.out.println("Initial Cash: " + initialCash);
+        System.out.println("Initial Cash: " + BB.getInitialInvestment());
         System.out.println("Final Balance: " + finalBalance);
         System.out.println("Profit: " + profit);
         System.out.println("Profit Rate: " + profitRate + "%");
@@ -71,7 +73,7 @@ public class BackTestingBB extends commonFunction{
     private static final int minOrderAmt = 5000;
 
     // 매수 및 매도 로직
-    public static double executeBackTest(List<Boolean> buySignals, List<Boolean> sellSignals, List<Double> closePrices, int length, double cash, double asset) {
+    public static double executeBackTest(List<Boolean> buySignals, List<Boolean> sellSignals, List<Double> closePrices, int length, double cash, double asset, double transactionFee) {
         boolean bought = false; // 매수 상태를 추적하는 변수
         for (int i = length - 1; i < closePrices.size(); i++) {
             double currentPrice = closePrices.get(i);
@@ -79,7 +81,9 @@ public class BackTestingBB extends commonFunction{
                 System.out.println("Buy at " + currentPrice);
                 // 매수 로직 (모든 자본으로 BTC 구매)
                 if (cash > 0) {
-                    asset += cash / currentPrice;
+                    double fee = cash * transactionFee; // 수수료 계산
+                    double amountToInvest = cash - fee; // 수수료를 뺀 금액
+                    asset += amountToInvest / currentPrice;
                     cash = 0;
                     bought = true; // 매수 상태로 설정
                 }
@@ -88,14 +92,18 @@ public class BackTestingBB extends commonFunction{
                 System.out.println("Sell at " + currentPrice);
                 // 매도 로직 (모든 BTC 판매)
                 if (asset > 0) {
-                    cash += asset * currentPrice;
+                    double proceeds = asset * currentPrice;
+                    double fee = proceeds * transactionFee; // 수수료 계산
+                    proceeds -= fee; // 수수료 차감
+                    cash += proceeds;
                     asset = 0;
                     bought = false; // 매도 상태로 설정
                 }
             }
         }
-        return cash + asset * closePrices.getLast();
+        return cash + asset * closePrices.get(closePrices.size() - 1);
     }
+
 
     // 이동평균을 계산하는 함수
     public static List<Double> calculateMovingAverage(List<Double> closePrices, int period) {

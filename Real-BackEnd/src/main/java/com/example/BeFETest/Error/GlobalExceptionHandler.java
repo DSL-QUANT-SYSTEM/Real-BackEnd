@@ -1,4 +1,4 @@
-package com.example.BeFETest.handler;
+package com.example.BeFETest.Error;
 
 
 import com.example.BeFETest.Error.CustomExceptions;

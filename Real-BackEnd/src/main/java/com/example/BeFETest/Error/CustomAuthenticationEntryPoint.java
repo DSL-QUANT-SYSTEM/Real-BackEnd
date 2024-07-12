@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
@@ -19,6 +18,19 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         String errorMessage = String.format("Unauthorized - Please log in. Request URL: %s", request.getRequestURI());
         response.getWriter().write(String.format("{\"status\": 401, \"message\": \"%s\", \"exception\": \"%s\"}", errorMessage, authException.getMessage()));
+
+
+        //response.setContentType("application/json;charset=UTF-8");
+        //response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+        // 에러가 발생한 함수 이름을 포함
+        //String functionName = authException.getStackTrace()[0].getMethodName();
+        //String errorMessage = String.format("Unauthorized - Please log in. Request URL: %s, Function: %s", request.getRequestURI(), functionName);
+
+        //response.getWriter().write(String.format("{\"status\": 401, \"message\": \"%s\", \"exception\": \"%s\"}", errorMessage, authException.getMessage()));
+
+
     }
 }
+
 

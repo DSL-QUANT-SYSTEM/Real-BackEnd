@@ -144,6 +144,18 @@ public class CustomExceptions {
         }
   }
 
+    public static class AccessDeniedException extends RuntimeException {
+        public AccessDeniedException(String message) {
+            super(message);
+        }
+    }
+
+    public static class AuthenticationException extends RuntimeException {
+        public AuthenticationException(String message) {
+            super(message);
+        }
+    }
+
   public static abstract class CustomException extends RuntimeException {
         private final ErrorCode errorCode;
 

@@ -11,10 +11,17 @@ public class ErrorResponse {
 
     private int status;
     private String message;
+    private String detailedMessage;
 
     public ErrorResponse(int status, String message) {
         this.status = status;
         this.message = message;
+    }
+
+    public ErrorResponse(int status, String message, String detailedMessage) {
+        this.status = status;
+        this.message = message;
+        this.detailedMessage = detailedMessage;
     }
 
     public int getStatus() {
@@ -23,6 +30,10 @@ public class ErrorResponse {
 
     public String getMessage() {
         return message;
+    }
+
+    public String getDetailedMessage(){
+        return detailedMessage;
     }
 
     // Getters and Setters

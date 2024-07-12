@@ -1,5 +1,98 @@
 package com.example.BeFETest;
 
+import com.example.BeFETest.Entity.kosdak.KosdakEntity;
+import com.example.BeFETest.Entity.kosdak.KosdakResponse;
+import com.example.BeFETest.Repository.KosdakRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+
+
+@Component
+public class DataInitializer implements CommandLineRunner {
+
+    @Autowired
+    private KosdakRepository kosdakRepository;
+
+    @Override
+    public void run(String... args) throws Exception {
+        initializeKosdakData();
+    }
+
+    private void initializeKosdakData() {
+        // 기존 데이터 삭제
+        kosdakRepository.deleteAll();
+
+        // 데이터 리스트 생성
+        List<KosdakResponse> kosdakResponses = new ArrayList<>();
+
+        // 첫 번째 데이터 생성
+        KosdakResponse kosdakResponse1 = new KosdakResponse();
+        kosdakResponse1.setDate(LocalDate.now().toString());
+        kosdakResponse1.setCurrentPrice(737000);
+        kosdakResponse1.setAllDayRatio(2.2);
+        kosdakResponse1.setPercentChange(-3.5);
+
+        KosdakEntity kosdakEntity1 = new KosdakEntity();
+        kosdakEntity1.setTime(LocalDateTime.now().toString());
+        kosdakEntity1.setValue(737000);
+        kosdakEntity1.setResponse(kosdakResponse1);
+
+        List<KosdakEntity> kosdakEntities1 = new ArrayList<>();
+        kosdakEntities1.add(kosdakEntity1);
+        kosdakResponse1.setKosdakData(kosdakEntities1);
+
+        kosdakResponses.add(kosdakResponse1);
+
+        // 두 번째 데이터 생성
+        KosdakResponse kosdakResponse2 = new KosdakResponse();
+        kosdakResponse2.setDate(LocalDate.now().minusDays(1).toString());
+        kosdakResponse2.setCurrentPrice(745000);
+        kosdakResponse2.setAllDayRatio(1.8);
+        kosdakResponse2.setPercentChange(2.1);
+
+        KosdakEntity kosdakEntity2 = new KosdakEntity();
+        kosdakEntity2.setTime(LocalDateTime.now().toString());
+        kosdakEntity2.setValue(745000);
+        kosdakEntity2.setResponse(kosdakResponse2);
+
+        List<KosdakEntity> kosdakEntities2 = new ArrayList<>();
+        kosdakEntities2.add(kosdakEntity2);
+        kosdakResponse2.setKosdakData(kosdakEntities2);
+
+        kosdakResponses.add(kosdakResponse2);
+
+        // 세 번째 데이터 생성
+        KosdakResponse kosdakResponse3 = new KosdakResponse();
+        kosdakResponse3.setDate(LocalDate.now().minusDays(2).toString());
+        kosdakResponse3.setCurrentPrice(730000);
+        kosdakResponse3.setAllDayRatio(1.5);
+        kosdakResponse3.setPercentChange(-1.0);
+
+        KosdakEntity kosdakEntity3 = new KosdakEntity();
+        kosdakEntity3.setTime(LocalDateTime.now().toString());
+        kosdakEntity3.setValue(730000);
+        kosdakEntity3.setResponse(kosdakResponse3);
+
+        List<KosdakEntity> kosdakEntities3 = new ArrayList<>();
+        kosdakEntities3.add(kosdakEntity3);
+        kosdakResponse3.setKosdakData(kosdakEntities3);
+
+        kosdakResponses.add(kosdakResponse3);
+
+        // 데이터베이스에 저장
+        kosdakRepository.saveAll(kosdakResponses);
+    }
+}
+
+
+
 /*
 import com.example.BeFETest.Entity.BacktestingHistory;
 import com.example.BeFETest.Entity.HistoryEntity;

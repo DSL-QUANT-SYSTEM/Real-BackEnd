@@ -60,6 +60,7 @@ public class SecurityConfig {
                         authorizeRequests
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .requestMatchers("/").permitAll()
+                                .requestMatchers("/home/**").authenticated()
                                 .requestMatchers("/logout").authenticated()
                                 .requestMatchers("/api/user-info").authenticated()
                                 .requestMatchers("/login/**").permitAll()

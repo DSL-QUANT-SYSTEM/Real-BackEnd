@@ -83,6 +83,7 @@ public class GlobalExceptionHandler {
 */
 
 
+/*
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -97,12 +98,12 @@ public class GlobalExceptionHandler {
           return ResponseEntity.status(ex.getErrorCode().getStatus()).body(ex.getErrorCode().getMessage());
       }
 
-      /*
-      @ExceptionHandler(CustomExceptions.UnauthorizedException.class)
-      public ResponseEntity<String> handleUnauthorized(CustomExceptions.UnauthorizedException ex) {
-          return ResponseEntity.status(ex.getErrorCode().getStatus()).body(ex.getErrorCode().getMessage());
-      }
-      */
+
+      //@ExceptionHandler(CustomExceptions.UnauthorizedException.class)
+      //public ResponseEntity<String> handleUnauthorized(CustomExceptions.UnauthorizedException ex) {
+      //    return ResponseEntity.status(ex.getErrorCode().getStatus()).body(ex.getErrorCode().getMessage());
+      //}
+
 
       @ExceptionHandler(CustomExceptions.UnauthorizedException.class)
       public ResponseEntity<ErrorResponse> handleUnauthorized(CustomExceptions.UnauthorizedException ex) {
@@ -150,6 +151,131 @@ public class GlobalExceptionHandler {
       public ResponseEntity<String> handleGatewayTimeout(CustomExceptions.GatewayTimeoutException ex) {
           return ResponseEntity.status(ex.getErrorCode().getStatus()).body(ex.getErrorCode().getMessage());
       }
+}
+*/
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> globalExceptionHandler(Exception ex, WebRequest request) {
+        String requestUrl = request.getDescription(false).substring(4);  // URL 정보
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Internal Server Error!!",
+                String.format("Exception occurred at %s: %s", requestUrl, ex.getMessage())
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(CustomExceptions.BadRequestException.class)
+    public ResponseEntity<ErrorResponse> handleBadRequest(CustomExceptions.BadRequestException ex, WebRequest request) {
+        String requestUrl = request.getDescription(false).substring(4);
+        ErrorResponse errorResponse = new ErrorResponse(
+                ex.getErrorCode().getStatus(),
+                ex.getErrorCode().getMessage(),
+                String.format("Exception occurred at %s: %s", requestUrl, ex.getDetailedMessage())
+        );
+        return ResponseEntity.status(ex.getErrorCode().getStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(CustomExceptions.UnauthorizedException.class)
+    public ResponseEntity<ErrorResponse> handleUnauthorized(CustomExceptions.UnauthorizedException ex, WebRequest request) {
+        String requestUrl = request.getDescription(false).substring(4);
+        ErrorResponse errorResponse = new ErrorResponse(
+                ex.getErrorCode().getStatus(),
+                ex.getErrorCode().getMessage(),
+                String.format("Exception occurred at %s: %s", requestUrl, ex.getDetailedMessage())
+        );
+        return ResponseEntity.status(ex.getErrorCode().getStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(CustomExceptions.ForbiddenException.class)
+    public ResponseEntity<ErrorResponse> handleForbidden(CustomExceptions.ForbiddenException ex, WebRequest request) {
+        String requestUrl = request.getDescription(false).substring(4);
+        ErrorResponse errorResponse = new ErrorResponse(
+                ex.getErrorCode().getStatus(),
+                ex.getErrorCode().getMessage(),
+                String.format("Exception occurred at %s: %s", requestUrl, ex.getDetailedMessage())
+        );
+        return ResponseEntity.status(ex.getErrorCode().getStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(CustomExceptions.ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFound(CustomExceptions.ResourceNotFoundException ex, WebRequest request) {
+        String requestUrl = request.getDescription(false).substring(4);
+        ErrorResponse errorResponse = new ErrorResponse(
+                ex.getErrorCode().getStatus(),
+                ex.getErrorCode().getMessage(),
+                String.format("Exception occurred at %s: %s", requestUrl, ex.getDetailedMessage())
+        );
+        return ResponseEntity.status(ex.getErrorCode().getStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(CustomExceptions.MethodNotAllowedException.class)
+    public ResponseEntity<ErrorResponse> handleMethodNotAllowed(CustomExceptions.MethodNotAllowedException ex, WebRequest request) {
+        String requestUrl = request.getDescription(false).substring(4);
+        ErrorResponse errorResponse = new ErrorResponse(
+                ex.getErrorCode().getStatus(),
+                ex.getErrorCode().getMessage(),
+                String.format("Exception occurred at %s: %s", requestUrl, ex.getDetailedMessage())
+        );
+        return ResponseEntity.status(ex.getErrorCode().getStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(CustomExceptions.ConflictException.class)
+    public ResponseEntity<ErrorResponse> handleConflict(CustomExceptions.ConflictException ex, WebRequest request) {
+        String requestUrl = request.getDescription(false).substring(4);
+        ErrorResponse errorResponse = new ErrorResponse(
+                ex.getErrorCode().getStatus(),
+                ex.getErrorCode().getMessage(),
+                String.format("Exception occurred at %s: %s", requestUrl, ex.getDetailedMessage())
+        );
+        return ResponseEntity.status(ex.getErrorCode().getStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(CustomExceptions.InternalServerErrorException.class)
+    public ResponseEntity<ErrorResponse> handleInternalServerError(CustomExceptions.InternalServerErrorException ex, WebRequest request) {
+        String requestUrl = request.getDescription(false).substring(4);
+        ErrorResponse errorResponse = new ErrorResponse(
+                ex.getErrorCode().getStatus(),
+                ex.getErrorCode().getMessage(),
+                String.format("Exception occurred at %s: %s", requestUrl, ex.getDetailedMessage())
+        );
+        return ResponseEntity.status(ex.getErrorCode().getStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(CustomExceptions.BadGatewayException.class)
+    public ResponseEntity<ErrorResponse> handleBadGateway(CustomExceptions.BadGatewayException ex, WebRequest request) {
+        String requestUrl = request.getDescription(false).substring(4);
+        ErrorResponse errorResponse = new ErrorResponse(
+                ex.getErrorCode().getStatus(),
+                ex.getErrorCode().getMessage(),
+                String.format("Exception occurred at %s: %s", requestUrl, ex.getDetailedMessage())
+        );
+        return ResponseEntity.status(ex.getErrorCode().getStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(CustomExceptions.ServiceUnavailableException.class)
+    public ResponseEntity<ErrorResponse> handleServiceUnavailable(CustomExceptions.ServiceUnavailableException ex, WebRequest request) {
+        String requestUrl = request.getDescription(false).substring(4);
+        ErrorResponse errorResponse = new ErrorResponse(
+                ex.getErrorCode().getStatus(),
+                ex.getErrorCode().getMessage(),
+                String.format("Exception occurred at %s: %s", requestUrl, ex.getDetailedMessage())
+        );
+        return ResponseEntity.status(ex.getErrorCode().getStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(CustomExceptions.GatewayTimeoutException.class)
+    public ResponseEntity<ErrorResponse> handleGatewayTimeout(CustomExceptions.GatewayTimeoutException ex, WebRequest request) {
+        String requestUrl = request.getDescription(false).substring(4);
+        ErrorResponse errorResponse = new ErrorResponse(
+                ex.getErrorCode().getStatus(),
+                ex.getErrorCode().getMessage(),
+                String.format("Exception occurred at %s: %s", requestUrl, ex.getDetailedMessage())
+        );
+        return ResponseEntity.status(ex.getErrorCode().getStatus()).body(errorResponse);
+    }
 }
 
  

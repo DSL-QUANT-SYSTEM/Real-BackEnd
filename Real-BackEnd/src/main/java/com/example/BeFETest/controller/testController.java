@@ -1,8 +1,15 @@
 package com.example.BeFETest.controller;
 
+import com.example.BeFETest.DTO.kosdak.KosdakConverter;
+import com.example.BeFETest.DTO.kosdak.KosdakResponseDTO;
+import com.example.BeFETest.DTO.kosdak2000.Kosdak2000Converter;
+import com.example.BeFETest.DTO.kosdak2000.Kosdak2000ResponseDTO;
+import com.example.BeFETest.DTO.kospi.KospiConverter;
+import com.example.BeFETest.DTO.kospi.KospiResponseDTO;
 import com.example.BeFETest.Entity.UserEntity;
 import com.example.BeFETest.Entity.UserInfo;
 import com.example.BeFETest.Entity.UserRequest;
+import com.example.BeFETest.Entity.kosdak.KosdakEntity;
 import com.example.BeFETest.Entity.kosdak.KosdakResponse;
 import com.example.BeFETest.Entity.kosdak2000.Kosdak2000Response;
 import com.example.BeFETest.Entity.kospi.KospiResponse;
@@ -18,6 +25,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -25,12 +34,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class testController {
 
+    @Autowired
     private final BacktestingHistoryRepository backtestingHistoryRepository;
 
+    @Autowired
     private final KospiRepository kospiRepository;
 
+    @Autowired
     private final Kosdak2000Repository kosdak2000Repository;
 
+    @Autowired
     private final KosdakRepository kosdakRepository;
 
     @Autowired
@@ -63,173 +76,86 @@ public class testController {
         return userInfo;
     }
 
+    @GetMapping("/home/kosdak")
+    /*
+    public ResponseEntity<KosdakResponseDTO> getKosdak() {              // 테스트용 임의 데이터 생성 코드
+        try {
+            KosdakResponse kosdakResponse = new KosdakResponse();
+            kosdakResponse.setId(1L);
+            kosdakResponse.setDate(LocalDate.now().toString());
+            kosdakResponse.setCurrentPrice(737000);
+            kosdakResponse.setAllDayRatio(2.2);
+            kosdakResponse.setPercentChange(-3.5);
 
-    @GetMapping("/home/kospi")
-    public ResponseEntity<?> getKospi() {
-        try{
-            LocalDate currentDate = LocalDate.now();
-            String currentDateString = currentDate.toString();
-            List<KospiResponse> kospiResponses =
-                kospiRepository.findByDate(currentDateString);
-            if(!kospiResponses.isEmpty()) {
-                return new ResponseEntity<>(kospiResponses, HttpStatus.OK);
-            } else {
-                throw new CustomExceptions.ResourceNotFoundException();
-            }
+            KosdakEntity kosdakEntity = new KosdakEntity();
+            kosdakEntity.setId(1L);
+            kosdakEntity.setTime(LocalDateTime.now().toString());
+            kosdakEntity.setValue(737000);
+            kosdakEntity.setResponse(kosdakResponse);
+
+            List<KosdakEntity> kosdakEntities = new ArrayList<>();
+            kosdakEntities.add(kosdakEntity);
+            kosdakResponse.setKosdakData(kosdakEntities);
+
+            KosdakResponseDTO kosdakResponseDTO = KosdakConverter.toDto(kosdakResponse);
+
+            return new ResponseEntity<>(kosdakResponseDTO, HttpStatus.OK);
         } catch (Exception e) {
             throw new CustomExceptions.InternalServerErrorException();
         }
     }
-
-    @GetMapping("/home/kosdak")
-    public ResponseEntity<?> getKosdak() {
+    */
+    public ResponseEntity<KosdakResponseDTO> getKosdak(){
         try {
             LocalDate currentDate = LocalDate.now();
             String currentDateString = currentDate.toString();
-            List<KosdakResponse> kosdakResponses = 
-                kosdakRepository.findByDate(currentDateString);
-            if(!kosdakResponses.isEmpty()) {
-                return new ResponseEntity<>(kosdakResponses, HttpStatus.OK);
+            KosdakResponse kosdakResponse = kosdakRepository.findByDate(currentDateString);
+            if(kosdakResponse != null){
+                KosdakResponseDTO kosdakDTO = KosdakConverter.toDto(kosdakResponse);
+                return new ResponseEntity<>(kosdakDTO, HttpStatus.OK);
             } else {
                 throw new CustomExceptions.ResourceNotFoundException();
             }
-        } catch (Exception e) {
+        } catch (Exception e){
             throw new CustomExceptions.InternalServerErrorException();
         }
     }
+
+
+
+    @GetMapping("/home/kospi")
+    public ResponseEntity<KospiResponseDTO> getKospi(){
+        try {
+            LocalDate currentDate = LocalDate.now();
+            String currentDateString = currentDate.toString();
+            KospiResponse kospiResponse = kospiRepository.findByDate(currentDateString);
+            if(kospiResponse != null){
+                KospiResponseDTO kospiDTO = KospiConverter.toDto(kospiResponse);
+                return new ResponseEntity<>(kospiDTO, HttpStatus.OK);
+            } else {
+                throw new CustomExceptions.ResourceNotFoundException();
+            }
+        } catch (Exception e){
+            throw new CustomExceptions.InternalServerErrorException();
+        }
+    }
+
     
     @GetMapping("/home/kosdak2000")
-    public ResponseEntity<?> getKosdak2000() {
+    public ResponseEntity<Kosdak2000ResponseDTO> getKosdak2000(){
         try {
             LocalDate currentDate = LocalDate.now();
             String currentDateString = currentDate.toString();
-            List<Kosdak2000Response> kosdak2000Responses = 
-                kosdak2000Repository.findByDate(currentDateString);
-            if (!kosdak2000Responses.isEmpty()) {
-                return new ResponseEntity<>(kosdak2000Responses, HttpStatus.OK);
+            Kosdak2000Response kosdak2000Response = kosdak2000Repository.findByDate(currentDateString);
+            if(kosdak2000Response != null){
+                Kosdak2000ResponseDTO kosdak2000DTO = Kosdak2000Converter.toDto(kosdak2000Response);
+                return new ResponseEntity<>(kosdak2000DTO, HttpStatus.OK);
             } else {
                 throw new CustomExceptions.ResourceNotFoundException();
             }
-        } catch (Exception e) {
+        } catch (Exception e){
             throw new CustomExceptions.InternalServerErrorException();
         }
-    }    
-        
-        
-
-    /*
-    @PostMapping("/mypage")
-    public UserInfo checkUserInfo(@RequestBody UserRequest request) {
-        UserEntity userEntity = userRepository.findByBirthDate(request.getUser_birth());
-        if (userEntity == null) {
-            throw new RuntimeException("사용자 정보를 찾을 수 없습니다.");
-        }
-        System.out.println("Found User!");
-        UserInfo userInfo = new UserInfo();
-        userInfo.setName(userEntity.getName());
-        userInfo.setPhone(userEntity.getPhoneNumber());
-        userInfo.setBirthDate(userEntity.getBirthDate());
-        userInfo.setGender(userEntity.getGender());
-        userInfo.setBacktestingRecords(userEntity.getRecords().toArray(new String[0]));
-        return userInfo;
-    }
-    */
-
-    /*
-
-    @PostMapping("/mypage")
-    public UserInfo checkUserInfo(@RequestBody UserRequest request) {
-        UserEntity userEntity = userRepository.findByBirthDate(request.getUser_birth());
-        if (userEntity == null) {
-            throw new RuntimeException("사용자 정보를 찾을 수 없습니다.");
-        }
-        System.out.println("Found User!");
-        UserInfo userInfo = new UserInfo();
-        userInfo.setName(userEntity.getName());
-        userInfo.setPhone(userEntity.getPhoneNumber());
-        userInfo.setBirthDate(userEntity.getBirthDate());
-        userInfo.setGender(userEntity.getGender());
-
-        // BacktestingHistory 객체를 문자열 배열로 변환
-        String[] records = userEntity.getRecords().stream()
-                .map(record -> "Date: " + record.getDate() +
-                        ", Universe: " + record.getUniverse() +
-                        ", Weight: " + record.getWeight() +
-                        ", Initial Investment: " + record.getInitialInvestment() +
-                        ", Period: " + record.getPeriod() +
-                        ", File HTML: " + record.getFileHtml())
-                .toArray(String[]::new);
-
-        userInfo.setBacktestingRecords(records);
-
-        System.out.println("Test-!!!");
-
-        return userInfo;
-    }
-    */
-
-    /*
-    @GetMapping("/home/kospi")
-    public ResponseEntity getKospi() {
-        try {
-            LocalDate currentDate = LocalDate.now();
-            String currentDateString = currentDate.toString();
-            List<KospiResponse> kospiResponses = kospiRepository.findByDate(currentDateString);
-            if (!kospiResponses.isEmpty()) {
-                return new ResponseEntity<>(kospiResponses, HttpStatus.OK);
-            } else {
-                //ErrorResponse errorResponse = new ErrorResponse(ErrorCode.RESOURCE_NOT_FOUND);
-               // return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.INTERNAL_ERROR);
-            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
-    @GetMapping("/home/kosdak")
-    public ResponseEntity getKosdak() {
-        try {
-            LocalDate currentDate = LocalDate.now();
-            String currentDateString = currentDate.toString();
-            List<KosdakResponse> kosdakResponses = kosdakRepository.findByDate(currentDateString);
-            if (!kosdakResponses.isEmpty()) {
-                return new ResponseEntity<>(kosdakResponses, HttpStatus.OK);
-            } else {
-                ErrorResponse errorResponse = new ErrorResponse(ErrorCode.RESOURCE_NOT_FOUND);
-                return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.INTERNAL_ERROR);
-            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("/home/kosdak2000")
-    public ResponseEntity getKosdak2000() {
-        try {
-            LocalDate currentDate = LocalDate.now();
-            String currentDateString = currentDate.toString();
-            List<Kosdak2000Response> kosdak2000Responses = kosdak2000Repository.findByDate(currentDateString);
-            if (!kosdak2000Responses.isEmpty()) {
-                return new ResponseEntity<>(kosdak2000Responses, HttpStatus.OK);
-            } else {
-                ErrorResponse errorResponse = new ErrorResponse(ErrorCode.RESOURCE_NOT_FOUND);
-                return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.INTERNAL_ERROR);
-            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-    */
-
-    /*
-    @ExceptionHandler(InternalServerErrorException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleInternalServerErrorException(InternalServerErrorException ex){
-        return ErrorResponse.of(ErrorCode.INTERNAL_ERROR);
-
-    }
-    */
 }

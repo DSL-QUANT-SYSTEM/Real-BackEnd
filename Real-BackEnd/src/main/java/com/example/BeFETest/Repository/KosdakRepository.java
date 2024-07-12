@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface KosdakRepository extends JpaRepository<KosdakResponse, Long> {
 
-    List<KosdakResponse> findByDate(String date);
+    KosdakResponse findByDate(String date);
 }

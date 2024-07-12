@@ -15,6 +15,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        response.getWriter().write("{\"status\": 403, \"message\": \"Access Denied - You do not have permission to access this resource\"}");
+        String errorMessage = String.format("Access Denied - You do not have permission to access this resource. Request URL: %s", request.getRequestURI());
+        response.getWriter().write(String.format("{\"status\": 403, \"message\": \"%s\", \"exception\": \"%s\"}", errorMessage, accessDeniedException.getMessage()));
     }
 }

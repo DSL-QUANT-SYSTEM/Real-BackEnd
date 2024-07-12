@@ -160,6 +160,10 @@ public class CustomExceptions {
       public String getMessage() {
           return errorCode.getMessage();
       }
+
+      public String getDetailedMessage(){
+            return String.format("Exception occurred in %s: %s", getClass().getSimpleName(), errorCode.getMessage());
+      }
   }
     
 }

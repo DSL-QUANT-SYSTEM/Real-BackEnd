@@ -5,6 +5,7 @@ import com.example.BeFETest.DTO.kakaoDTO.LoginResponseDto;
 import com.example.BeFETest.DTO.kakaoDTO.RefreshTokenRequest;
 import com.example.BeFETest.Entity.RefreshToken;
 import com.example.BeFETest.Error.CustomExceptions;
+import com.example.BeFETest.Error.ErrorCode;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -45,11 +46,11 @@ public class loginController {
                 response.setHeader("Authorization", jwtToken);
                 return loginResponse;
             } else {
-                throw new CustomExceptions.UnauthorizedException();
+                throw new CustomExceptions.UnauthorizedException("Unathorized Error", null, "Unathorized Error", ErrorCode.UNAUTHORIZED);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            throw new CustomExceptions.InternalServerErrorException();
+            throw new CustomExceptions.InternalServerErrorException("Internal Error", null, "Internal Error", ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
         
@@ -85,7 +86,7 @@ public class loginController {
             return authService.refreshToken(refreshTokenRequest.getRefreshToken());
         } catch (Exception e) {
             e.printStackTrace();
-            throw new CustomExceptions.InternalServerErrorException();
+            throw new CustomExceptions.InternalServerErrorException("Internal Error", null, "Internal Error", ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
         
@@ -106,7 +107,7 @@ public class loginController {
             String email = claims.get("email", String.class);
             return new UserInfo(username, email);
         } else {
-            throw new CustomExceptions.ForbiddenException();
+            throw new CustomExceptions.ForbiddenException("Forbidden Error", null, "Forbidden Error", ErrorCode.FORBIDDEN);
         }
     }
 
@@ -121,7 +122,7 @@ public class loginController {
             return ResponseEntity.ok().body("Successfully logged out");
         } catch (Exception e) {
             e.printStackTrace();
-            throw new CustomExceptions.InternalServerErrorException();
+            throw new CustomExceptions.InternalServerErrorException("Internal Error", null, "Internal Error", ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 

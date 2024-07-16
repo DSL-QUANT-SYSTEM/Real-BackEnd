@@ -15,6 +15,7 @@ import com.example.BeFETest.Entity.kosdak2000.Kosdak2000Response;
 import com.example.BeFETest.Entity.kospi.KospiResponse;
 import com.example.BeFETest.Error.CustomExceptions;
 
+import com.example.BeFETest.Error.ErrorCode;
 import com.example.BeFETest.Repository.*;
 
 import lombok.RequiredArgsConstructor;
@@ -53,7 +54,7 @@ public class testController {
     public UserInfo checkUserInfo(@RequestBody UserRequest request) {
         UserEntity userEntity = userRepository.findByBirthDate(request.getUser_birth());
         if(userEntity == null) {
-            throw new CustomExceptions.ResourceNotFoundException();
+            throw new CustomExceptions.ResourceNotFoundException("Resource Not found", null, "Resource Not found", ErrorCode.NOT_FOUND);
         }
         UserInfo userInfo = new UserInfo();
         userInfo.setName(userEntity.getName());
@@ -114,11 +115,19 @@ public class testController {
                 KosdakResponseDTO kosdakDTO = KosdakConverter.toDto(kosdakResponse);
                 return new ResponseEntity<>(kosdakDTO, HttpStatus.OK);
             } else {
-                throw new CustomExceptions.ResourceNotFoundException();
+                throw new CustomExceptions.ResourceNotFoundException("Resource Not", null, "Resource Not", ErrorCode.NOT_FOUND);
             }
-        } catch (Exception e){
-            throw new CustomExceptions.InternalServerErrorException();
+        } catch (CustomExceptions.BadGatewayException e){//(CustomExceptions.ResourceNotFoundException e) {
+            throw e; // ResourceNotFoundException 그대로 던짐
+        } catch (Exception e) {
+            throw new CustomExceptions.InternalServerErrorException("Internal Error", e, "Internal Error", ErrorCode.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("/fortest")
+    public ResponseEntity<?> fortestfunc(){
+        //throw new RuntimeException("Test exception for AOP logging");
+        throw new CustomExceptions.ForbiddenException("Forbid", null, "Forbidd", ErrorCode.FORBIDDEN);
     }
 
 
@@ -133,10 +142,12 @@ public class testController {
                 KospiResponseDTO kospiDTO = KospiConverter.toDto(kospiResponse);
                 return new ResponseEntity<>(kospiDTO, HttpStatus.OK);
             } else {
-                throw new CustomExceptions.ResourceNotFoundException();
+                throw new CustomExceptions.ResourceNotFoundException("Resource Not", null, "Resource Not", ErrorCode.NOT_FOUND);
             }
-        } catch (Exception e){
-            throw new CustomExceptions.InternalServerErrorException();
+        } catch (CustomExceptions.ResourceNotFoundException e) {
+            throw e; // ResourceNotFoundException 그대로
+        } catch (Exception e) {
+            throw new CustomExceptions.InternalServerErrorException("Internal Error", e, "Internal Error", ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -151,10 +162,10 @@ public class testController {
                 Kosdak2000ResponseDTO kosdak2000DTO = Kosdak2000Converter.toDto(kosdak2000Response);
                 return new ResponseEntity<>(kosdak2000DTO, HttpStatus.OK);
             } else {
-                throw new CustomExceptions.ResourceNotFoundException();
+                throw new CustomExceptions.ResourceNotFoundException("Resource Not", null, "Resource Not", ErrorCode.NOT_FOUND);
             }
         } catch (Exception e){
-            throw new CustomExceptions.InternalServerErrorException();
+            throw new CustomExceptions.InternalServerErrorException("Internal Error", null, "Internal Error", ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 

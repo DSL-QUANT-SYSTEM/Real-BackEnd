@@ -64,6 +64,7 @@ public class SecurityConfig {
                         authorizeRequests
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .requestMatchers("/").permitAll()
+                                .requestMatchers("/strategy/**").permitAll()
                                 .requestMatchers("/fortest").permitAll()
                                 .requestMatchers("/home/**").authenticated()
                                 .requestMatchers("/logout").authenticated()

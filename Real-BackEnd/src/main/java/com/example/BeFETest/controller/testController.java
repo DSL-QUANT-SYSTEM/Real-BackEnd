@@ -1,5 +1,7 @@
 package com.example.BeFETest.controller;
 
+import com.example.BeFETest.DTO.coinDTO.GoldenDeadCrossStrategyDTO;
+import com.example.BeFETest.DTO.coinDTO.StrategyCommonDTO;
 import com.example.BeFETest.DTO.kosdak.KosdakConverter;
 import com.example.BeFETest.DTO.kosdak.KosdakResponseDTO;
 import com.example.BeFETest.DTO.kosdak2000.Kosdak2000Converter;
@@ -49,6 +51,8 @@ public class testController {
 
     @Autowired
     private UserRepository userRepository;
+
+    private StrategyCommonDTO strategyCommonDTO;
 
     @PostMapping("/mypage")
     public UserInfo checkUserInfo(@RequestBody UserRequest request) {
@@ -169,4 +173,66 @@ public class testController {
         }
     }
 
+    @PostMapping("/strategy")
+    public ResponseEntity<?> saveCommonStrategy(@RequestBody StrategyCommonDTO strategyCommonDTO){
+        System.out.println(" TEST!!!!!!!!= ");
+        this.strategyCommonDTO = strategyCommonDTO;
+        return ResponseEntity.ok("Common strategy settings saved successfully");
+    }
+
+    @PostMapping("/strategy/golden")
+    public ResponseEntity<?> saveGoldenDeadCrossStrategy(@RequestBody GoldenDeadCrossStrategyDTO goldenDeadCrossStrategyDTO) {
+
+        System.out.println("goldenDeadCrossStrategyDTO = !!!!!!!!");
+
+        if (strategyCommonDTO != null) {
+            // Combine commonDTO with goldenDeadCrossStrategyDTO
+            GoldenDeadCrossStrategyDTO combinedDTO = new GoldenDeadCrossStrategyDTO(
+                    strategyCommonDTO.getInitialInvestment(),
+                    strategyCommonDTO.getTransactionFee(),
+                    strategyCommonDTO.getStartDate(),
+                    strategyCommonDTO.getEndDate(),
+                    strategyCommonDTO.getTargetItem(),
+                    strategyCommonDTO.getTickKind(),
+                    strategyCommonDTO.getInquiryRange(),
+                    goldenDeadCrossStrategyDTO.getFastMovingAveragePeriod(),
+                    goldenDeadCrossStrategyDTO.getSlowMovingAveragePeriod()
+            );
+
+            // Here you can save or process combinedDTO as needed
+            System.out.println("Combined Strategy: " + combinedDTO.toString());
+
+            // Return the combinedDTO
+            return ResponseEntity.ok(combinedDTO);
+        } else {
+            return ResponseEntity.badRequest().body("Common strategy settings not set");
+        }
+    }
+
+
+    /*
+    @PostMapping("/strategy/golden")
+    public ResponseEntity<?> saveGoldenDeadCrossStrategy(@RequestBody GoldenDeadCrossStrategyDTO goldenDeadCrossStrategyDTO) {
+        if (strategyCommonDTO != null) {
+            // Combine commonDTO with goldenDeadCrossStrategyDTO
+            GoldenDeadCrossStrategyDTO combinedDTO = new GoldenDeadCrossStrategyDTO(
+                    strategyCommonDTO.getInitialInvestment(),
+                    strategyCommonDTO.getTransactionFee(),
+                    strategyCommonDTO.getStartDate(),
+                    strategyCommonDTO.getEndDate(),
+                    strategyCommonDTO.getTargetItem(),
+                    strategyCommonDTO.getTickKind(),
+                    strategyCommonDTO.getInquiryRange(),
+                    goldenDeadCrossStrategyDTO.getFastMovingAveragePeriod(),
+                    goldenDeadCrossStrategyDTO.getSlowMovingAveragePeriod()
+            );
+
+            // Here you can save or process combinedDTO as needed
+            System.out.println("Combined Strategy: " + combinedDTO.toString());
+        } else {
+            return ResponseEntity.badRequest().body("Common strategy settings not set");
+        }
+        return ResponseEntity.ok("Golden/Dead Cross strategy settings saved successfully");
+    }
+    */
 }

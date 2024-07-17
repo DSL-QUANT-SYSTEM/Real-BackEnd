@@ -54,6 +54,8 @@ public class testController {
 
     private StrategyCommonDTO strategyCommonDTO;
 
+    private GoldenDeadCrossStrategyDTO combinedDTO;
+
     @PostMapping("/mypage")
     public UserInfo checkUserInfo(@RequestBody UserRequest request) {
         UserEntity userEntity = userRepository.findByBirthDate(request.getUser_birth());
@@ -82,34 +84,6 @@ public class testController {
     }
 
     @GetMapping("/home/kosdak")
-    /*
-    public ResponseEntity<KosdakResponseDTO> getKosdak() {              // 테스트용 임의 데이터 생성 코드
-        try {
-            KosdakResponse kosdakResponse = new KosdakResponse();
-            kosdakResponse.setId(1L);
-            kosdakResponse.setDate(LocalDate.now().toString());
-            kosdakResponse.setCurrentPrice(737000);
-            kosdakResponse.setAllDayRatio(2.2);
-            kosdakResponse.setPercentChange(-3.5);
-
-            KosdakEntity kosdakEntity = new KosdakEntity();
-            kosdakEntity.setId(1L);
-            kosdakEntity.setTime(LocalDateTime.now().toString());
-            kosdakEntity.setValue(737000);
-            kosdakEntity.setResponse(kosdakResponse);
-
-            List<KosdakEntity> kosdakEntities = new ArrayList<>();
-            kosdakEntities.add(kosdakEntity);
-            kosdakResponse.setKosdakData(kosdakEntities);
-
-            KosdakResponseDTO kosdakResponseDTO = KosdakConverter.toDto(kosdakResponse);
-
-            return new ResponseEntity<>(kosdakResponseDTO, HttpStatus.OK);
-        } catch (Exception e) {
-            throw new CustomExceptions.InternalServerErrorException();
-        }
-    }
-    */
     public ResponseEntity<KosdakResponseDTO> getKosdak(){
         try {
             LocalDate currentDate = LocalDate.now();
@@ -127,14 +101,6 @@ public class testController {
             throw new CustomExceptions.InternalServerErrorException("Internal Error", e, "Internal Error", ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @GetMapping("/fortest")
-    public ResponseEntity<?> fortestfunc(){
-        //throw new RuntimeException("Test exception for AOP logging");
-        throw new CustomExceptions.ForbiddenException("Forbid", null, "Forbidd", ErrorCode.FORBIDDEN);
-    }
-
-
 
     @GetMapping("/home/kospi")
     public ResponseEntity<KospiResponseDTO> getKospi(){
@@ -175,7 +141,6 @@ public class testController {
 
     @PostMapping("/strategy")
     public ResponseEntity<?> saveCommonStrategy(@RequestBody StrategyCommonDTO strategyCommonDTO){
-        System.out.println(" TEST!!!!!!!!= ");
         this.strategyCommonDTO = strategyCommonDTO;
         return ResponseEntity.ok("Common strategy settings saved successfully");
     }
@@ -183,11 +148,9 @@ public class testController {
     @PostMapping("/strategy/golden")
     public ResponseEntity<?> saveGoldenDeadCrossStrategy(@RequestBody GoldenDeadCrossStrategyDTO goldenDeadCrossStrategyDTO) {
 
-        System.out.println("goldenDeadCrossStrategyDTO = !!!!!!!!");
-
         if (strategyCommonDTO != null) {
             // Combine commonDTO with goldenDeadCrossStrategyDTO
-            GoldenDeadCrossStrategyDTO combinedDTO = new GoldenDeadCrossStrategyDTO(
+            combinedDTO = new GoldenDeadCrossStrategyDTO(
                     strategyCommonDTO.getInitialInvestment(),
                     strategyCommonDTO.getTransactionFee(),
                     strategyCommonDTO.getStartDate(),

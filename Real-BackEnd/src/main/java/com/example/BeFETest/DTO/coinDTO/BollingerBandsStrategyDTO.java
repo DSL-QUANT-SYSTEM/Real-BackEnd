@@ -25,4 +25,18 @@ public class BollingerBandsStrategyDTO extends TradeStrategyDTO{
      *                                                                     20);
      *
      */
+
+    @Override
+    public String toString() {
+        return "BollingerBandsStrategyDTO{" +
+                "movingAveragePeriod=" + movingAveragePeriod +
+                ", initialInvestment=" + initialInvestment +
+                ", transactionFee=" + transactionFee +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", targetItem='" + targetItem + '\'' +
+                ", tickKind='" + tickKind + '\'' +
+                ", inquiryRange=" + inquiryRange +
+                '}';
+    }
 }

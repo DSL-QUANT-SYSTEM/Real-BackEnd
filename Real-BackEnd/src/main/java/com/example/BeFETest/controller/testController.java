@@ -11,6 +11,7 @@ import com.example.BeFETest.DTO.kospi.KospiResponseDTO;
 import com.example.BeFETest.Entity.UserEntity;
 import com.example.BeFETest.Entity.UserInfo;
 import com.example.BeFETest.Entity.UserRequest;
+import com.example.BeFETest.Entity.coinStrategy.GoldenDeadCrossStrategyEntity;
 import com.example.BeFETest.Entity.kosdak.KosdakEntity;
 import com.example.BeFETest.Entity.kosdak.KosdakResponse;
 import com.example.BeFETest.Entity.kosdak2000.Kosdak2000Response;
@@ -18,8 +19,10 @@ import com.example.BeFETest.Entity.kospi.KospiResponse;
 import com.example.BeFETest.Error.CustomExceptions;
 
 import com.example.BeFETest.Error.ErrorCode;
+import com.example.BeFETest.JWT.JwtUtil;
 import com.example.BeFETest.Repository.*;
 
+import com.example.BeFETest.service.StrategyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,7 +55,16 @@ public class testController {
     @Autowired
     private UserRepository userRepository;
 
+    //private StrategyCommonDTO strategyCommonDTO;
+    //private GoldenDeadCrossStrategyDTO goldenDTO;
+
     private StrategyCommonDTO strategyCommonDTO;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private StrategyService strategyService;
 
     @PostMapping("/mypage")
     public UserInfo checkUserInfo(@RequestBody UserRequest request) {
@@ -173,9 +185,9 @@ public class testController {
         }
     }
 
+    /*
     @PostMapping("/strategy")
     public ResponseEntity<?> saveCommonStrategy(@RequestBody StrategyCommonDTO strategyCommonDTO){
-        System.out.println(" TEST!!!!!!!!= ");
         this.strategyCommonDTO = strategyCommonDTO;
         return ResponseEntity.ok("Common strategy settings saved successfully");
     }
@@ -183,11 +195,9 @@ public class testController {
     @PostMapping("/strategy/golden")
     public ResponseEntity<?> saveGoldenDeadCrossStrategy(@RequestBody GoldenDeadCrossStrategyDTO goldenDeadCrossStrategyDTO) {
 
-        System.out.println("goldenDeadCrossStrategyDTO = !!!!!!!!");
-
         if (strategyCommonDTO != null) {
             // Combine commonDTO with goldenDeadCrossStrategyDTO
-            GoldenDeadCrossStrategyDTO combinedDTO = new GoldenDeadCrossStrategyDTO(
+            goldenDTO = new GoldenDeadCrossStrategyDTO(
                     strategyCommonDTO.getInitialInvestment(),
                     strategyCommonDTO.getTransactionFee(),
                     strategyCommonDTO.getStartDate(),
@@ -200,14 +210,18 @@ public class testController {
             );
 
             // Here you can save or process combinedDTO as needed
-            System.out.println("Combined Strategy: " + combinedDTO.toString());
-
+            System.out.println("Combined Strategy: " + goldenDTO.toString());
             // Return the combinedDTO
-            return ResponseEntity.ok(combinedDTO);
+            return ResponseEntity.ok(goldenDTO);
         } else {
             return ResponseEntity.badRequest().body("Common strategy settings not set");
         }
     }
+
+
+
+     */
+
 
 
     /*
@@ -235,4 +249,71 @@ public class testController {
         return ResponseEntity.ok("Golden/Dead Cross strategy settings saved successfully");
     }
     */
+
+
+    private Long extractUserIdFromToken(String token) {
+        return jwtUtil.extractUserIdFromToken(token);
+    }
+
+    @PostMapping("/")
+    public ResponseEntity<?> saveCommonStrategy(@RequestBody StrategyCommonDTO strategyCommonDTO){
+        this.strategyCommonDTO = strategyCommonDTO;
+        System.out.println(" = !!!123123123!" );
+        return ResponseEntity.ok("Common strategy settings saved successfully");
+    }
+
+
+    @PostMapping("/strategy/golden")
+    public ResponseEntity<?> saveGoldenDeadCrossStrategy(@RequestBody GoldenDeadCrossStrategyDTO strategy, @RequestHeader("Authorization") String token) {
+        Long userId = extractUserIdFromToken(token);
+
+        System.out.println(" = !!!???!" );
+
+
+        if (strategyCommonDTO != null) {
+            // Combine commonDTO with goldenDeadCrossStrategyDTO
+            GoldenDeadCrossStrategyDTO goldenDeadCrossStrategyDTO = new GoldenDeadCrossStrategyDTO(
+                    strategyCommonDTO.getInitialInvestment(),
+                    strategyCommonDTO.getTransactionFee(),
+                    strategyCommonDTO.getStartDate(),
+                    strategyCommonDTO.getEndDate(),
+                    strategyCommonDTO.getTargetItem(),
+                    strategyCommonDTO.getTickKind(),
+                    strategyCommonDTO.getInquiryRange(),
+                    strategy.getFastMovingAveragePeriod(),
+                    strategy.getSlowMovingAveragePeriod()
+            );
+
+            // Here you can save or process combinedDTO as needed
+            System.out.println("Combined Strategy: " + goldenDeadCrossStrategyDTO.toString());
+
+            GoldenDeadCrossStrategyEntity goldenEntity = new GoldenDeadCrossStrategyEntity();
+            goldenEntity.setInitialInvestment(goldenDeadCrossStrategyDTO.getInitialInvestment());
+            goldenEntity.setTransactionFee(goldenDeadCrossStrategyDTO.getTransactionFee());
+            goldenEntity.setStartDate(goldenDeadCrossStrategyDTO.getStartDate());
+            goldenEntity.setEndDate(goldenDeadCrossStrategyDTO.getEndDate());
+            goldenEntity.setTargetItem(goldenDeadCrossStrategyDTO.getTargetItem());
+            goldenEntity.setTickKind(goldenDeadCrossStrategyDTO.getTickKind());
+            goldenEntity.setInquiryRange(goldenDeadCrossStrategyDTO.getInquiryRange());
+            goldenEntity.setFastMovingAveragePeriod(goldenDeadCrossStrategyDTO.getFastMovingAveragePeriod());
+            goldenEntity.setSlowMovingAveragePeriod(goldenDeadCrossStrategyDTO.getSlowMovingAveragePeriod());
+
+            goldenEntity.setUserId(userId);
+            strategyService.saveGoldenDeadCrossStrategy(goldenEntity);
+
+            System.out.println(" = !!!!" );
+
+            return ResponseEntity.ok("Golden/Dead Cross strategy settings saved successfully");
+        }else{
+            return ResponseEntity.badRequest().body("Common strategy settings not set");
+        }
+    }
+
+
+    @GetMapping("/result")
+    public ResponseEntity<List<GoldenDeadCrossStrategyEntity>> getGoldenDeadCrossStrategy(@RequestHeader("Authorization") String token) {
+        Long userId = extractUserIdFromToken(token);
+        List<GoldenDeadCrossStrategyEntity> strategies = strategyService.getRecentGoldenDeadCrossStrategies(userId);
+        return ResponseEntity.ok(strategies);
+    }
 }

@@ -25,4 +25,18 @@ public class IndicatorBasedStrategyDTO extends TradeStrategyDTO {
      *                                                                     14, 5);
      *
      */
+
+    @Override
+    public String toString() {
+        return "IndicatorBasedStrategyDTO{" +
+                "rsiPeriod=" + rsiPeriod +
+                ", initialInvestment=" + initialInvestment +
+                ", transactionFee=" + transactionFee +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", targetItem='" + targetItem + '\'' +
+                ", tickKind='" + tickKind + '\'' +
+                ", inquiryRange=" + inquiryRange +
+                '}';
+    }
 }

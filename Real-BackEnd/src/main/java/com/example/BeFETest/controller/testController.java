@@ -1,5 +1,7 @@
 package com.example.BeFETest.controller;
 
+import com.example.BeFETest.DTO.coinDTO.GoldenDeadCrossStrategyDTO;
+import com.example.BeFETest.DTO.coinDTO.StrategyCommonDTO;
 import com.example.BeFETest.DTO.kosdak.KosdakConverter;
 import com.example.BeFETest.DTO.kosdak.KosdakResponseDTO;
 import com.example.BeFETest.DTO.kosdak2000.Kosdak2000Converter;
@@ -50,6 +52,10 @@ public class testController {
     @Autowired
     private UserRepository userRepository;
 
+    private StrategyCommonDTO strategyCommonDTO;
+
+    private GoldenDeadCrossStrategyDTO combinedDTO;
+
     @PostMapping("/mypage")
     public UserInfo checkUserInfo(@RequestBody UserRequest request) {
         UserEntity userEntity = userRepository.findByBirthDate(request.getUser_birth());
@@ -78,34 +84,6 @@ public class testController {
     }
 
     @GetMapping("/home/kosdak")
-    /*
-    public ResponseEntity<KosdakResponseDTO> getKosdak() {              // 테스트용 임의 데이터 생성 코드
-        try {
-            KosdakResponse kosdakResponse = new KosdakResponse();
-            kosdakResponse.setId(1L);
-            kosdakResponse.setDate(LocalDate.now().toString());
-            kosdakResponse.setCurrentPrice(737000);
-            kosdakResponse.setAllDayRatio(2.2);
-            kosdakResponse.setPercentChange(-3.5);
-
-            KosdakEntity kosdakEntity = new KosdakEntity();
-            kosdakEntity.setId(1L);
-            kosdakEntity.setTime(LocalDateTime.now().toString());
-            kosdakEntity.setValue(737000);
-            kosdakEntity.setResponse(kosdakResponse);
-
-            List<KosdakEntity> kosdakEntities = new ArrayList<>();
-            kosdakEntities.add(kosdakEntity);
-            kosdakResponse.setKosdakData(kosdakEntities);
-
-            KosdakResponseDTO kosdakResponseDTO = KosdakConverter.toDto(kosdakResponse);
-
-            return new ResponseEntity<>(kosdakResponseDTO, HttpStatus.OK);
-        } catch (Exception e) {
-            throw new CustomExceptions.InternalServerErrorException();
-        }
-    }
-    */
     public ResponseEntity<KosdakResponseDTO> getKosdak(){
         try {
             LocalDate currentDate = LocalDate.now();
@@ -123,14 +101,6 @@ public class testController {
             throw new CustomExceptions.InternalServerErrorException("Internal Error", e, "Internal Error", ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @GetMapping("/fortest")
-    public ResponseEntity<?> fortestfunc(){
-        //throw new RuntimeException("Test exception for AOP logging");
-        throw new CustomExceptions.ForbiddenException("Forbid", null, "Forbidd", ErrorCode.FORBIDDEN);
-    }
-
-
 
     @GetMapping("/home/kospi")
     public ResponseEntity<KospiResponseDTO> getKospi(){
@@ -169,4 +139,63 @@ public class testController {
         }
     }
 
+    @PostMapping("/strategy")
+    public ResponseEntity<?> saveCommonStrategy(@RequestBody StrategyCommonDTO strategyCommonDTO){
+        this.strategyCommonDTO = strategyCommonDTO;
+        return ResponseEntity.ok("Common strategy settings saved successfully");
+    }
+
+    @PostMapping("/strategy/golden")
+    public ResponseEntity<?> saveGoldenDeadCrossStrategy(@RequestBody GoldenDeadCrossStrategyDTO goldenDeadCrossStrategyDTO) {
+
+        if (strategyCommonDTO != null) {
+            // Combine commonDTO with goldenDeadCrossStrategyDTO
+            combinedDTO = new GoldenDeadCrossStrategyDTO(
+                    strategyCommonDTO.getInitialInvestment(),
+                    strategyCommonDTO.getTransactionFee(),
+                    strategyCommonDTO.getStartDate(),
+                    strategyCommonDTO.getEndDate(),
+                    strategyCommonDTO.getTargetItem(),
+                    strategyCommonDTO.getTickKind(),
+                    strategyCommonDTO.getInquiryRange(),
+                    goldenDeadCrossStrategyDTO.getFastMovingAveragePeriod(),
+                    goldenDeadCrossStrategyDTO.getSlowMovingAveragePeriod()
+            );
+
+            // Here you can save or process combinedDTO as needed
+            System.out.println("Combined Strategy: " + combinedDTO.toString());
+
+            // Return the combinedDTO
+            return ResponseEntity.ok(combinedDTO);
+        } else {
+            return ResponseEntity.badRequest().body("Common strategy settings not set");
+        }
+    }
+
+
+    /*
+    @PostMapping("/strategy/golden")
+    public ResponseEntity<?> saveGoldenDeadCrossStrategy(@RequestBody GoldenDeadCrossStrategyDTO goldenDeadCrossStrategyDTO) {
+        if (strategyCommonDTO != null) {
+            // Combine commonDTO with goldenDeadCrossStrategyDTO
+            GoldenDeadCrossStrategyDTO combinedDTO = new GoldenDeadCrossStrategyDTO(
+                    strategyCommonDTO.getInitialInvestment(),
+                    strategyCommonDTO.getTransactionFee(),
+                    strategyCommonDTO.getStartDate(),
+                    strategyCommonDTO.getEndDate(),
+                    strategyCommonDTO.getTargetItem(),
+                    strategyCommonDTO.getTickKind(),
+                    strategyCommonDTO.getInquiryRange(),
+                    goldenDeadCrossStrategyDTO.getFastMovingAveragePeriod(),
+                    goldenDeadCrossStrategyDTO.getSlowMovingAveragePeriod()
+            );
+
+            // Here you can save or process combinedDTO as needed
+            System.out.println("Combined Strategy: " + combinedDTO.toString());
+        } else {
+            return ResponseEntity.badRequest().body("Common strategy settings not set");
+        }
+        return ResponseEntity.ok("Golden/Dead Cross strategy settings saved successfully");
+    }
+    */
 }

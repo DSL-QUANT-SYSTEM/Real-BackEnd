@@ -26,4 +26,19 @@ public class GoldenDeadCrossStrategyDTO extends TradeStrategyDTO{
      *                                                                       5, 20);
      */
 
+    @Override
+    public String toString(){
+        return "GoldenDeadCrossStrategyDTO{" +
+                "initialInvestment=" + initialInvestment +
+                ", transactionFee=" + transactionFee +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", targetItem='" + targetItem + '\'' +
+                ", tickKind='" + tickKind + '\'' +
+                ", inquiryRange=" + inquiryRange +
+                ", fastMovingAveragePeriod=" + fastMovingAveragePeriod +
+                ", slowMovingAveragePeriod=" + slowMovingAveragePeriod +
+                '}';
+    }
+
 }

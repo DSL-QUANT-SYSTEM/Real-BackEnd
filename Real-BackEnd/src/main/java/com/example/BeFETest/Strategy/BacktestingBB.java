@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BackTestingBB extends CommonFunction {
+public class BacktestingBB extends CommonFunction {
     //볼린저밴드 전략 백테스팅 예시
     public static void main(String[] args) {
         BollingerBandsStrategyDTO BB=new BollingerBandsStrategyDTO(1000000, 0.01,

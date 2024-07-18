@@ -1,4 +1,4 @@
-package com.example.BeFETest.Repository;
+package com.example.BeFETest.Repository.JWT;
 
 
 import com.example.BeFETest.Entity.RefreshToken;

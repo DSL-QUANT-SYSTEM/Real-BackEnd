@@ -11,15 +11,18 @@ import com.example.BeFETest.DTO.kospi.KospiResponseDTO;
 import com.example.BeFETest.Entity.UserEntity;
 import com.example.BeFETest.Entity.UserInfo;
 import com.example.BeFETest.Entity.UserRequest;
-import com.example.BeFETest.Entity.kosdak.KosdakEntity;
 import com.example.BeFETest.Entity.kosdak.KosdakResponse;
 import com.example.BeFETest.Entity.kosdak2000.Kosdak2000Response;
 import com.example.BeFETest.Entity.kospi.KospiResponse;
 import com.example.BeFETest.Error.CustomExceptions;
 
 import com.example.BeFETest.Error.ErrorCode;
-import com.example.BeFETest.Repository.*;
 
+import com.example.BeFETest.Repository.Backtesting.BacktestingHistoryRepository;
+import com.example.BeFETest.Repository.JWT.UserRepository;
+import com.example.BeFETest.Repository.Kosdak.Kosdak2000Repository;
+import com.example.BeFETest.Repository.Kosdak.KosdakRepository;
+import com.example.BeFETest.Repository.Kospi.KospiRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,9 +31,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @RestController

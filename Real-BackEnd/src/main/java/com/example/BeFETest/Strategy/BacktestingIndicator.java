@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BackTestingIndicator extends CommonFunction {
+public class BacktestingIndicator extends CommonFunction {
     // 초기 자본과 자산 설정
     public static void main(String[] args) {
         IndicatorBasedStrategyDTO IB =new IndicatorBasedStrategyDTO(1000000, 0.01,

@@ -9,6 +9,7 @@ import java.time.LocalDate;
 @Setter
 public class GoldenDeadCrossStrategyDTO extends TradeStrategyDTO{
 
+    private Long userId;
     private int fastMovingAveragePeriod;
     private int slowMovingAveragePeriod;
 

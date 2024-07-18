@@ -1,4 +1,12 @@
 package com.example.BeFETest.Repository.Backtesting;
 
-public interface GDRepository {
+import com.example.BeFETest.Entity.BacktestingRes.GDEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface GDRepository extends JpaRepository<GDEntity, Long> {
+
+    List<GDEntity> findByUserIdOrderByIdDesc(Long userId);
+    List<GDEntity> findTop10UserIdOrderByIdDesc(Long userId);
 }

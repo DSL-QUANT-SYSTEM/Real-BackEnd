@@ -2,7 +2,7 @@ package com.example.BeFETest;
 
 import com.example.BeFETest.Entity.kosdak.KosdakEntity;
 import com.example.BeFETest.Entity.kosdak.KosdakResponse;
-import com.example.BeFETest.Repository.KosdakRepository;
+import com.example.BeFETest.Repository.Kosdak.KosdakRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;

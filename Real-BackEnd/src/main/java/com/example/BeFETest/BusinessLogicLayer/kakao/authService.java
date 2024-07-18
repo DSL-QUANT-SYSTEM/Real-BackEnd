@@ -3,7 +3,7 @@ package com.example.BeFETest.BusinessLogicLayer.kakao;
 import com.example.BeFETest.DTO.kakaoDTO.*;
 import com.example.BeFETest.Entity.RefreshToken;
 import com.example.BeFETest.JWT.JwtUtil;
-import com.example.BeFETest.Repository.RefreshTokenRepository;
+import com.example.BeFETest.Repository.JWT.RefreshTokenRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

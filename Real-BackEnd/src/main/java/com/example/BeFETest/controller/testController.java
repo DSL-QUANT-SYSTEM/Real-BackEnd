@@ -1,5 +1,6 @@
 package com.example.BeFETest.controller;
 
+import com.example.BeFETest.BusinessLogicLayer.Strategy.StrategyService;
 import com.example.BeFETest.DTO.coinDTO.GoldenDeadCrossStrategyDTO;
 import com.example.BeFETest.DTO.coinDTO.StrategyCommonDTO;
 import com.example.BeFETest.DTO.kosdak.KosdakConverter;
@@ -18,6 +19,7 @@ import com.example.BeFETest.Error.CustomExceptions;
 
 import com.example.BeFETest.Error.ErrorCode;
 
+import com.example.BeFETest.JWT.JwtUtil;
 import com.example.BeFETest.Repository.Backtesting.BacktestingHistoryRepository;
 import com.example.BeFETest.Repository.JWT.UserRepository;
 import com.example.BeFETest.Repository.Kosdak.Kosdak2000Repository;
@@ -52,9 +54,16 @@ public class testController {
     @Autowired
     private UserRepository userRepository;
 
-    private StrategyCommonDTO strategyCommonDTO;
+    @Autowired
+    private JwtUtil jwtUtil;
 
-    private GoldenDeadCrossStrategyDTO combinedDTO;
+    @Autowired
+    private StrategyService strategyService;
+
+
+    //private StrategyCommonDTO strategyCommonDTO;
+
+    //private GoldenDeadCrossStrategyDTO combinedDTO;
 
     @PostMapping("/mypage")
     public UserInfo checkUserInfo(@RequestBody UserRequest request) {
@@ -140,11 +149,21 @@ public class testController {
     }
 
     @PostMapping("/strategy")
+    public ResponseEntity<?> saveCommonStrategy(@RequestHeader("Authorization") String token, @RequestBody StrategyCommonDTO strategyCommonDTO){
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        System.out.println("userId = " + userId);
+        strategyService.saveCommonStrategyResult(strategyCommonDTO, userId);
+    }
+
+
+    /*
+    @PostMapping("/strategy")
     public ResponseEntity<?> saveCommonStrategy(@RequestBody StrategyCommonDTO strategyCommonDTO){
         this.strategyCommonDTO = strategyCommonDTO;
         return ResponseEntity.ok("Common strategy settings saved successfully");
     }
 
+    /*
     @PostMapping("/strategy/golden")
     public ResponseEntity<?> saveGoldenDeadCrossStrategy(@RequestBody GoldenDeadCrossStrategyDTO goldenDeadCrossStrategyDTO) {
 
@@ -171,6 +190,7 @@ public class testController {
             return ResponseEntity.badRequest().body("Common strategy settings not set");
         }
     }
+    */
 
 
     /*

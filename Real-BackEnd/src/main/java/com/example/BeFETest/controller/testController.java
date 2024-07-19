@@ -9,6 +9,7 @@ import com.example.BeFETest.DTO.kosdak2000.Kosdak2000Converter;
 import com.example.BeFETest.DTO.kosdak2000.Kosdak2000ResponseDTO;
 import com.example.BeFETest.DTO.kospi.KospiConverter;
 import com.example.BeFETest.DTO.kospi.KospiResponseDTO;
+import com.example.BeFETest.Entity.BacktestingRes.GDEntity;
 import com.example.BeFETest.Entity.UserEntity;
 import com.example.BeFETest.Entity.UserInfo;
 import com.example.BeFETest.Entity.UserRequest;
@@ -33,6 +34,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @RestController
@@ -150,9 +152,30 @@ public class testController {
 
     @PostMapping("/strategy")
     public ResponseEntity<?> saveCommonStrategy(@RequestHeader("Authorization") String token, @RequestBody StrategyCommonDTO strategyCommonDTO){
+        System.out.println(" = !!!" );
+
         Long userId = jwtUtil.getUserIdFromToken(token);
         System.out.println("userId = " + userId);
         strategyService.saveCommonStrategyResult(strategyCommonDTO, userId);
+        return ResponseEntity.ok("Common strategy saved successfully");
+    }
+
+    @PostMapping("/strategy/golden")
+    public ResponseEntity<?> saveGDStrategy(@RequestHeader("Authorization") String token, @RequestBody GoldenDeadCrossStrategyDTO gdStrategyDTO){
+
+        System.out.println(" = !!!????" );
+
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        gdStrategyDTO.setUserId(userId);
+        strategyService.saveGDStrategyResult(gdStrategyDTO);
+        System.out.println("userId = " + userId);
+        System.out.println("GD = " + gdStrategyDTO.toString());
+        return ResponseEntity.ok("GD strategy saved successfully");
+        //List<GDEntity> strategies = strategyService.getRecentGDStrategies(userId);
+        //for (GDEntity strategy : strategies) {
+        //    System.out.println("strategy = " + strategy.toString());
+        //}
+        //return ResponseEntity.ok(strategies);
     }
 
 

@@ -3,6 +3,8 @@ package com.example.BeFETest.BusinessLogicLayer.Strategy;
 import com.example.BeFETest.DTO.coinDTO.GoldenDeadCrossStrategyDTO;
 import com.example.BeFETest.DTO.coinDTO.StrategyCommonDTO;
 import com.example.BeFETest.Entity.BacktestingRes.GDEntity;
+import com.example.BeFETest.Error.CustomExceptions;
+import com.example.BeFETest.Error.ErrorCode;
 import com.example.BeFETest.Repository.Backtesting.GDRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,23 +42,28 @@ public class StrategyService {
     public void saveGDStrategyResult(GoldenDeadCrossStrategyDTO strategyDTO){
         //해당 하는 GD entity를 DB에서 userId로 찾은 후 추가 옵션정보 저장하기
 
-        GDEntity gdEntity
+        GDEntity gdEntity = gdRepository.findByUserIdOrderByIdDesc(strategyDTO.getUserId()).stream().findFirst().orElse(null);
 
-        gdEntity.setFastMovingAveragePeriod(strategyDTO.getFastMovingAveragePeriod());
-        gdEntity.setSlowMovingAveragePeriod(strategyDTO.getSlowMovingAveragePeriod());
+        if(gdEntity != null){
+            gdEntity.setFastMovingAveragePeriod(strategyDTO.getFastMovingAveragePeriod());
+            gdEntity.setSlowMovingAveragePeriod(strategyDTO.getSlowMovingAveragePeriod());
 
+            gdRepository.save(gdEntity);
 
-        gdRepository.save(gdEntity);
-
-        List<GDEntity> gdStrategies = gdRepository.findByUserIdOrderByIdDesc(gdEntity.getUserId());
-        if(gdStrategies.size() > 10){
-            List<GDEntity> strategiesToDelete = gdStrategies.subList(10, gdStrategies.size());
-            gdRepository.deleteAll(strategiesToDelete);
+            List<GDEntity> gdStrategies = gdRepository.findByUserIdOrderByIdDesc(gdEntity.getUserId());
+            if (gdStrategies.size() > 10) {
+                List<GDEntity> strategiesToDelete = gdStrategies.subList(10, gdStrategies.size());
+                gdRepository.deleteAll(strategiesToDelete);
+            }
+        }else {
+            throw new CustomExceptions.ResourceNotFoundException("전략 데이터 없음", null, "no data in db", ErrorCode.NOT_FOUND);
         }
+
+
     }
 
     public List<GDEntity> getRecentGDStrategies(Long userId){
-        return gdRepository.findTop10UserIdOrderByIdDesc(userId);
+        return gdRepository.findTop10ByUserIdOrderByIdDesc(userId);
     }
 
 

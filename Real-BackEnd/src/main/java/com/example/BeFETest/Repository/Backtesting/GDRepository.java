@@ -9,5 +9,5 @@ import java.util.List;
 public interface GDRepository extends JpaRepository<GDEntity, Long> {
 
     List<GDEntity> findByUserIdOrderByIdDesc(Long userId);
-    List<GDEntity> findTop10UserIdOrderByIdDesc(Long userId);
+    List<GDEntity> findTop10ByUserIdOrderByIdDesc(Long userId);
 }

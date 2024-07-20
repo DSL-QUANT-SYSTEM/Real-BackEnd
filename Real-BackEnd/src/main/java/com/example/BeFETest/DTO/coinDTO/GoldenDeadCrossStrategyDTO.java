@@ -13,6 +13,8 @@ public class GoldenDeadCrossStrategyDTO extends TradeStrategyDTO{
     private int fastMovingAveragePeriod;
     private int slowMovingAveragePeriod;
 
+
+
     public GoldenDeadCrossStrategyDTO(double initialInvestment, double transactionFee, LocalDate startDate, LocalDate endDate,
                                       String targetItem, String tickKind, int inquiryRange,
                                       int fastMovingAveragePeriod, int slowMovingAveragePeriod) {

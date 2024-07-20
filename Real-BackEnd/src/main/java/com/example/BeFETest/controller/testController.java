@@ -178,6 +178,21 @@ public class testController {
         //return ResponseEntity.ok(strategies);
     }
 
+    @GetMapping("/strategy/golden/result")
+    public ResponseEntity<?> getGDStrategyResult(@RequestHeader("Authorization") String token){
+        System.out.println("GD Strategy Result....");
+
+        try{
+            Long userId = jwtUtil.getUserIdFromToken(token);
+            strategyService.
+
+        } catch(CustomExceptions.ResourceNotFoundException e){
+            throw e;
+        } catch(Exception e){
+            throw new CustomExceptions.InternalServerErrorException("Internal Error", e, "Internal Error", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     /*
     @PostMapping("/strategy")

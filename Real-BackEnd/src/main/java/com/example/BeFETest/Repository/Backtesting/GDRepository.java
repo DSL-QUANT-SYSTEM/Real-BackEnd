@@ -10,4 +10,5 @@ public interface GDRepository extends JpaRepository<GDEntity, Long> {
 
     List<GDEntity> findByUserIdOrderByIdDesc(Long userId);
     List<GDEntity> findTop10ByUserIdOrderByIdDesc(Long userId);
+    GDEntity findTopByUserIdOrderByIdDesc(Long userId);
 }

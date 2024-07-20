@@ -66,6 +66,17 @@ public class StrategyService {
         return gdRepository.findTop10ByUserIdOrderByIdDesc(userId);
     }
 
+    public GoldenDeadCrossStrategyDTO getLatestGDStrategyResultByUserId(Long userId){
+        gdRepository.findTopByUserIdOrderByIdDesc(userId);
+        return
+    }
+
+    private GoldenDeadCrossStrategyDTO convertToDTO(GDEntity gdEntity){
+
+        GoldenDeadCrossStrategyDTO dto = new GoldenDeadCrossStrategyDTO();
+
+    }
+
 
 
 }

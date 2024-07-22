@@ -23,6 +23,7 @@ public class GDEntity {
     private double transactionFee;
     private LocalDate startDate;
     private LocalDate endDate;
+    private String targetItem;
     private String tickKind;
     private int inquiryRange;
     private int fastMovingAveragePeriod;

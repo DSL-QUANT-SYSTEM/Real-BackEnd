@@ -23,6 +23,8 @@ public class GoldenDeadCrossStrategyDTO extends TradeStrategyDTO{
         this.slowMovingAveragePeriod = slowMovingAveragePeriod;
     }
 
+
+
     /**
      * TradingStrategyDTO goldenDeadCross = new GoldenDeadCrossStrategyDTO(10000, 0.01, LocalDate.of(2023, 1, 1), LocalDate.of(2024, 1, 1),
      *                                                                       "AAPL", "day", 30,

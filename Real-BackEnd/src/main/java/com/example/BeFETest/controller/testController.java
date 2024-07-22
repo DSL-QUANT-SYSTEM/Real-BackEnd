@@ -178,13 +178,15 @@ public class testController {
         //return ResponseEntity.ok(strategies);
     }
 
-    @GetMapping("/strategy/golden/result")
+    //@GetMapping("/strategy/golden/result")
+    @GetMapping("/result")
     public ResponseEntity<?> getGDStrategyResult(@RequestHeader("Authorization") String token){
-        System.out.println("GD Strategy Result....");
+        System.out.println("GD Strategy Result -> ");
 
         try{
             Long userId = jwtUtil.getUserIdFromToken(token);
-            strategyService.
+            GoldenDeadCrossStrategyDTO gdResultDTO = strategyService.getLatestGDStrategyResultByUserId(userId);
+            return ResponseEntity.ok(gdResultDTO);
 
         } catch(CustomExceptions.ResourceNotFoundException e){
             throw e;

@@ -67,16 +67,11 @@ public class StrategyService {
     }
 
     public GoldenDeadCrossStrategyDTO getLatestGDStrategyResultByUserId(Long userId){
-        gdRepository.findTopByUserIdOrderByIdDesc(userId);
-        return
+        GDEntity gdEntity = gdRepository.findTopByUserIdOrderByIdDesc(userId);
+        GoldenDeadCrossStrategyDTO gdDTO = new GoldenDeadCrossStrategyDTO(gdEntity.getInitialInvestment(), gdEntity.getTransactionFee(), gdEntity.getStartDate(),
+                gdEntity.getEndDate(), gdEntity.getTargetItem(), gdEntity.getTickKind(), gdEntity.getInquiryRange(), gdEntity.getFastMovingAveragePeriod(), gdEntity.getSlowMovingAveragePeriod());
+        return gdDTO;
     }
-
-    private GoldenDeadCrossStrategyDTO convertToDTO(GDEntity gdEntity){
-
-        GoldenDeadCrossStrategyDTO dto = new GoldenDeadCrossStrategyDTO();
-
-    }
-
 
 
 }

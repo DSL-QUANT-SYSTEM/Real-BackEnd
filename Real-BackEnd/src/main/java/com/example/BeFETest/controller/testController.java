@@ -1,5 +1,6 @@
 package com.example.BeFETest.controller;
 
+import com.example.BeFETest.BusinessLogicLayer.Strategy.StrategyService;
 import com.example.BeFETest.DTO.coinDTO.GoldenDeadCrossStrategyDTO;
 import com.example.BeFETest.DTO.coinDTO.StrategyCommonDTO;
 import com.example.BeFETest.DTO.kosdak.KosdakConverter;
@@ -8,6 +9,7 @@ import com.example.BeFETest.DTO.kosdak2000.Kosdak2000Converter;
 import com.example.BeFETest.DTO.kosdak2000.Kosdak2000ResponseDTO;
 import com.example.BeFETest.DTO.kospi.KospiConverter;
 import com.example.BeFETest.DTO.kospi.KospiResponseDTO;
+import com.example.BeFETest.Entity.BacktestingRes.GDEntity;
 import com.example.BeFETest.Entity.UserEntity;
 import com.example.BeFETest.Entity.UserInfo;
 import com.example.BeFETest.Entity.UserRequest;
@@ -18,6 +20,7 @@ import com.example.BeFETest.Error.CustomExceptions;
 
 import com.example.BeFETest.Error.ErrorCode;
 
+import com.example.BeFETest.JWT.JwtUtil;
 import com.example.BeFETest.Repository.Backtesting.BacktestingHistoryRepository;
 import com.example.BeFETest.Repository.JWT.UserRepository;
 import com.example.BeFETest.Repository.Kosdak.Kosdak2000Repository;
@@ -31,6 +34,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @RestController
@@ -52,9 +56,16 @@ public class testController {
     @Autowired
     private UserRepository userRepository;
 
-    private StrategyCommonDTO strategyCommonDTO;
+    @Autowired
+    private JwtUtil jwtUtil;
 
-    private GoldenDeadCrossStrategyDTO combinedDTO;
+    @Autowired
+    private StrategyService strategyService;
+
+
+    //private StrategyCommonDTO strategyCommonDTO;
+
+    //private GoldenDeadCrossStrategyDTO combinedDTO;
 
     @PostMapping("/mypage")
     public UserInfo checkUserInfo(@RequestBody UserRequest request) {
@@ -140,11 +151,59 @@ public class testController {
     }
 
     @PostMapping("/strategy")
+    public ResponseEntity<?> saveCommonStrategy(@RequestHeader("Authorization") String token, @RequestBody StrategyCommonDTO strategyCommonDTO){
+        System.out.println(" = !!!" );
+
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        System.out.println("userId = " + userId);
+        strategyService.saveCommonStrategyResult(strategyCommonDTO, userId);
+        return ResponseEntity.ok("Common strategy saved successfully");
+    }
+
+    @PostMapping("/strategy/golden")
+    public ResponseEntity<?> saveGDStrategy(@RequestHeader("Authorization") String token, @RequestBody GoldenDeadCrossStrategyDTO gdStrategyDTO){
+
+        System.out.println(" = !!!????" );
+
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        gdStrategyDTO.setUserId(userId);
+        strategyService.saveGDStrategyResult(gdStrategyDTO);
+        System.out.println("userId = " + userId);
+        System.out.println("GD = " + gdStrategyDTO.toString());
+        return ResponseEntity.ok("GD strategy saved successfully");
+        //List<GDEntity> strategies = strategyService.getRecentGDStrategies(userId);
+        //for (GDEntity strategy : strategies) {
+        //    System.out.println("strategy = " + strategy.toString());
+        //}
+        //return ResponseEntity.ok(strategies);
+    }
+
+    //@GetMapping("/strategy/golden/result")
+    @GetMapping("/result")
+    public ResponseEntity<?> getGDStrategyResult(@RequestHeader("Authorization") String token){
+        System.out.println("GD Strategy Result -> ");
+
+        try{
+            Long userId = jwtUtil.getUserIdFromToken(token);
+            GoldenDeadCrossStrategyDTO gdResultDTO = strategyService.getLatestGDStrategyResultByUserId(userId);
+            return ResponseEntity.ok(gdResultDTO);
+
+        } catch(CustomExceptions.ResourceNotFoundException e){
+            throw e;
+        } catch(Exception e){
+            throw new CustomExceptions.InternalServerErrorException("Internal Error", e, "Internal Error", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    /*
+    @PostMapping("/strategy")
     public ResponseEntity<?> saveCommonStrategy(@RequestBody StrategyCommonDTO strategyCommonDTO){
         this.strategyCommonDTO = strategyCommonDTO;
         return ResponseEntity.ok("Common strategy settings saved successfully");
     }
 
+    /*
     @PostMapping("/strategy/golden")
     public ResponseEntity<?> saveGoldenDeadCrossStrategy(@RequestBody GoldenDeadCrossStrategyDTO goldenDeadCrossStrategyDTO) {
 
@@ -171,6 +230,7 @@ public class testController {
             return ResponseEntity.badRequest().body("Common strategy settings not set");
         }
     }
+    */
 
 
     /*

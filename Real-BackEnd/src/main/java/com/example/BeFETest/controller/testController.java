@@ -1,7 +1,9 @@
 package com.example.BeFETest.controller;
 
 import com.example.BeFETest.BusinessLogicLayer.Strategy.StrategyService;
+import com.example.BeFETest.DTO.coinDTO.BollingerBandsStrategyDTO;
 import com.example.BeFETest.DTO.coinDTO.GoldenDeadCrossStrategyDTO;
+import com.example.BeFETest.DTO.coinDTO.IndicatorBasedStrategyDTO;
 import com.example.BeFETest.DTO.coinDTO.StrategyCommonDTO;
 import com.example.BeFETest.DTO.kosdak.KosdakConverter;
 import com.example.BeFETest.DTO.kosdak.KosdakResponseDTO;
@@ -62,10 +64,6 @@ public class testController {
     @Autowired
     private StrategyService strategyService;
 
-
-    //private StrategyCommonDTO strategyCommonDTO;
-
-    //private GoldenDeadCrossStrategyDTO combinedDTO;
 
     @PostMapping("/mypage")
     public UserInfo checkUserInfo(@RequestBody UserRequest request) {
@@ -152,18 +150,15 @@ public class testController {
 
     @PostMapping("/strategy")
     public ResponseEntity<?> saveCommonStrategy(@RequestHeader("Authorization") String token, @RequestBody StrategyCommonDTO strategyCommonDTO){
-        System.out.println(" = !!!" );
 
         Long userId = jwtUtil.getUserIdFromToken(token);
         System.out.println("userId = " + userId);
-        strategyService.saveCommonStrategyResult(strategyCommonDTO, userId);
+        strategyService.saveGDCommonStrategyResult(strategyCommonDTO, userId);
         return ResponseEntity.ok("Common strategy saved successfully");
     }
 
     @PostMapping("/strategy/golden")
     public ResponseEntity<?> saveGDStrategy(@RequestHeader("Authorization") String token, @RequestBody GoldenDeadCrossStrategyDTO gdStrategyDTO){
-
-        System.out.println(" = !!!????" );
 
         Long userId = jwtUtil.getUserIdFromToken(token);
         gdStrategyDTO.setUserId(userId);
@@ -177,6 +172,30 @@ public class testController {
         //}
         //return ResponseEntity.ok(strategies);
     }
+
+    @PostMapping("/strategy/bollinger")
+    public ResponseEntity<?> saveBBStrategy(@RequestHeader("Authorization") String token, @RequestBody BollingerBandsStrategyDTO bbStrategyDTO){
+
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        bbStrategyDTO.setUserId(userId);
+        strategyService.saveBBStrategyResult(bbStrategyDTO);
+        System.out.println("userId = " + userId);
+        System.out.println("BB = " + bbStrategyDTO.toString());
+        return ResponseEntity.ok("BB strategy saved successfully");
+    }
+
+    @PostMapping("/strategy/rsi")
+    public ResponseEntity<?> saveRSIStrategy(@RequestHeader("Authorization") String token, @RequestBody IndicatorBasedStrategyDTO indicatorDTO){
+
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        indicatorDTO.setUserId(userId);
+        strategyService.saveIndicatorStrategyResult(indicatorDTO);
+        System.out.println("userId = " + userId);
+        System.out.println("Indicator = " + indicatorDTO.toString());
+        return ResponseEntity.ok("Indicator strategy saved successfully");
+    }
+
+
 
     //@GetMapping("/strategy/golden/result")
     @GetMapping("/result")

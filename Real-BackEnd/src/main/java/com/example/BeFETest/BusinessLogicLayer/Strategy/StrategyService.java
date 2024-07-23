@@ -1,11 +1,17 @@
 package com.example.BeFETest.BusinessLogicLayer.Strategy;
 
+import com.example.BeFETest.DTO.coinDTO.BollingerBandsStrategyDTO;
 import com.example.BeFETest.DTO.coinDTO.GoldenDeadCrossStrategyDTO;
+import com.example.BeFETest.DTO.coinDTO.IndicatorBasedStrategyDTO;
 import com.example.BeFETest.DTO.coinDTO.StrategyCommonDTO;
+import com.example.BeFETest.Entity.BacktestingRes.BBEntity;
 import com.example.BeFETest.Entity.BacktestingRes.GDEntity;
+import com.example.BeFETest.Entity.BacktestingRes.IndicatorEntity;
 import com.example.BeFETest.Error.CustomExceptions;
 import com.example.BeFETest.Error.ErrorCode;
+import com.example.BeFETest.Repository.Backtesting.BBRepository;
 import com.example.BeFETest.Repository.Backtesting.GDRepository;
+import com.example.BeFETest.Repository.Backtesting.IndicatorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,8 +24,14 @@ public class StrategyService {
     @Autowired
     private GDRepository gdRepository;
 
+    @Autowired
+    private BBRepository bbRepository;
+
+    @Autowired
+    private IndicatorRepository indicatorRepository;
+
     @Transactional
-    public void saveCommonStrategyResult(StrategyCommonDTO strategyDTO, Long userId){
+    public void saveGDCommonStrategyResult(StrategyCommonDTO strategyDTO, Long userId){
         GDEntity gdEntity = new GDEntity();
         gdEntity.setUserId(userId);
         gdEntity.setInitialInvestment(strategyDTO.getInitialInvestment());
@@ -73,5 +85,63 @@ public class StrategyService {
         return gdDTO;
     }
 
+
+    @Transactional
+    public void saveBBStrategyResult(BollingerBandsStrategyDTO strategyDTO){
+
+        BBEntity bbEntity = bbRepository.findByUserIdOrderByIdDesc(strategyDTO.getUserId()).stream().findFirst().orElse(null);
+
+        if(bbEntity != null){
+            bbEntity.setMovingAveragePeriod(strategyDTO.getMovingAveragePeriod());
+
+            bbRepository.save(bbEntity);
+
+            List<BBEntity> bbStrategies = bbRepository.findByUserIdOrderByIdDesc(bbEntity.getUserId());
+            if (bbStrategies.size() > 10) {
+                List<BBEntity> strategiesToDelete = bbStrategies.subList(10, bbStrategies.size());
+                bbRepository.deleteAll(strategiesToDelete);
+            }
+        }else {
+            throw new CustomExceptions.ResourceNotFoundException("전략 데이터 없음", null, "no data in db", ErrorCode.NOT_FOUND);
+        }
+
+
+    }
+
+    public BollingerBandsStrategyDTO getLatestBBStrategyResultByUserId(Long userId){
+        BBEntity bbEntity = bbRepository.findTopByUserIdOrderByIdDesc(userId);
+        BollingerBandsStrategyDTO bbDTO = new BollingerBandsStrategyDTO(bbEntity.getInitialInvestment(), bbEntity.getTransactionFee(), bbEntity.getStartDate(),
+                bbEntity.getEndDate(), bbEntity.getTargetItem(), bbEntity.getTickKind(), bbEntity.getInquiryRange(), bbEntity.getMovingAveragePeriod());
+        return bbDTO;
+    }
+
+    @Transactional
+    public void saveIndicatorStrategyResult(IndicatorBasedStrategyDTO strategyDTO){
+
+        IndicatorEntity indiEntity = indicatorRepository.findByUserIdOrderByIdDesc(strategyDTO.getUserId()).stream().findFirst().orElse(null);
+
+        if(indiEntity != null){
+            indiEntity.setRsiPeriod(strategyDTO.getRsiPeriod());
+
+            indicatorRepository.save(indiEntity);
+
+            List<IndicatorEntity> indiStrategies = indicatorRepository.findByUserIdOrderByIdDesc(indiEntity.getUserId());
+            if (indiStrategies.size() > 10) {
+                List<IndicatorEntity> strategiesToDelete = indiStrategies.subList(10, indiStrategies.size());
+                indicatorRepository.deleteAll(strategiesToDelete);
+            }
+        }else {
+            throw new CustomExceptions.ResourceNotFoundException("전략 데이터 없음", null, "no data in db", ErrorCode.NOT_FOUND);
+        }
+
+
+    }
+
+    public IndicatorBasedStrategyDTO getLatestIndicatorStrategyResultByUserId(Long userId){
+        IndicatorEntity indiEntity = indicatorRepository.findTopByUserIdOrderByIdDesc(userId);
+        IndicatorBasedStrategyDTO indiDTO = new IndicatorBasedStrategyDTO(indiEntity.getInitialInvestment(), indiEntity.getTransactionFee(), indiEntity.getStartDate(),
+                indiEntity.getEndDate(), indiEntity.getTargetItem(), indiEntity.getTickKind(), indiEntity.getInquiryRange(), indiEntity.getRsiPeriod());
+        return indiDTO;
+    }
 
 }

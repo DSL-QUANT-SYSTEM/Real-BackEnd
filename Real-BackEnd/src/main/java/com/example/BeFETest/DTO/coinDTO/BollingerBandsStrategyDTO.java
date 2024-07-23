@@ -9,6 +9,8 @@ import java.time.LocalDate;
 @Setter
 public class BollingerBandsStrategyDTO extends TradeStrategyDTO{
 
+    private Long userId;
+
     private int movingAveragePeriod;
 
     public BollingerBandsStrategyDTO(double initialInvestment, double transactionFee, LocalDate startDate, LocalDate endDate,

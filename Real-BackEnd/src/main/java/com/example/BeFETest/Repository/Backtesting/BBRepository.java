@@ -1,4 +1,13 @@
 package com.example.BeFETest.Repository.Backtesting;
 
-public interface BBRepository {
+import com.example.BeFETest.Entity.BacktestingRes.BBEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface BBRepository extends JpaRepository<BBEntity, Long> {
+
+    List<BBEntity> findByUserIdOrderByIdDesc(Long userId);
+    List<BBEntity> findTop10ByUserIdOrderByIdDesc(Long userId);
+    BBEntity findTopByUserIdOrderByIdDesc(Long userId);
 }

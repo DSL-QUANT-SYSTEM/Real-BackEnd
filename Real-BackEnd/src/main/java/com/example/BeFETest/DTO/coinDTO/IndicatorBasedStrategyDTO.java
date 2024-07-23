@@ -9,6 +9,8 @@ import java.time.LocalDate;
 @Setter
 public class IndicatorBasedStrategyDTO extends TradeStrategyDTO {
 
+    private Long userId;
+
     private int rsiPeriod;
 
     public IndicatorBasedStrategyDTO(double initialInvestment, double transactionFee, LocalDate startDate, LocalDate endDate,

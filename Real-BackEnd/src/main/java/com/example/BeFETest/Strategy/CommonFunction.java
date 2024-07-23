@@ -35,14 +35,14 @@ public class CommonFunction {
     //Output
     //4) reponse : 응답 데이터
     //-----------------------------------------------------------------------------
-    private static String sendRequest(String reqType, String reqUrl) {
+    private static String sendRequest(String reqUrl) {
         try {
             // Create URL object
             URL url = new URL(reqUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
             // Set request method
-            connection.setRequestMethod(reqType);
+            connection.setRequestMethod("GET");
 
             // Send request
             int responseCode = connection.getResponseCode();
@@ -150,7 +150,7 @@ public class CommonFunction {
 
             String url = serverUrl + "/v1/candles/" + targetUrl + "?market=" + targetItem + "&count=" + inqRange;
 
-            String response = sendRequest("GET", url);
+            String response = sendRequest(url);
             List<Map<String, Object>> parsedData = parseJson(response);
             // Candle 객체로 변환
             List<Candle> candleData = new ArrayList<>();

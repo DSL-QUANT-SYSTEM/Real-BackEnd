@@ -1,10 +1,7 @@
 package com.example.BeFETest.controller;
 
 import com.example.BeFETest.BusinessLogicLayer.Strategy.StrategyService;
-import com.example.BeFETest.DTO.coinDTO.BollingerBandsStrategyDTO;
-import com.example.BeFETest.DTO.coinDTO.GoldenDeadCrossStrategyDTO;
-import com.example.BeFETest.DTO.coinDTO.IndicatorBasedStrategyDTO;
-import com.example.BeFETest.DTO.coinDTO.StrategyCommonDTO;
+import com.example.BeFETest.DTO.coinDTO.*;
 import com.example.BeFETest.DTO.kosdak.KosdakConverter;
 import com.example.BeFETest.DTO.kosdak.KosdakResponseDTO;
 import com.example.BeFETest.DTO.kosdak2000.Kosdak2000Converter;
@@ -28,6 +25,7 @@ import com.example.BeFETest.Repository.JWT.UserRepository;
 import com.example.BeFETest.Repository.Kosdak.Kosdak2000Repository;
 import com.example.BeFETest.Repository.Kosdak.KosdakRepository;
 import com.example.BeFETest.Repository.Kospi.KospiRepository;
+import com.example.BeFETest.Strategy.BacktestingGD;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -63,6 +61,8 @@ public class testController {
 
     @Autowired
     private StrategyService strategyService;
+
+    private  StrategyService gdService;
 
 
     @PostMapping("/mypage")
@@ -203,9 +203,12 @@ public class testController {
         System.out.println("GD Strategy Result -> ");
 
         try{
-            Long userId = jwtUtil.getUserIdFromToken(token);
-            GoldenDeadCrossStrategyDTO gdResultDTO = strategyService.getLatestGDStrategyResultByUserId(userId);
-            return ResponseEntity.ok(gdResultDTO);
+            GoldenDeadCrossStrategyDTO goldenDeadCrossStrategyDTO = BacktestingGD.executeTrades();
+            gdService.saveGDStrategyResult(goldenDeadCrossStrategyDTO);
+            return ResponseEntity.ok(goldenDeadCrossStrategyDTO);
+//            Long userId = jwtUtil.getUserIdFromToken(token);
+//            GoldenDeadCrossStrategyDTO gdResultDTO = strategyService.getLatestGDStrategyResultByUserId(userId);
+//            return ResponseEntity.ok(gdResultDTO);
 
         } catch(CustomExceptions.ResourceNotFoundException e){
             throw e;

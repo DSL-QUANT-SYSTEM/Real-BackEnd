@@ -14,9 +14,9 @@ public class IndicatorBasedStrategyDTO extends TradeStrategyDTO {
     private int rsiPeriod;
 
     public IndicatorBasedStrategyDTO(double initialInvestment, double transactionFee, LocalDate startDate, LocalDate endDate,
-                                  String targetItem, String tickKind, int inquiryRange,
-                                  int rsiPeriod) {
-        super(initialInvestment, transactionFee, startDate, endDate, targetItem, tickKind, inquiryRange);
+                                  String targetItem, String tickKind, int inquiryRange, double finalCash, double finalAsset, double finalBalance,
+                                  double profit, double profitRate, int numberOfTrades, int rsiPeriod) {
+        super(initialInvestment, transactionFee, startDate, endDate, targetItem, tickKind, inquiryRange, finalCash, finalAsset, finalBalance, profit, profitRate, numberOfTrades);
         this.rsiPeriod = rsiPeriod;
     }
 

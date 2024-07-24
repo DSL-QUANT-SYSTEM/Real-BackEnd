@@ -80,9 +80,9 @@ public class StrategyService {
 
     public GoldenDeadCrossStrategyDTO getLatestGDStrategyResultByUserId(Long userId){
         GDEntity gdEntity = gdRepository.findTopByUserIdOrderByIdDesc(userId);
-        GoldenDeadCrossStrategyDTO gdDTO = new GoldenDeadCrossStrategyDTO(gdEntity.getInitialInvestment(), gdEntity.getTransactionFee(), gdEntity.getStartDate(),
-                gdEntity.getEndDate(), gdEntity.getTargetItem(), gdEntity.getTickKind(), gdEntity.getInquiryRange(), gdEntity.getFastMovingAveragePeriod(), gdEntity.getSlowMovingAveragePeriod());
-        return gdDTO;
+        return new GoldenDeadCrossStrategyDTO(gdEntity.getInitialInvestment(), gdEntity.getTransactionFee(), gdEntity.getStartDate(),
+                gdEntity.getEndDate(), gdEntity.getTargetItem(), gdEntity.getTickKind(), gdEntity.getInquiryRange(), gdEntity.getFinalCash(), gdEntity.getFinalAsset(),
+                gdEntity.getFinalBalance(), gdEntity.getProfit(), gdEntity.getProfitRate(), gdEntity.getNumberOfTrades(), gdEntity.getFastMovingAveragePeriod(), gdEntity.getSlowMovingAveragePeriod());
     }
 
 
@@ -110,9 +110,9 @@ public class StrategyService {
 
     public BollingerBandsStrategyDTO getLatestBBStrategyResultByUserId(Long userId){
         BBEntity bbEntity = bbRepository.findTopByUserIdOrderByIdDesc(userId);
-        BollingerBandsStrategyDTO bbDTO = new BollingerBandsStrategyDTO(bbEntity.getInitialInvestment(), bbEntity.getTransactionFee(), bbEntity.getStartDate(),
-                bbEntity.getEndDate(), bbEntity.getTargetItem(), bbEntity.getTickKind(), bbEntity.getInquiryRange(), bbEntity.getMovingAveragePeriod());
-        return bbDTO;
+        return new BollingerBandsStrategyDTO(bbEntity.getInitialInvestment(), bbEntity.getTransactionFee(), bbEntity.getStartDate(),
+                bbEntity.getEndDate(), bbEntity.getTargetItem(), bbEntity.getTickKind(), bbEntity.getInquiryRange(), bbEntity.getFinalCash(), bbEntity.getFinalAsset(),
+                bbEntity.getFinalBalance(), bbEntity.getProfit(), bbEntity.getProfitRate(), bbEntity.getNumberOfTrades(),bbEntity.getMovingAveragePeriod());
     }
 
     @Transactional
@@ -139,9 +139,9 @@ public class StrategyService {
 
     public IndicatorBasedStrategyDTO getLatestIndicatorStrategyResultByUserId(Long userId){
         IndicatorEntity indiEntity = indicatorRepository.findTopByUserIdOrderByIdDesc(userId);
-        IndicatorBasedStrategyDTO indiDTO = new IndicatorBasedStrategyDTO(indiEntity.getInitialInvestment(), indiEntity.getTransactionFee(), indiEntity.getStartDate(),
-                indiEntity.getEndDate(), indiEntity.getTargetItem(), indiEntity.getTickKind(), indiEntity.getInquiryRange(), indiEntity.getRsiPeriod());
-        return indiDTO;
+        return new IndicatorBasedStrategyDTO(indiEntity.getInitialInvestment(), indiEntity.getTransactionFee(), indiEntity.getStartDate(),
+                indiEntity.getEndDate(), indiEntity.getTargetItem(), indiEntity.getTickKind(), indiEntity.getInquiryRange(), indiEntity.getFinalCash(), indiEntity.getFinalAsset(),
+                indiEntity.getFinalBalance(), indiEntity.getProfit(), indiEntity.getProfitRate(), indiEntity.getNumberOfTrades(),indiEntity.getRsiPeriod());
     }
 
 }

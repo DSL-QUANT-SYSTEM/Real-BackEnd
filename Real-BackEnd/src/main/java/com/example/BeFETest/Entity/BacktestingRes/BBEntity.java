@@ -36,6 +36,4 @@ public class BBEntity {
     private double profit;
     private double profitRate;
     private int numberOfTrades;
-    private int winningTrades;
-    private int losingTrades;
 }

@@ -50,7 +50,7 @@ public class loginController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            throw new CustomExceptions.InternalServerErrorException("Internal Error", null, "Internal Error", ErrorCode.INTERNAL_SERVER_ERROR);
+            throw new CustomExceptions.InternalServerErrorException("Error message : " + e.getMessage(), e, "Error message : " + e.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
         
@@ -86,7 +86,7 @@ public class loginController {
             return authService.refreshToken(refreshTokenRequest.getRefreshToken());
         } catch (Exception e) {
             e.printStackTrace();
-            throw new CustomExceptions.InternalServerErrorException("Internal Error", null, "Internal Error", ErrorCode.INTERNAL_SERVER_ERROR);
+            throw new CustomExceptions.InternalServerErrorException("Error message : " + e.getMessage(), e, "Error message : " + e.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
         
@@ -122,7 +122,7 @@ public class loginController {
             return ResponseEntity.ok().body("Successfully logged out");
         } catch (Exception e) {
             e.printStackTrace();
-            throw new CustomExceptions.InternalServerErrorException("Internal Error", null, "Internal Error", ErrorCode.INTERNAL_SERVER_ERROR);
+            throw new CustomExceptions.InternalServerErrorException("Error message : " + e.getMessage(), e, "Error message : " + e.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 

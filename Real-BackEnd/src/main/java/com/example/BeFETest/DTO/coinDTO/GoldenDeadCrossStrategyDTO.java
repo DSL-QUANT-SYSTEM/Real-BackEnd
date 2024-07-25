@@ -19,7 +19,7 @@ public class GoldenDeadCrossStrategyDTO extends TradeStrategyDTO{
                                       String targetItem, String tickKind, int inquiryRange, double finalCash, double finalAsset, double finalBalance,
                                       double profit, double profitRate, int numberOfTrades,
                                       int fastMovingAveragePeriod, int slowMovingAveragePeriod) {
-        super(initialInvestment, transactionFee, startDate, endDate, targetItem, tickKind, inquiryRange, finalCash, finalAsset, finalBalance, profit, profitRate, numberOfTrades);
+        super(initialInvestment, transactionFee, startDate, endDate, targetItem, tickKind, inquiryRange);
         this.fastMovingAveragePeriod = fastMovingAveragePeriod;
         this.slowMovingAveragePeriod = slowMovingAveragePeriod;
     }

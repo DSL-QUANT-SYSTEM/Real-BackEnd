@@ -8,7 +8,6 @@ import com.example.BeFETest.DTO.kosdak2000.Kosdak2000Converter;
 import com.example.BeFETest.DTO.kosdak2000.Kosdak2000ResponseDTO;
 import com.example.BeFETest.DTO.kospi.KospiConverter;
 import com.example.BeFETest.DTO.kospi.KospiResponseDTO;
-import com.example.BeFETest.Entity.BacktestingRes.GDEntity;
 import com.example.BeFETest.Entity.UserEntity;
 import com.example.BeFETest.Entity.UserInfo;
 import com.example.BeFETest.Entity.UserRequest;
@@ -25,7 +24,6 @@ import com.example.BeFETest.Repository.JWT.UserRepository;
 import com.example.BeFETest.Repository.Kosdak.Kosdak2000Repository;
 import com.example.BeFETest.Repository.Kosdak.KosdakRepository;
 import com.example.BeFETest.Repository.Kospi.KospiRepository;
-import com.example.BeFETest.Strategy.BacktestingGD;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -62,8 +60,8 @@ public class testController {
     @Autowired
     private StrategyService strategyService;
 
-    private  StrategyService gdService;
 
+    private StrategyCommonDTO commonDTO;
 
     @PostMapping("/mypage")
     public UserInfo checkUserInfo(@RequestBody UserRequest request) {
@@ -151,20 +149,23 @@ public class testController {
     @PostMapping("/strategy")
     public ResponseEntity<?> saveCommonStrategy(@RequestHeader("Authorization") String token, @RequestBody StrategyCommonDTO strategyCommonDTO){
 
-        Long userId = jwtUtil.getUserIdFromToken(token);
-        System.out.println("userId = " + userId);
-        strategyService.saveGDCommonStrategyResult(strategyCommonDTO, userId);
+        //Long userId = jwtUtil.getUserIdFromToken(token);
+        //System.out.println("userId = " + userId);
+        //strategyService.saveGDCommonStrategyResult(strategyCommonDTO, userId);
+        commonDTO = strategyService.saveCommonStrategyResult(strategyCommonDTO);
         return ResponseEntity.ok("Common strategy saved successfully");
     }
 
     @PostMapping("/strategy/golden")
     public ResponseEntity<?> saveGDStrategy(@RequestHeader("Authorization") String token, @RequestBody GoldenDeadCrossStrategyDTO gdStrategyDTO){
 
+        System.out.println("FOR TESTT");
+        System.out.println("commonDTO = " + commonDTO.toString());
         Long userId = jwtUtil.getUserIdFromToken(token);
-        gdStrategyDTO.setUserId(userId);
-        strategyService.saveGDStrategyResult(gdStrategyDTO);
         System.out.println("userId = " + userId);
-        System.out.println("GD = " + gdStrategyDTO.toString());
+
+        strategyService.saveGDStrategyResult(commonDTO, userId, gdStrategyDTO);
+
         return ResponseEntity.ok("GD strategy saved successfully");
         //List<GDEntity> strategies = strategyService.getRecentGDStrategies(userId);
         //for (GDEntity strategy : strategies) {
@@ -203,12 +204,12 @@ public class testController {
         System.out.println("GD Strategy Result -> ");
 
         try{
-            GoldenDeadCrossStrategyDTO goldenDeadCrossStrategyDTO = BacktestingGD.executeTrades();
-            gdService.saveGDStrategyResult(goldenDeadCrossStrategyDTO);
-            return ResponseEntity.ok(goldenDeadCrossStrategyDTO);
-//            Long userId = jwtUtil.getUserIdFromToken(token);
-//            GoldenDeadCrossStrategyDTO gdResultDTO = strategyService.getLatestGDStrategyResultByUserId(userId);
-//            return ResponseEntity.ok(gdResultDTO);
+            //GoldenDeadCrossStrategyDTO goldenDeadCrossStrategyDTO = BacktestingGD.executeTrades();
+            //strategyService.saveGDStrategyResult(goldenDeadCrossStrategyDTO);
+            //return ResponseEntity.ok(goldenDeadCrossStrategyDTO);
+           Long userId = jwtUtil.getUserIdFromToken(token);
+            GoldenDeadCrossStrategyDTO gdResultDTO = strategyService.getLatestGDStrategyResultByUserId(userId);
+           return ResponseEntity.ok(gdResultDTO);
 
         } catch(CustomExceptions.ResourceNotFoundException e){
             throw e;

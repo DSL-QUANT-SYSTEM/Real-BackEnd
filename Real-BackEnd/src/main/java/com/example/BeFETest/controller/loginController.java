@@ -34,6 +34,7 @@ public class loginController {
 
 
 
+    /*
     @GetMapping("/login/oauth2/code/kakao")
     public ResponseEntity<LoginResponseDto> login(@RequestParam("code") String code, HttpServletResponse response) {
         try {
@@ -53,7 +54,32 @@ public class loginController {
             throw new CustomExceptions.InternalServerErrorException("Error message : " + e.getMessage(), e, "Error message : " + e.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
-        
+    */
+
+    @GetMapping("/login/oauth2/code/kakao")
+    public ResponseEntity<LoginResponseDto> login(@RequestParam("code") String code, HttpServletResponse response) {
+        try {
+            String kakaoAccessToken = authService.getKakaoAccessToken(code);
+            ResponseEntity<LoginResponseDto> loginResponse = authService.kakaoLogin(kakaoAccessToken);
+
+            if (loginResponse.getBody().isLoginSuccess()) {
+                // 헤더에 JWT 토큰 설정
+                String jwtToken = loginResponse.getHeaders().getFirst("Authorization");
+                response.setHeader("Authorization", jwtToken);
+                return loginResponse;
+            } else {
+                throw new CustomExceptions.UnauthorizedException("Unauthorized Error", null, "Unauthorized Error", ErrorCode.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 원래 에러 메시지를 그대로 반환
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new LoginResponseDto());
+        }
+    }
+
+
+
+
             
 
     

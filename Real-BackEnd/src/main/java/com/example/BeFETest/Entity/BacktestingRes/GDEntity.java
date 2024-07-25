@@ -37,4 +37,21 @@ public class GDEntity {
     private double profit;
     private double profitRate;
     private int numberOfTrades;
+
+    @Override
+    public String toString() {
+        return "GDEntity{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", initialInvestment=" + initialInvestment +
+                ", transactionFee=" + transactionFee +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", targetItem='" + targetItem + '\'' +
+                ", tickKind='" + tickKind + '\'' +
+                ", inquiryRange=" + inquiryRange +
+                ", fastMovingAveragePeriod=" + fastMovingAveragePeriod +
+                ", slowMovingAveragePeriod=" + slowMovingAveragePeriod
+                ;
+    }
 }

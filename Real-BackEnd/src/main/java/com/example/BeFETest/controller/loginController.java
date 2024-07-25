@@ -50,7 +50,7 @@ public class loginController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            throw new CustomExceptions.InternalServerErrorException("Internal Error", null, "Internal Error", ErrorCode.INTERNAL_SERVER_ERROR);
+            throw new CustomExceptions.InternalServerErrorException("Internal Error" + e.getMessage(), e, "Internal Error" + e.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
         

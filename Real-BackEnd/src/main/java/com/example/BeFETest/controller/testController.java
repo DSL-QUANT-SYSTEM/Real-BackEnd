@@ -107,7 +107,7 @@ public class testController {
         } catch (CustomExceptions.BadGatewayException e){//(CustomExceptions.ResourceNotFoundException e) {
             throw e; // ResourceNotFoundException 그대로 던짐
         } catch (Exception e) {
-            throw new CustomExceptions.InternalServerErrorException("Internal Error", e, "Internal Error", ErrorCode.INTERNAL_SERVER_ERROR);
+            throw new CustomExceptions.InternalServerErrorException("Internal Error" + e.getMessage(), e, "Internal Error" + e.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 

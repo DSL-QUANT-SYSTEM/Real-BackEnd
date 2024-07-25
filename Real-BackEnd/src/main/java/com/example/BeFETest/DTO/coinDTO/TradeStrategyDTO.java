@@ -23,8 +23,7 @@ public abstract class TradeStrategyDTO {
     protected int numberOfTrades;
     public TradeStrategyDTO(double initialInvestment, double transactionFee,
                             LocalDate startDate, LocalDate endDate, String targetItem, String tickKind,
-                            int inquiryRange, double finalCash, double finalAsset, double finalBalance,
-                            double profit, double profitRate, int numberOfTrades) {
+                            int inquiryRange) {
         this.initialInvestment = initialInvestment;
         this.transactionFee = transactionFee;
         this.startDate = startDate;
@@ -33,12 +32,6 @@ public abstract class TradeStrategyDTO {
         this.tickKind = tickKind;
         this.inquiryRange = inquiryRange;
 
-        this.finalCash=finalCash;
-        this.finalAsset=finalAsset;
-        this.finalBalance=finalBalance;
-        this.profit=profit;
-        this.profitRate=profitRate;
-        this.numberOfTrades=numberOfTrades;
     }
 
 }

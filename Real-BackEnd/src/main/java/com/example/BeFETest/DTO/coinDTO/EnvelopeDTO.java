@@ -16,7 +16,7 @@ public class EnvelopeDTO extends TradeStrategyDTO{
                        String targetItem, String tickKind, int inquiryRange, double finalCash, double finalAsset, double finalBalance,
                        double profit, double profitRate, int numberOfTrades,
                        double moving_down, double moving_up, int movingAveragePeriod) {
-        super(initialInvestment, transactionFee, startDate, endDate, targetItem, tickKind, inquiryRange, finalCash, finalAsset, finalBalance, profit, profitRate, numberOfTrades);
+        super(initialInvestment, transactionFee, startDate, endDate, targetItem, tickKind, inquiryRange);
         this.moving_down=moving_down;
         this.moving_up=moving_up;
         this.movingAveragePeriod=movingAveragePeriod;

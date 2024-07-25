@@ -17,7 +17,7 @@ public class BollingerBandsStrategyDTO extends TradeStrategyDTO{
                                      String targetItem, String tickKind, int inquiryRange, double finalCash, double finalAsset, double finalBalance,
                                      double profit, double profitRate, int numberOfTrades,
                                      int movingAveragePeriod) {
-        super(initialInvestment, transactionFee, startDate, endDate, targetItem, tickKind, inquiryRange, finalCash, finalAsset, finalBalance, profit, profitRate, numberOfTrades);
+        super(initialInvestment, transactionFee, startDate, endDate, targetItem, tickKind, inquiryRange);
         this.movingAveragePeriod = movingAveragePeriod;
     }
 

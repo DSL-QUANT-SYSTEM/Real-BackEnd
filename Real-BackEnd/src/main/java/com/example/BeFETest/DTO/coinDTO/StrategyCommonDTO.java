@@ -26,8 +26,7 @@ public class StrategyCommonDTO {
 
     public StrategyCommonDTO(double initialInvestment, double transactionFee,
                             LocalDate startDate, LocalDate endDate, String targetItem, String tickKind,
-                            int inquiryRange, double finalCash, double finalAsset, double finalBalance,
-                            double profit, double profitRate, int numberOfTrades) {
+                            int inquiryRange) {
         this.initialInvestment = initialInvestment;
         this.transactionFee = transactionFee;
         this.startDate = startDate;
@@ -35,12 +34,18 @@ public class StrategyCommonDTO {
         this.targetItem = targetItem;
         this.tickKind = tickKind;
         this.inquiryRange = inquiryRange;
+    }
 
-        this.finalCash=finalCash;
-        this.finalAsset=finalAsset;
-        this.finalBalance=finalBalance;
-        this.profit=profit;
-        this.profitRate=profitRate;
-        this.numberOfTrades=numberOfTrades;
+    @Override
+    public String toString() {
+        return "StrategyCommonDTO{" +
+                "initialInvestment=" + initialInvestment +
+                ", transactionFee=" + transactionFee +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", targetItem='" + targetItem + '\'' +
+                ", tickKind='" + tickKind + '\'' +
+                ", inquiryRange=" + inquiryRange
+                ;
     }
 }

@@ -24,6 +24,7 @@ import com.example.BeFETest.Repository.JWT.UserRepository;
 import com.example.BeFETest.Repository.Kosdak.Kosdak2000Repository;
 import com.example.BeFETest.Repository.Kosdak.KosdakRepository;
 import com.example.BeFETest.Repository.Kospi.KospiRepository;
+//import com.example.BeFETest.Strategy.BacktestingGD;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -78,11 +79,11 @@ public class testController {
         // BacktestingHistory 객체를 문자열 배열로 변환
         String[] records = userEntity.getRecords().stream()
                 .map(record -> "Date: " + record.getDate() +
-                     ", Universe: " + record.getUniverse() +
-                     ", weight: " + record.getWeight() +
-                     ", Initial Investment: " + record.getInitialInvestment() + 
-                     ", Period: " + record.getPeriod() +
-                     ", File HTML: " + record.getFileHtml())
+                        ", Universe: " + record.getUniverse() +
+                        ", weight: " + record.getWeight() +
+                        ", Initial Investment: " + record.getInitialInvestment() +
+                        ", Period: " + record.getPeriod() +
+                        ", File HTML: " + record.getFileHtml())
                 .toArray(String[]::new);
 
         userInfo.setBacktestingRecords(records);
@@ -128,7 +129,7 @@ public class testController {
         }
     }
 
-    
+
     @GetMapping("/home/kosdak2000")
     public ResponseEntity<Kosdak2000ResponseDTO> getKosdak2000(){
         try {
@@ -159,12 +160,17 @@ public class testController {
     @PostMapping("/strategy/golden")
     public ResponseEntity<?> saveGDStrategy(@RequestHeader("Authorization") String token, @RequestBody GoldenDeadCrossStrategyDTO gdStrategyDTO){
 
-        System.out.println("FOR TESTT");
+        System.out.println("FOR TEST");
         System.out.println("commonDTO = " + commonDTO.toString());
         Long userId = jwtUtil.getUserIdFromToken(token);
         System.out.println("userId = " + userId);
+        GoldenDeadCrossStrategyDTO goldenDeadCrossStrategyDTO = new GoldenDeadCrossStrategyDTO(
+                1000000, 0.01, LocalDate.of(2023, 1, 1), LocalDate.of(2024, 1, 1),
+                "KRW-STMX", "60", 200, 0,0,0,0,0,0,10, 50
+        );
+//        GoldenDeadCrossStrategyDTO goldenDeadCrossStrategyDTO = BacktestingGD.executeTrades();
+        strategyService.saveGDStrategyResult(commonDTO, userId, gdStrategyDTO,goldenDeadCrossStrategyDTO);
 
-        strategyService.saveGDStrategyResult(commonDTO, userId, gdStrategyDTO);
 
         return ResponseEntity.ok("GD strategy saved successfully");
         //List<GDEntity> strategies = strategyService.getRecentGDStrategies(userId);
@@ -204,12 +210,9 @@ public class testController {
         System.out.println("GD Strategy Result -> ");
 
         try{
-            //GoldenDeadCrossStrategyDTO goldenDeadCrossStrategyDTO = BacktestingGD.executeTrades();
-            //strategyService.saveGDStrategyResult(goldenDeadCrossStrategyDTO);
-            //return ResponseEntity.ok(goldenDeadCrossStrategyDTO);
-           Long userId = jwtUtil.getUserIdFromToken(token);
+            Long userId = jwtUtil.getUserIdFromToken(token);
             GoldenDeadCrossStrategyDTO gdResultDTO = strategyService.getLatestGDStrategyResultByUserId(userId);
-           return ResponseEntity.ok(gdResultDTO);
+            return ResponseEntity.ok(gdResultDTO);
 
         } catch(CustomExceptions.ResourceNotFoundException e){
             throw e;

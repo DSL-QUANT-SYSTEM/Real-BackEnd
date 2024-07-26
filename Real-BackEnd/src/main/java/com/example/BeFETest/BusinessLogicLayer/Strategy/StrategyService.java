@@ -59,13 +59,13 @@ public class StrategyService {
     }
 
 
-
     @Transactional
-    public void saveGDStrategyResult(StrategyCommonDTO strategyDTO, Long userId, GoldenDeadCrossStrategyDTO gdDTO){
+    public void saveGDStrategyResult(StrategyCommonDTO strategyDTO, Long userId, GoldenDeadCrossStrategyDTO gdDTO, GoldenDeadCrossStrategyDTO gdResult){
         //해당 하는 GD entity를 DB에서 userId로 찾은 후 추가 옵션정보 저장하기
 
         //여기서 GDEntity 처음으로 생성 후 생성자 통해서 다 넣기 DB에서 찾는게 아니라
         //GDEntity gdEntity = gdRepository.findByUserIdOrderByIdDesc(strategyDTO.getUserId()).stream().findFirst().orElse(null);
+        //공통정보 저장
         GDEntity gdEntity = new GDEntity();
         gdEntity.setUserId(userId);
         gdEntity.setInitialInvestment(strategyDTO.getInitialInvestment());
@@ -75,9 +75,16 @@ public class StrategyService {
         gdEntity.setTargetItem(strategyDTO.getTargetItem());
         gdEntity.setTickKind(strategyDTO.getTickKind());
         gdEntity.setInquiryRange(strategyDTO.getInquiryRange());
-
+        //골든데드 정보 저장
         gdEntity.setFastMovingAveragePeriod(gdDTO.getFastMovingAveragePeriod());
         gdEntity.setSlowMovingAveragePeriod(gdDTO.getSlowMovingAveragePeriod());
+        //백테스팅 결과 저장
+        gdEntity.setFinalAsset(gdResult.getFinalAsset());
+        gdEntity.setFinalCash(gdResult.getFinalCash());
+        gdEntity.setFinalBalance(gdResult.getFinalBalance());
+        gdEntity.setProfit(gdResult.getProfit());
+        gdEntity.setProfitRate(gdResult.getProfitRate());
+        gdEntity.setNumberOfTrades(gdResult.getNumberOfTrades());
 
         System.out.println("gdEntity = " + gdEntity.toString());
         gdRepository.save(gdEntity);

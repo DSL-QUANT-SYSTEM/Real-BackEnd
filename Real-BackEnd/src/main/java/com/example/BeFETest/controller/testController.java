@@ -167,7 +167,7 @@ public class testController {
         GoldenDeadCrossStrategyDTO gdResultDTO = BacktestingGD.executeTrades(commonDTO, gdStrategyDTO);
         System.out.println("GDRESULTDTO:  "+ gdResultDTO);
         strategyService.saveGDStrategyResult(commonDTO, userId, gdStrategyDTO,gdResultDTO);
-
+        //디비 저장과 프론트 표시간에 문제점발생
 
         return ResponseEntity.ok("GD strategy saved successfully");
         //List<GDEntity> strategies = strategyService.getRecentGDStrategies(userId);

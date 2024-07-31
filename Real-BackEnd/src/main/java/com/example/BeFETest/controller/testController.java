@@ -24,7 +24,7 @@ import com.example.BeFETest.Repository.JWT.UserRepository;
 import com.example.BeFETest.Repository.Kosdak.Kosdak2000Repository;
 import com.example.BeFETest.Repository.Kosdak.KosdakRepository;
 import com.example.BeFETest.Repository.Kospi.KospiRepository;
-//import com.example.BeFETest.Strategy.BacktestingGD;
+import com.example.BeFETest.Strategy.BacktestingGD;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -164,12 +164,8 @@ public class testController {
         System.out.println("commonDTO = " + commonDTO.toString());
         Long userId = jwtUtil.getUserIdFromToken(token);
         System.out.println("userId = " + userId);
-        GoldenDeadCrossStrategyDTO goldenDeadCrossStrategyDTO = new GoldenDeadCrossStrategyDTO(
-                1000000, 0.01, LocalDate.of(2023, 1, 1), LocalDate.of(2024, 1, 1),
-                "KRW-STMX", "60", 200, 0,0,0,0,0,0,10, 50
-        );
-//        GoldenDeadCrossStrategyDTO goldenDeadCrossStrategyDTO = BacktestingGD.executeTrades();
-        strategyService.saveGDStrategyResult(commonDTO, userId, gdStrategyDTO,goldenDeadCrossStrategyDTO);
+        GoldenDeadCrossStrategyDTO gdResultDTO = BacktestingGD.executeTrades(gdStrategyDTO);
+        strategyService.saveGDStrategyResult(commonDTO, userId, gdStrategyDTO,gdResultDTO);
 
 
         return ResponseEntity.ok("GD strategy saved successfully");

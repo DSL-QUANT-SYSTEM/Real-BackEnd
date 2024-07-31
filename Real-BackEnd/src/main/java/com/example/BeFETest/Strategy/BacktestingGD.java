@@ -217,13 +217,7 @@ public class BacktestingGD {
     }
 
     // 매수 및 매도 로직
-    public static GoldenDeadCrossStrategyDTO executeTrades() {
-        // 객체 생성
-        GoldenDeadCrossStrategyDTO gd = new GoldenDeadCrossStrategyDTO(
-                1000000, 0.01, LocalDate.of(2023, 1, 1), LocalDate.of(2024, 1, 1),
-                "KRW-STMX", "60", 200, 0,0,0,0,0,0,10, 50
-        );
-
+    public static GoldenDeadCrossStrategyDTO executeTrades(GoldenDeadCrossStrategyDTO gd) {
         double cash = gd.getInitialInvestment();
         double asset = 0;       // 초기 자산 (BTC)
 

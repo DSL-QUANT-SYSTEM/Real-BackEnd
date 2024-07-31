@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URISyntaxException;
+import java.util.Objects;
 
 @RestController
 public class loginController {
@@ -60,9 +61,10 @@ public class loginController {
     public ResponseEntity<LoginResponseDto> login(@RequestParam("code") String code, HttpServletResponse response) {
         try {
             String kakaoAccessToken = authService.getKakaoAccessToken(code);
+            System.out.println(kakaoAccessToken);
             ResponseEntity<LoginResponseDto> loginResponse = authService.kakaoLogin(kakaoAccessToken);
 
-            if (loginResponse.getBody().isLoginSuccess()) {
+            if (Objects.requireNonNull(loginResponse.getBody()).isLoginSuccess()) {
                 // 헤더에 JWT 토큰 설정
                 String jwtToken = loginResponse.getHeaders().getFirst("Authorization");
                 response.setHeader("Authorization", jwtToken);

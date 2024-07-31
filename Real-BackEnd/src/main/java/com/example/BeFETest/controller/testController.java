@@ -164,7 +164,8 @@ public class testController {
         System.out.println("commonDTO = " + commonDTO.toString());
         Long userId = jwtUtil.getUserIdFromToken(token);
         System.out.println("userId = " + userId);
-        GoldenDeadCrossStrategyDTO gdResultDTO = BacktestingGD.executeTrades(gdStrategyDTO);
+        GoldenDeadCrossStrategyDTO gdResultDTO = BacktestingGD.executeTrades(commonDTO, gdStrategyDTO);
+        System.out.println("GDRESULTDTO:  "+ gdResultDTO);
         strategyService.saveGDStrategyResult(commonDTO, userId, gdStrategyDTO,gdResultDTO);
 
 

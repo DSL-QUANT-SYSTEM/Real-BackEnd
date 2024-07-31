@@ -1,5 +1,6 @@
 package com.example.BeFETest.Strategy;
 import com.example.BeFETest.DTO.coinDTO.GoldenDeadCrossStrategyDTO;
+import com.example.BeFETest.DTO.coinDTO.StrategyCommonDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
@@ -138,21 +139,26 @@ public class BacktestingGD {
     public static List<Candle> getCandle(String targetItem, String tickKind, int inqRange) {
         try {
             String targetUrl;
-            if (tickKind.equals("1") || tickKind.equals("3") || tickKind.equals("5") || tickKind.equals("10") ||
-                    tickKind.equals("15") || tickKind.equals("30") || tickKind.equals("60") || tickKind.equals("240")) {
-                targetUrl = "minutes/" + tickKind;
-            } else if (tickKind.equals("D")) {
-                targetUrl = "days";
-            } else if (tickKind.equals("W")) {
-                targetUrl = "weeks";
-            } else if (tickKind.equals("M")) {
-                targetUrl = "months";
+            if (tickKind != null) {
+                if (tickKind.equals("1") || tickKind.equals("3") || tickKind.equals("5") || tickKind.equals("10") ||
+                        tickKind.equals("15") || tickKind.equals("30") || tickKind.equals("60") || tickKind.equals("240")) {
+                    targetUrl = "minutes/" + tickKind;
+                } else if (tickKind.equals("D")) {
+                    targetUrl = "days";
+                } else if (tickKind.equals("W")) {
+                    targetUrl = "weeks";
+                } else if (tickKind.equals("M")) {
+                    targetUrl = "months";
+                } else {
+                    throw new IllegalArgumentException("잘못된 틱 종류: " + tickKind);
+                }
             } else {
-                throw new IllegalArgumentException("잘못된 틱 종류: " + tickKind);
+                throw new IllegalArgumentException("틱 종류가 null입니다.");
             }
 
 
-            String url = serverUrl + "/v1/candles/" + targetUrl + "?market=" + targetItem + "&count=" + inqRange;
+//            String url = serverUrl + "/v1/candles/" + targetUrl + "?market=" + targetItem + "&count=" + inqRange;
+            String url = serverUrl + "/v1/candles/" + targetUrl + "?market=" + "KRW-STMX" + "&count=" + inqRange;
 
             String response = sendRequest(url);
             List<Map<String, Object>> parsedData = parseJson(response);
@@ -217,12 +223,12 @@ public class BacktestingGD {
     }
 
     // 매수 및 매도 로직
-    public static GoldenDeadCrossStrategyDTO executeTrades(GoldenDeadCrossStrategyDTO gd) {
-        double cash = gd.getInitialInvestment();
+    public static GoldenDeadCrossStrategyDTO executeTrades(StrategyCommonDTO commonDTO, GoldenDeadCrossStrategyDTO gd) {
+        double cash = commonDTO.getInitialInvestment();
         double asset = 0;       // 초기 자산 (BTC)
 
         // 캔들 데이터 가져오기
-        List<Candle> candlesGD = getCandle(gd.getTargetItem(), gd.getTickKind(), gd.getInquiryRange());
+        List<Candle> candlesGD = getCandle(commonDTO.getTargetItem(), commonDTO.getTickKind(), commonDTO.getInquiryRange());
 
         // 가격 데이터를 추출하여 closePrices 리스트에 추가
         List<Double> closePricesGD = new ArrayList<>();
@@ -247,7 +253,7 @@ public class BacktestingGD {
                     System.out.println("Golden Cross at index " + (i + gd.getSlowMovingAveragePeriod() - 1) + ", Buy at " + currentPrice);
                     // 매수 로직 (모든 자본으로 BTC 구매)
                     if (cash > 0) {
-                        double fee = cash * gd.getTransactionFee(); // 수수료 계산
+                        double fee = cash * commonDTO.getTransactionFee(); // 수수료 계산
                         cash -= fee; // 수수료 차감
                         asset += cash / currentPrice;
                         cash = 0;
@@ -259,7 +265,7 @@ public class BacktestingGD {
                     // 매도 로직 (모든 BTC 판매)
                     if (asset > 0) {
                         double proceeds = asset * currentPrice;
-                        double fee = proceeds * gd.getTransactionFee(); // 수수료 계산
+                        double fee = proceeds * commonDTO.getTransactionFee(); // 수수료 계산
                         proceeds -= fee; // 수수료 차감
                         cash += proceeds;
                         asset = 0;
@@ -272,9 +278,9 @@ public class BacktestingGD {
 
         // 최종 자산 계산
         double finalBalance = cash + asset * closePricesGD.getLast();
-        double profit=(finalBalance - gd.getInitialInvestment());
-        double profitRate = ((finalBalance - gd.getInitialInvestment()) / gd.getInitialInvestment()) * 100;
-        System.out.println("Initial Cash: " + gd.getInitialInvestment());
+        double profit=(finalBalance - commonDTO.getInitialInvestment());
+        double profitRate = ((finalBalance - commonDTO.getInitialInvestment()) / commonDTO.getInitialInvestment()) * 100;
+        System.out.println("Initial Cash: " + commonDTO.getInitialInvestment());
         System.out.println("Final Balance: " + finalBalance);
         System.out.println("Profit: " + profit);
         System.out.println("Profit Rate: " + profitRate + "%");

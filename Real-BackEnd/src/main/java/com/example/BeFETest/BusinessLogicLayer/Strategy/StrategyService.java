@@ -52,10 +52,9 @@ public class StrategyService {
 
 
     public StrategyCommonDTO saveCommonStrategyResult(StrategyCommonDTO strategyDTO){
-        StrategyCommonDTO commonDTO = new StrategyCommonDTO(strategyDTO.getInitialInvestment(), strategyDTO.getTransactionFee(), strategyDTO.getStartDate(),
-                strategyDTO.getEndDate(), strategyDTO.getTargetItem(), strategyDTO.getTargetItem(), strategyDTO.getInquiryRange());
 
-        return commonDTO;
+        return new StrategyCommonDTO(strategyDTO.getInitialInvestment(), strategyDTO.getTransactionFee(), strategyDTO.getStartDate(),
+                strategyDTO.getEndDate(), strategyDTO.getTargetItem(), strategyDTO.getTargetItem(), strategyDTO.getInquiryRange());
     }
 
 

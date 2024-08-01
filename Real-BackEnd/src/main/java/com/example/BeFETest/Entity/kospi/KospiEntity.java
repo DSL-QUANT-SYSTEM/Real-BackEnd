@@ -1,6 +1,7 @@
 // KospiEntity.java
 package com.example.BeFETest.Entity.kospi;
 
+/*
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -29,3 +30,4 @@ public class KospiEntity {
     private double value;
 
 }
+*/

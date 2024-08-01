@@ -4,15 +4,15 @@ import com.example.BeFETest.BusinessLogicLayer.Strategy.StrategyService;
 import com.example.BeFETest.DTO.coinDTO.*;
 import com.example.BeFETest.DTO.kosdak.KosdakConverter;
 import com.example.BeFETest.DTO.kosdak.KosdakResponseDTO;
-import com.example.BeFETest.DTO.kosdak2000.Kosdak2000Converter;
-import com.example.BeFETest.DTO.kosdak2000.Kosdak2000ResponseDTO;
+import com.example.BeFETest.DTO.kospi200.Kospi200Converter;
+import com.example.BeFETest.DTO.kospi200.Kospi200ResponseDTO;
 import com.example.BeFETest.DTO.kospi.KospiConverter;
 import com.example.BeFETest.DTO.kospi.KospiResponseDTO;
 import com.example.BeFETest.Entity.UserEntity;
 import com.example.BeFETest.Entity.UserInfo;
 import com.example.BeFETest.Entity.UserRequest;
 import com.example.BeFETest.Entity.kosdak.KosdakResponse;
-import com.example.BeFETest.Entity.kosdak2000.Kosdak2000Response;
+import com.example.BeFETest.Entity.kospi200.Kospi200Response;
 import com.example.BeFETest.Entity.kospi.KospiResponse;
 import com.example.BeFETest.Error.CustomExceptions;
 
@@ -21,7 +21,7 @@ import com.example.BeFETest.Error.ErrorCode;
 import com.example.BeFETest.JWT.JwtUtil;
 import com.example.BeFETest.Repository.Backtesting.BacktestingHistoryRepository;
 import com.example.BeFETest.Repository.JWT.UserRepository;
-import com.example.BeFETest.Repository.Kosdak.Kosdak2000Repository;
+import com.example.BeFETest.Repository.Kospi.Kospi200Repository;
 import com.example.BeFETest.Repository.Kosdak.KosdakRepository;
 import com.example.BeFETest.Repository.Kospi.KospiRepository;
 import com.example.BeFETest.Strategy.BacktestingGD;
@@ -33,7 +33,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 
 @RestController
@@ -47,7 +46,7 @@ public class testController {
     private final KospiRepository kospiRepository;
 
     @Autowired
-    private final Kosdak2000Repository kosdak2000Repository;
+    private final Kospi200Repository kospi200Repository;
 
     @Autowired
     private final KosdakRepository kosdakRepository;
@@ -130,15 +129,15 @@ public class testController {
     }
 
 
-    @GetMapping("/home/kosdak2000")
-    public ResponseEntity<Kosdak2000ResponseDTO> getKosdak2000(){
+    @GetMapping("/home/kospi200")
+    public ResponseEntity<Kospi200ResponseDTO> getkospi200(){
         try {
             LocalDate currentDate = LocalDate.now();
             String currentDateString = currentDate.toString();
-            Kosdak2000Response kosdak2000Response = kosdak2000Repository.findByDate(currentDateString);
-            if(kosdak2000Response != null){
-                Kosdak2000ResponseDTO kosdak2000DTO = Kosdak2000Converter.toDto(kosdak2000Response);
-                return new ResponseEntity<>(kosdak2000DTO, HttpStatus.OK);
+            Kospi200Response kospi200Response = kospi200Repository.findByDate(currentDateString);
+            if(kospi200Response != null){
+                Kospi200ResponseDTO kospi200DTO = Kospi200Converter.toDto(kospi200Response);
+                return new ResponseEntity<>(kospi200DTO, HttpStatus.OK);
             } else {
                 throw new CustomExceptions.ResourceNotFoundException("Resource Not", null, "Resource Not", ErrorCode.NOT_FOUND);
             }

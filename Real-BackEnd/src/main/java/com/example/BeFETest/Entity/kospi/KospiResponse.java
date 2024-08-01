@@ -20,17 +20,36 @@ public class KospiResponse {
     @Column(nullable = false)
     private String date;
 
-    @Column(name = "current_price", nullable = false)
-    private double currentPrice;
+    @Column(name = "closing_price", nullable = false)
+    private double closingPrice;
 
-    @Column(name = "allday_ratio", nullable = false)
-    private double allDayRatio;
+    @Column(name = "comparison", nullable = false)
+    private double comparison;
 
-    @Column(name = "percent_change", nullable = false)
-    private double percentChange;
+    @Column(name = "fluctuation_rate", nullable = false)
+    private double fluctuationRate;
 
-    @OneToMany(mappedBy = "response", cascade = CascadeType.ALL)
-    private List<KospiEntity> kospiData; // KospiEntity를 리스트로 가짐
+    @Column(name = "opening_price", nullable = false)
+    private double openingPrice;
+
+    @Column(name = "high_price", nullable = false)
+    private double highPrice;
+
+    @Column(name = "low_price", nullable = false)
+    private double lowPrice;
+
+    @Column(name = "trading_volume", nullable = false)
+    private double tradingVolume;
+
+    @Column(name = "trading_amount", nullable = false)
+    private double tradingAmount;
+
+    @Column(name = "listed_capitalization", nullable = false)
+    private double listedCapitalization;
+
+
+
+
 
 
 }

@@ -1,6 +1,6 @@
 package com.example.BeFETest;
 
-import com.example.BeFETest.Entity.kosdak.KosdakEntity;
+
 import com.example.BeFETest.Entity.kosdak.KosdakResponse;
 import com.example.BeFETest.Repository.Kosdak.KosdakRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -26,9 +27,52 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     private void initializeKosdakData() {
-        // 기존 데이터 삭제
+
         kosdakRepository.deleteAll();
 
+        KosdakResponse response1 = new KosdakResponse();
+        response1.setDate("2024-07-01");
+        response1.setClosingPrice(1500.50);
+        response1.setComparison(10.20);
+        response1.setFluctuationRate(0.68);
+        response1.setOpeningPrice(1480.00);
+        response1.setHighPrice(1520.00);
+        response1.setLowPrice(1470.00);
+        response1.setTradingVolume(500000);
+        response1.setTradingAmount(750000000);
+        response1.setListedCapitalization(1000000000);
+
+        KosdakResponse response2 = new KosdakResponse();
+        response2.setDate(LocalDate.now().toString());
+        response2.setClosingPrice(1510.70);
+        response2.setComparison(10.20);
+        response2.setFluctuationRate(0.68);
+        response2.setOpeningPrice(1490.00);
+        response2.setHighPrice(1530.00);
+        response2.setLowPrice(1480.00);
+        response2.setTradingVolume(520000);
+        response2.setTradingAmount(780000000);
+        response2.setListedCapitalization(1020000000);
+
+        KosdakResponse response3 = new KosdakResponse();
+        response3.setDate("2024-07-03");
+        response3.setClosingPrice(1520.80);
+        response3.setComparison(10.10);
+        response3.setFluctuationRate(0.67);
+        response3.setOpeningPrice(1500.00);
+        response3.setHighPrice(1540.00);
+        response3.setLowPrice(1490.00);
+        response3.setTradingVolume(530000);
+        response3.setTradingAmount(790000000);
+        response3.setListedCapitalization(1030000000);
+
+        kosdakRepository.saveAll(Arrays.asList(response1, response2, response3));
+
+        System.out.println("KosdakResponse test data initialized");
+        // 기존 데이터 삭제
+        //kosdakRepository.deleteAll();
+
+        /*
         // 데이터 리스트 생성
         List<KosdakResponse> kosdakResponses = new ArrayList<>();
 
@@ -88,6 +132,8 @@ public class DataInitializer implements CommandLineRunner {
 
         // 데이터베이스에 저장
         kosdakRepository.saveAll(kosdakResponses);
+        */
+
     }
 }
 
@@ -99,8 +145,8 @@ import com.example.BeFETest.Entity.HistoryEntity;
 import com.example.BeFETest.Entity.UserEntity;
 import com.example.BeFETest.Entity.kosdak.KosdakEntity;
 import com.example.BeFETest.Entity.kosdak.KosdakResponse;
-import com.example.BeFETest.Entity.kosdak2000.Kosdak2000Entity;
-import com.example.BeFETest.Entity.kosdak2000.Kosdak2000Response;
+import com.example.BeFETest.Entity.kospi200.kospi200Entity;
+import com.example.BeFETest.Entity.kospi200.kospi200Response;
 import com.example.BeFETest.Entity.kospi.KospiEntity;
 import com.example.BeFETest.Entity.kospi.KospiResponse;
 import com.example.BeFETest.Repository.*;
@@ -120,8 +166,8 @@ public class DataInitializer implements CommandLineRunner {
     private final KospiEntityRepository kospiEntityRepository;
     private final KosdakRepository kosdakRepository;
     private final KosdakEntityRepository kosdakEntityRepository;
-    private final Kosdak2000Repository kosdak2000Repository;
-    private final Kosdak2000EntityRepository kosdak2000EntityRepository;
+    private final kospi200Repository kospi200Repository;
+    private final kospi200EntityRepository kospi200EntityRepository;
     private final UserRepository userRepository; // UserRepository 추가
 
     public DataInitializer(
@@ -131,8 +177,8 @@ public class DataInitializer implements CommandLineRunner {
             KospiEntityRepository kospiEntityRepository,
             KosdakRepository kosdakRepository,
             KosdakEntityRepository kosdakEntityRepository,
-            Kosdak2000Repository kosdak2000Repository,
-            Kosdak2000EntityRepository kosdak2000EntityRepository,
+            kospi200Repository kospi200Repository,
+            kospi200EntityRepository kospi200EntityRepository,
             UserRepository userRepository // UserRepository 추가
     ) {
         this.historyRepo = historyRepo;
@@ -141,8 +187,8 @@ public class DataInitializer implements CommandLineRunner {
         this.kospiEntityRepository = kospiEntityRepository;
         this.kosdakRepository = kosdakRepository;
         this.kosdakEntityRepository = kosdakEntityRepository;
-        this.kosdak2000Repository = kosdak2000Repository;
-        this.kosdak2000EntityRepository = kosdak2000EntityRepository;
+        this.kospi200Repository = kospi200Repository;
+        this.kospi200EntityRepository = kospi200EntityRepository;
         this.userRepository = userRepository; // UserRepository 추가
     }
 
@@ -230,27 +276,27 @@ public class DataInitializer implements CommandLineRunner {
         }
         kosdakEntityRepository.saveAll(kosdakDataList);
 
-        // Sample data for Kosdak2000Response
-        Kosdak2000Response response3 = new Kosdak2000Response();
+        // Sample data for kospi200Response
+        kospi200Response response3 = new kospi200Response();
         response3.setDate("2024-05-20");
         response3.setCurrentPrice(3000.0);
         response3.setAllDayRatio(0.5);
         response3.setPercentChange(0.02);
 
-        List<Kosdak2000Entity> kosdak2000DataList = new ArrayList<>();
+        List<kospi200Entity> kospi200DataList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            Kosdak2000Entity kosdak2000Data = new Kosdak2000Entity();
-            kosdak2000Data.setResponse(response3);
-            kosdak2000Data.setTime("2024-04-" + (i + 1));
-            kosdak2000Data.setValue(3000.0 + i * 10);
-            kosdak2000DataList.add(kosdak2000Data);
+            kospi200Entity kospi200Data = new kospi200Entity();
+            kospi200Data.setResponse(response3);
+            kospi200Data.setTime("2024-04-" + (i + 1));
+            kospi200Data.setValue(3000.0 + i * 10);
+            kospi200DataList.add(kospi200Data);
         }
-        response3.setKosdak2000Data(kosdak2000DataList);
-        response3 = kosdak2000Repository.save(response3);
-        for (Kosdak2000Entity kosdak2000Data : kosdak2000DataList) {
-            kosdak2000Data.setResponse(response3);
+        response3.setkospi200Data(kospi200DataList);
+        response3 = kospi200Repository.save(response3);
+        for (kospi200Entity kospi200Data : kospi200DataList) {
+            kospi200Data.setResponse(response3);
         }
-        kosdak2000EntityRepository.saveAll(kosdak2000DataList);
+        kospi200EntityRepository.saveAll(kospi200DataList);
     }
 }
 */
@@ -269,18 +315,18 @@ public class DataInitializer implements CommandLineRunner {
     private final KosdakRepository kosdakRepository;
     private final KosdakEntityRepository kosdakEntityRepository;
 
-    private final Kosdak2000Repository kosdak2000Repository;
-    private final Kosdak2000EntityRepository kosdak2000EntityRepository;
+    private final kospi200Repository kospi200Repository;
+    private final kospi200EntityRepository kospi200EntityRepository;
 
-    public DataInitializer(HistoryRepo historyRepo, BacktestingHistoryRepository backtestingHistoryRepository, KospiRepository kospiRepository, KospiEntityRepository kospiEntityRepository, KosdakRepository kosdakRepository, KosdakEntityRepository kosdakEntityRepository, Kosdak2000Repository kosdak2000Repository, Kosdak2000EntityRepository kosdak2000EntityRepository) {
+    public DataInitializer(HistoryRepo historyRepo, BacktestingHistoryRepository backtestingHistoryRepository, KospiRepository kospiRepository, KospiEntityRepository kospiEntityRepository, KosdakRepository kosdakRepository, KosdakEntityRepository kosdakEntityRepository, kospi200Repository kospi200Repository, kospi200EntityRepository kospi200EntityRepository) {
         this.historyRepo = historyRepo;
         this.backtestingHistoryRepository = backtestingHistoryRepository;
         this.kospiRepository = kospiRepository;
         this.kospiEntityRepository = kospiEntityRepository;
         this.kosdakRepository = kosdakRepository;
         this.kosdakEntityRepository = kosdakEntityRepository;
-        this.kosdak2000Repository = kosdak2000Repository;
-        this.kosdak2000EntityRepository = kosdak2000EntityRepository;
+        this.kospi200Repository = kospi200Repository;
+        this.kospi200EntityRepository = kospi200EntityRepository;
     }
 
     @Override
@@ -388,30 +434,30 @@ public class DataInitializer implements CommandLineRunner {
         kosdakDataList = kosdakEntityRepository.saveAll(kosdakDataList);
 
 
-        Kosdak2000Response response3 = new Kosdak2000Response();
+        kospi200Response response3 = new kospi200Response();
         response3.setDate("2024-05-20");
         response3.setCurrentPrice(3000.0);
         response3.setAllDayRatio(0.5);
         response3.setPercentChange(0.02);
 
 
-        List<Kosdak2000Entity> kosdak2000DataList = new ArrayList<>();
+        List<kospi200Entity> kospi200DataList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            Kosdak2000Entity kosdak2000Data = new Kosdak2000Entity();
-            kosdak2000Data.setResponse(response3); // KospiResponse와 연관된 KospiEntity를 설정합니다.
-            kosdak2000Data.setTime("2024-04-" + (i + 1));
-            kosdak2000Data.setValue(3000.0 + i * 10);
-            kosdak2000DataList.add(kosdak2000Data);
+            kospi200Entity kospi200Data = new kospi200Entity();
+            kospi200Data.setResponse(response3); // KospiResponse와 연관된 KospiEntity를 설정합니다.
+            kospi200Data.setTime("2024-04-" + (i + 1));
+            kospi200Data.setValue(3000.0 + i * 10);
+            kospi200DataList.add(kospi200Data);
         }
 
         // KospiResponse를 저장합니다.
-        response3 = kosdak2000Repository.save(response3);
+        response3 = kospi200Repository.save(response3);
 
 // KospiEntity를 저장합니다.
-        for (Kosdak2000Entity kosdak2000Data : kosdak2000DataList) {
-            kosdak2000Data.setResponse(response3); // KospiResponse와 연관된 KospiEntity를 설정합니다.
+        for (kospi200Entity kospi200Data : kospi200DataList) {
+            kospi200Data.setResponse(response3); // KospiResponse와 연관된 KospiEntity를 설정합니다.
         }
-        kosdak2000DataList = kosdak2000EntityRepository.saveAll(kosdak2000DataList);
+        kospi200DataList = kospi200EntityRepository.saveAll(kospi200DataList);
 
 
 

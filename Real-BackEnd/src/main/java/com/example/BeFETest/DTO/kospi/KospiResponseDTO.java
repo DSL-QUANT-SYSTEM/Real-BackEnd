@@ -11,19 +11,31 @@ public class KospiResponseDTO {
 
     private Long id;
     private String date;
-    private double currentPrice;
-    private double allDayRatio;
-    private double percentChange;
-    private List<KospiDTO> kospiData;
+    private double closingPrice;
+    private double comparison;
+    private double fluctuationRate;
+    private double openingPrice;
+    private double highPrice;
+    private double lowPrice;
+    private double tradingVolume;
+    private double tradingAmount;
+    private double listedCapitalization;
 
     public KospiResponseDTO() {}
 
-    public KospiResponseDTO(Long id, String date, double currentPrice, double allDayRatio, double percentChange, List<KospiDTO> kospiData) {
+    public KospiResponseDTO(Long id, String date, double closingPrice, double comparison, double fluctuationRate,
+                               double openingPrice, double highPrice, double lowPrice, double tradingVolume,
+                               double tradingAmount, double listedCapitalization) {
         this.id = id;
         this.date = date;
-        this.currentPrice = currentPrice;
-        this.allDayRatio = allDayRatio;
-        this.percentChange = percentChange;
-        this.kospiData = kospiData;
+        this.closingPrice = closingPrice;
+        this.comparison = comparison;
+        this.fluctuationRate = fluctuationRate;
+        this.openingPrice = openingPrice;
+        this.highPrice = highPrice;
+        this.lowPrice = lowPrice;
+        this.tradingVolume = tradingVolume;
+        this.tradingAmount = tradingAmount;
+        this.listedCapitalization = listedCapitalization;
     }
 }

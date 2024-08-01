@@ -1,5 +1,6 @@
 package com.example.BeFETest.DTO.kosdak;
 
+/*
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,3 +22,4 @@ public class KosdakDTO {
 
 
 }
+*/

@@ -1,4 +1,4 @@
-package com.example.BeFETest.DTO.kosdak;
+package com.example.BeFETest.DTO.kospi200;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class KosdakResponseDTO {
+public class Kospi200ResponseDTO {
 
     private Long id;
     private String date;
@@ -22,11 +22,13 @@ public class KosdakResponseDTO {
     private double listedCapitalization;
 
 
-    public KosdakResponseDTO() {}
 
-    public KosdakResponseDTO(Long id, String date, double closingPrice, double comparison, double fluctuationRate,
-                            double openingPrice, double highPrice, double lowPrice, double tradingVolume,
-                            double tradingAmount, double listedCapitalization) {
+
+    public Kospi200ResponseDTO() {}
+
+    public Kospi200ResponseDTO(Long id, String date, double closingPrice, double comparison, double fluctuationRate,
+                               double openingPrice, double highPrice, double lowPrice, double tradingVolume,
+                               double tradingAmount, double listedCapitalization) {
         this.id = id;
         this.date = date;
         this.closingPrice = closingPrice;

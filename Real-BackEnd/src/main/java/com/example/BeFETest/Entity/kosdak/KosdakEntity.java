@@ -1,5 +1,5 @@
 package com.example.BeFETest.Entity.kosdak;
-
+/*
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -28,3 +28,5 @@ public class KosdakEntity {
     private double value;
 
 }
+*/
+

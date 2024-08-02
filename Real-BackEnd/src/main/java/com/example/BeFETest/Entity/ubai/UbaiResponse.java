@@ -1,6 +1,6 @@
 package com.example.BeFETest.Entity.ubai;
 
-import com.example.BeFETest.Entity.kosdak.KosdakEntity;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

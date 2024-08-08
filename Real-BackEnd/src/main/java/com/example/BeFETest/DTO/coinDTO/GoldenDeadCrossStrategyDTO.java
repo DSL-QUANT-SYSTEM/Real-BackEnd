@@ -10,18 +10,18 @@ import java.time.LocalDate;
 public class GoldenDeadCrossStrategyDTO extends TradeStrategyDTO{
 
     private Long userId;
-    private int fastMovingAveragePeriod;
-    private int slowMovingAveragePeriod;
+    private int fastMoveAvg;
+    private int slowMoveAvg;
 
 
 
-    public GoldenDeadCrossStrategyDTO(double initialInvestment, double transactionFee, LocalDate startDate, LocalDate endDate,
-                                      String targetItem, String tickKind, int inquiryRange, double finalCash, double finalAsset, double finalBalance,
+    public GoldenDeadCrossStrategyDTO(double initial_investment, double tax, LocalDate start_date, LocalDate end_date,
+                                      String target_item, String tick_kind, int inq_range, double finalCash, double finalAsset, double finalBalance,
                                       double profit, double profitRate, int numberOfTrades,
-                                      int fastMovingAveragePeriod, int slowMovingAveragePeriod) {
-        super(initialInvestment, transactionFee, startDate, endDate, targetItem, tickKind, inquiryRange);
-        this.fastMovingAveragePeriod = fastMovingAveragePeriod;
-        this.slowMovingAveragePeriod = slowMovingAveragePeriod;
+                                      int fastMoveAvg, int slowMoveAvg) {
+        super(initial_investment, tax, start_date, end_date, target_item, tick_kind, inq_range);
+        this.fastMoveAvg = fastMoveAvg;
+        this.slowMoveAvg = slowMoveAvg;
     }
 
 
@@ -35,15 +35,15 @@ public class GoldenDeadCrossStrategyDTO extends TradeStrategyDTO{
     @Override
     public String toString(){
         return "GoldenDeadCrossStrategyDTO{" +
-                "initialInvestment=" + initialInvestment +
-                ", transactionFee=" + transactionFee +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", targetItem='" + targetItem + '\'' +
-                ", tickKind='" + tickKind + '\'' +
-                ", inquiryRange=" + inquiryRange +
-                ", fastMovingAveragePeriod=" + fastMovingAveragePeriod +
-                ", slowMovingAveragePeriod=" + slowMovingAveragePeriod +
+                "initial_investment=" + initial_investment +
+                ", tax=" + tax +
+                ", start_date=" + start_date +
+                ", end_date=" + end_date +
+                ", target_item='" + target_item + '\'' +
+                ", tick_kind='" + tick_kind + '\'' +
+                ", inq_range=" + inq_range +
+                ", fastMoveAvg=" + fastMoveAvg +
+                ", slowMoveAvg=" + slowMoveAvg +
                 '}';
     }
 

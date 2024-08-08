@@ -1,5 +1,7 @@
 package com.example.BeFETest.Strategy;
 import com.example.BeFETest.DTO.coinDTO.BollingerBandsStrategyDTO;
+import com.example.BeFETest.DTO.coinDTO.GoldenDeadCrossStrategyDTO;
+import com.example.BeFETest.DTO.coinDTO.StrategyCommonDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
@@ -18,65 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class BacktestingBB  {
-    //볼린저밴드 전략 백테스팅 예시
-    public static void main(String[] args) {
-        BollingerBandsStrategyDTO BB=new BollingerBandsStrategyDTO(1000000, 0.01,
-                LocalDate.of(2023, 1, 1), LocalDate.of(2024, 1, 1),
-                "KRW-STMX", "60", 100, 0,0,0,0,0,0,20);
-        // 초기 자산 설정
-        double asset  = 0;       // 초기 자산 (BTC)
-
-        //볼린저밴드 전략 예시
-        List<Candle> candlesBB= getCandle(BB.getTargetItem(), BB.getTickKind(), BB.getInquiryRange());
-
-        List<Double> closePricesBB =new ArrayList<>();
-        assert candlesBB != null;
-        for (Candle candle : candlesBB) {
-            closePricesBB.add(candle.getTradePrice());
-        }
-
-        // 이동평균선(ma) 구하기
-        List<Double> ma = calculateMovingAverage(closePricesBB, BB.getMovingAveragePeriod());
-        // 표준편차로 상한하한 계산
-        List<Double> std = calculateStandardDeviation(closePricesBB, BB.getMovingAveragePeriod());
-        List<Double> upperBand = calculateUpperBand(ma, std);
-        List<Double> lowerBand = calculateLowerBand(ma, std);
-
-        // 밴드폭 계산
-        List<Double> bandWidth = calculateBandWidth(upperBand, lowerBand, ma);
-        // 밴드폭 축소 후 밀집구간 거치고 상한 돌파 시 -> 매수, 반대로 하향 이탈하면 -> 매도
-        List<Boolean> buySignals = generateBuySignals(closePricesBB, upperBand, bandWidth);
-        List<Boolean> sellSignals = generateSellSignals(closePricesBB, lowerBand);
-        System.out.println("////////////////////////////////////BB Data////////////////////////////////////////////");
-        int check=0;
-        // 매수 및 매도 신호 출력
-        for (int i = 0; i < closePricesBB.size(); i++) {
-            if (i >= BB.getMovingAveragePeriod() - 1) { // 이동평균 및 표준편차 계산을 위해 최소 기간 길이 이후부터 출력
-                if (buySignals.get(i - (BB.getMovingAveragePeriod() - 1))) {
-                    System.out.println("Buy Signals: " + closePricesBB.get(i - (BB.getMovingAveragePeriod() - 1)));
-                    check=1;
-                }
-                if (sellSignals.get(i - (BB.getMovingAveragePeriod() - 1))) {
-                    System.out.println("Sell Signals: " + closePricesBB.get(i - (BB.getMovingAveragePeriod() - 1)));
-                    check=1;
-                }
-            }
-        }
-        if(check==0){
-            System.out.println("There are no Buy/Sell Signals");
-        }
-
-        // 백테스팅 실행
-        double finalBalance = executeBackTest(buySignals, sellSignals, closePricesBB, BB.getMovingAveragePeriod(), BB.getInitialInvestment(), asset, BB.getTransactionFee());
-        double profit = finalBalance - BB.getInitialInvestment();
-        double profitRate = (profit / BB.getInitialInvestment()) * 100;
-
-        // 결과 출력
-        System.out.println("Initial Cash: " + BB.getInitialInvestment());
-        System.out.println("Final Balance: " + finalBalance);
-        System.out.println("Profit: " + profit);
-        System.out.println("Profit Rate: " + profitRate + "%");
-    }
+    //볼린저밴드 전략 백테스팅
     // Keys
     private static final String accessKey = "78lGs0QBrcPzJry5zDO8XhcTT7H98txHkyZBeHoT";
     private static final String secretKey = "nTOf48sFQxIyD5xwChtFxEnMKwqBsxxWCQx8G1KS";
@@ -197,17 +141,21 @@ public class BacktestingBB  {
     public static List<Candle> getCandle(String targetItem, String tickKind, int inqRange) {
         try {
             String targetUrl;
-            if (tickKind.equals("1") || tickKind.equals("3") || tickKind.equals("5") || tickKind.equals("10") ||
-                    tickKind.equals("15") || tickKind.equals("30") || tickKind.equals("60") || tickKind.equals("240")) {
-                targetUrl = "minutes/" + tickKind;
-            } else if (tickKind.equals("D")) {
-                targetUrl = "days";
-            } else if (tickKind.equals("W")) {
-                targetUrl = "weeks";
-            } else if (tickKind.equals("M")) {
-                targetUrl = "months";
+            if (tickKind != null) {
+                if (tickKind.equals("1") || tickKind.equals("3") || tickKind.equals("5") || tickKind.equals("10") ||
+                        tickKind.equals("15") || tickKind.equals("30") || tickKind.equals("60") || tickKind.equals("240")) {
+                    targetUrl = "minutes/" + tickKind;
+                } else if (tickKind.equals("D")) {
+                    targetUrl = "days";
+                } else if (tickKind.equals("W")) {
+                    targetUrl = "weeks";
+                } else if (tickKind.equals("M")) {
+                    targetUrl = "months";
+                } else {
+                    throw new IllegalArgumentException("잘못된 틱 종류: " + tickKind);
+                }
             } else {
-                throw new IllegalArgumentException("잘못된 틱 종류: " + tickKind);
+                throw new IllegalArgumentException("틱 종류가 null입니다.");
             }
 
 
@@ -241,35 +189,98 @@ public class BacktestingBB  {
     }
 
     // 매수 및 매도 로직
-    public static double executeBackTest(List<Boolean> buySignals, List<Boolean> sellSignals, List<Double> closePrices, int length, double cash, double asset, double transactionFee) {
+    public static BollingerBandsStrategyDTO executeTrades(StrategyCommonDTO commonDTO, BollingerBandsStrategyDTO BB) {
+        double cash = commonDTO.getInitial_investment();
+        double asset  = 0;       // 초기 자산 (BTC)
+
+        //볼린저밴드 전략 예시
+        List<Candle> candlesBB= getCandle(commonDTO.getTarget_item(), commonDTO.getTick_kind(), commonDTO.getInq_range());
+        List<Double> closePricesBB =new ArrayList<>();
+        assert candlesBB != null;
+        for (Candle candle : candlesBB) {
+            closePricesBB.add(candle.getTradePrice());
+        }
+
+        // 이동평균선(ma) 구하기
+        List<Double> ma = calculateMovingAverage(closePricesBB, BB.getMoveAvg());
+        // 표준편차로 상한하한 계산
+        List<Double> std = calculateStandardDeviation(closePricesBB, BB.getMoveAvg());
+        List<Double> upperBand = calculateUpperBand(ma, std);
+        List<Double> lowerBand = calculateLowerBand(ma, std);
+
+        // 밴드폭 계산
+        List<Double> bandWidth = calculateBandWidth(upperBand, lowerBand, ma);
+        // 밴드폭 축소 후 밀집구간 거치고 상한 돌파 시 -> 매수, 반대로 하향 이탈하면 -> 매도
+        List<Boolean> buySignals = generateBuySignals(closePricesBB, upperBand, bandWidth);
+        List<Boolean> sellSignals = generateSellSignals(closePricesBB, lowerBand);
+        System.out.println("////////////////////////////////////BB Data////////////////////////////////////////////");
+        int check=0;
+        // 매수 및 매도 신호 출력
+        for (int i = 0; i < closePricesBB.size(); i++) {
+            if (i >= BB.getMoveAvg() - 1) { // 이동평균 및 표준편차 계산을 위해 최소 기간 길이 이후부터 출력
+                if (buySignals.get(i - (BB.getMoveAvg() - 1))) {
+                    System.out.println("Buy Signals: " + closePricesBB.get(i - (BB.getMoveAvg() - 1)));
+                    check=1;
+                }
+                if (sellSignals.get(i - (BB.getMoveAvg() - 1))) {
+                    System.out.println("Sell Signals: " + closePricesBB.get(i - (BB.getMoveAvg() - 1)));
+                    check=1;
+                }
+            }
+        }
+        if(check==0){
+            System.out.println("There are no Buy/Sell Signals");
+        }
+
         boolean bought = false; // 매수 상태를 추적하는 변수
-        for (int i = length - 1; i < closePrices.size(); i++) {
-            double currentPrice = closePrices.get(i);
-            if (buySignals.get(i - (length - 1)) && !bought) {
+        int numberOfTrades= 0;
+        for (int i = BB.getMoveAvg() - 1; i < closePricesBB.size(); i++) {
+            double currentPrice = closePricesBB.get(i);
+            if (buySignals.get(i - (BB.getMoveAvg() - 1)) && !bought) {
                 System.out.println("Buy at " + currentPrice);
                 // 매수 로직 (모든 자본으로 BTC 구매)
                 if (cash > 0) {
-                    double fee = cash * transactionFee; // 수수료 계산
+                    double fee = cash * commonDTO.getTax(); // 수수료 계산
                     double amountToInvest = cash - fee; // 수수료를 뺀 금액
                     asset += amountToInvest / currentPrice;
                     cash = 0;
                     bought = true; // 매수 상태로 설정
+                    numberOfTrades++;
                 }
             }
-            if (sellSignals.get(i - (length - 1)) && bought) {
+            if (sellSignals.get(i - (BB.getMoveAvg() - 1)) && bought) {
                 System.out.println("Sell at " + currentPrice);
                 // 매도 로직 (모든 BTC 판매)
                 if (asset > 0) {
                     double proceeds = asset * currentPrice;
-                    double fee = proceeds * transactionFee; // 수수료 계산
+                    double fee = proceeds * commonDTO.getTax(); // 수수료 계산
                     proceeds -= fee; // 수수료 차감
                     cash += proceeds;
                     asset = 0;
                     bought = false; // 매도 상태로 설정
+                    numberOfTrades++;
                 }
             }
         }
-        return cash + asset * closePrices.get(closePrices.size() - 1);
+
+        double finalBalance = cash + asset * closePricesBB.getLast();
+        double profit = finalBalance - commonDTO.getInitial_investment();
+        double profitRate = (profit / commonDTO.getInitial_investment()) * 100;
+
+        // 결과 출력
+        System.out.println("Initial Cash: " + commonDTO.getInitial_investment());
+        System.out.println("Final Balance: " + finalBalance);
+        System.out.println("Profit: " + profit);
+        System.out.println("Profit Rate: " + profitRate + "%");
+
+        BB.setFinalCash(cash);
+        BB.setFinalAsset(asset);
+        BB.setFinalBalance(finalBalance);
+        BB.setProfit(profit);
+        BB.setProfitRate(profitRate);
+        BB.setNumberOfTrades(numberOfTrades);
+
+        return BB;
     }
 
 

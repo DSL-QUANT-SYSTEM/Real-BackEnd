@@ -224,11 +224,11 @@ public class BacktestingGD {
 
     // 매수 및 매도 로직
     public static GoldenDeadCrossStrategyDTO executeTrades(StrategyCommonDTO commonDTO, GoldenDeadCrossStrategyDTO gd) {
-        double cash = commonDTO.getInitialInvestment();
+        double cash = commonDTO.getInitial_investment();
         double asset = 0;       // 초기 자산 (BTC)
 
         // 캔들 데이터 가져오기
-        List<Candle> candlesGD = getCandle(commonDTO.getTargetItem(), commonDTO.getTickKind(), commonDTO.getInquiryRange());
+        List<Candle> candlesGD = getCandle(commonDTO.getTarget_item(), commonDTO.getTick_kind(), commonDTO.getInq_range());
 
         // 가격 데이터를 추출하여 closePrices 리스트에 추가
         List<Double> closePricesGD = new ArrayList<>();
@@ -238,8 +238,8 @@ public class BacktestingGD {
         }
 
         // 이동평균 계산
-        List<Double> fastMovingAverage = calculateMovingAverage(closePricesGD, gd.getFastMovingAveragePeriod());
-        List<Double> slowMovingAverage = calculateMovingAverage(closePricesGD, gd.getSlowMovingAveragePeriod());
+        List<Double> fastMovingAverage = calculateMovingAverage(closePricesGD, gd.getFastMoveAvg());
+        List<Double> slowMovingAverage = calculateMovingAverage(closePricesGD, gd.getSlowMoveAvg());
         // 골든크로스 및 데드크로스 찾기
         List<Boolean> crosses = findCrosses(fastMovingAverage, slowMovingAverage);
 
@@ -248,12 +248,12 @@ public class BacktestingGD {
         int numberOfTrades=0;
         for (int i = 0; i < crosses.size(); i++) {
             if (crosses.get(i) != null) {
-                double currentPrice = closePricesGD.get(i + gd.getSlowMovingAveragePeriod() - 1); // 현재 가격
+                double currentPrice = closePricesGD.get(i + gd.getSlowMoveAvg() - 1); // 현재 가격
                 if (crosses.get(i) && !bought) {
-                    System.out.println("Golden Cross at index " + (i + gd.getSlowMovingAveragePeriod() - 1) + ", Buy at " + currentPrice);
+                    System.out.println("Golden Cross at index " + (i + gd.getSlowMoveAvg() - 1) + ", Buy at " + currentPrice);
                     // 매수 로직 (모든 자본으로 BTC 구매)
                     if (cash > 0) {
-                        double fee = cash * commonDTO.getTransactionFee(); // 수수료 계산
+                        double fee = cash * commonDTO.getTax(); // 수수료 계산
                         cash -= fee; // 수수료 차감
                         asset += cash / currentPrice;
                         cash = 0;
@@ -261,11 +261,11 @@ public class BacktestingGD {
                         numberOfTrades++;
                     }
                 } else if (!crosses.get(i) && bought) {
-                    System.out.println("Death Cross at index " + (i + gd.getSlowMovingAveragePeriod() - 1) + ", Sell at " + currentPrice);
+                    System.out.println("Death Cross at index " + (i + gd.getSlowMoveAvg() - 1) + ", Sell at " + currentPrice);
                     // 매도 로직 (모든 BTC 판매)
                     if (asset > 0) {
                         double proceeds = asset * currentPrice;
-                        double fee = proceeds * commonDTO.getTransactionFee(); // 수수료 계산
+                        double fee = proceeds * commonDTO.getTax(); // 수수료 계산
                         proceeds -= fee; // 수수료 차감
                         cash += proceeds;
                         asset = 0;
@@ -278,9 +278,9 @@ public class BacktestingGD {
 
         // 최종 자산 계산
         double finalBalance = cash + asset * closePricesGD.getLast();
-        double profit=(finalBalance - commonDTO.getInitialInvestment());
-        double profitRate = ((finalBalance - commonDTO.getInitialInvestment()) / commonDTO.getInitialInvestment()) * 100;
-        System.out.println("Initial Cash: " + commonDTO.getInitialInvestment());
+        double profit=(finalBalance - commonDTO.getInitial_investment());
+        double profitRate = ((finalBalance - commonDTO.getInitial_investment()) / commonDTO.getInitial_investment()) * 100;
+        System.out.println("Initial Cash: " + commonDTO.getInitial_investment());
         System.out.println("Final Balance: " + finalBalance);
         System.out.println("Profit: " + profit);
         System.out.println("Profit Rate: " + profitRate + "%");

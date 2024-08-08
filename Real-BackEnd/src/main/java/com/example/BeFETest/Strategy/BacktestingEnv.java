@@ -30,7 +30,7 @@ public class BacktestingEnv  {
         double asset = 0;                   // 초기 자산 (BTC)
 
         // 캔들 데이터 가져오기
-        List<Candle> candlesEnv = getCandle(Env.getTargetItem(), Env.getTickKind(), Env.getInquiryRange());
+        List<Candle> candlesEnv = getCandle(Env.getTarget_item(), Env.getTick_kind(), Env.getInq_range());
         assert candlesEnv != null;
 
         // 가격 데이터 추출
@@ -51,7 +51,7 @@ public class BacktestingEnv  {
 
         // 매매 전략 실행
         executeEnvelopeStrategy(closePrices, movingAverage, upperBand, lowerBand, Env.getMovingAveragePeriod(),
-                Env.getInitialInvestment(), asset, Env.getInitialInvestment(), Env.getTransactionFee());
+                Env.getInitial_investment(), asset, Env.getInitial_investment(), Env.getTax());
     }
 
     //-----------------------------------------------------------------------------

@@ -9,13 +9,13 @@ import java.time.LocalDate;
 @Setter
 public class StrategyCommonDTO {
     //입력정보
-    private double initialInvestment;
-    private double transactionFee;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private String targetItem;
-    private String tickKind;
-    private int inquiryRange;
+    private double initial_investment;
+    private double tax;
+    private LocalDate start_date;
+    private LocalDate end_date;
+    private String target_item;
+    private String tick_kind;
+    private int inq_range;
     //결과정보
     private double finalCash;
     private double finalAsset;
@@ -24,28 +24,34 @@ public class StrategyCommonDTO {
     private double profitRate;
     private int numberOfTrades;
 
-    public StrategyCommonDTO(double initialInvestment, double transactionFee,
-                            LocalDate startDate, LocalDate endDate, String targetItem, String tickKind,
-                            int inquiryRange) {
-        this.initialInvestment = initialInvestment;
-        this.transactionFee = transactionFee;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.targetItem = targetItem;
-        this.tickKind = tickKind;
-        this.inquiryRange = inquiryRange;
+    public StrategyCommonDTO(double initial_investment, double tax,
+                            LocalDate start_date, LocalDate end_date, String target_item, String tick_kind,
+                            int inq_range) {
+        this.initial_investment = initial_investment;
+        this.tax = tax;
+        this.start_date = start_date;
+        this.end_date = end_date;
+        this.target_item = target_item;
+        this.tick_kind = tick_kind;
+        this.inq_range = inq_range;
     }
 
     @Override
     public String toString() {
         return "StrategyCommonDTO{" +
-                "initialInvestment=" + initialInvestment +
-                ", transactionFee=" + transactionFee +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", targetItem='" + targetItem + '\'' +
-                ", tickKind='" + tickKind + '\'' +
-                ", inquiryRange=" + inquiryRange
+                "initialInvestment=" + initial_investment +
+                ", tax=" + tax +
+                ", start_date=" + start_date +
+                ", end_date=" + end_date +
+                ", target_item='" + target_item + '\'' +
+                ", tick_kind='" + tick_kind + '\'' +
+                ", inq_range=" + inq_range
+//                ", finalCash=" + finalCash +
+//                ", finalAsset=" + finalAsset+
+//                ", finalBalance=" + finalBalance+
+//                ", profit=" + profit+
+//                ", profitRate=" +profitRate+
+//                ", numberOfTrades=" + numberOfTrades
                 ;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.BeFETest.Strategy;
 import com.example.BeFETest.DTO.coinDTO.IndicatorBasedStrategyDTO;
+import com.example.BeFETest.DTO.coinDTO.StrategyCommonDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
@@ -19,33 +20,6 @@ import java.util.logging.Logger;
 
 public class BacktestingIndicator  {
     // 초기 자본과 자산 설정
-    public static void main(String[] args) {
-        IndicatorBasedStrategyDTO IB =new IndicatorBasedStrategyDTO(1000000, 0.01,
-                LocalDate.of(2023, 1, 1), LocalDate.of(2024, 1, 1),
-                "KRW-BTC", "5", 200, 0,0,0,0,0,0,14);
-
-        double asset = 0;  // 초기 자산 (BTC)
-        boolean bought = false; // 매수 상태를 추적하는 변수
-
-        // 캔들 데이터 가져오기
-        List<Candle> candles = getCandle("KRW-BTC", "5", 200);
-        assert candles != null;
-
-        // RSI, MFI, MACD 지표 계산
-        List<Double> closePrices = new ArrayList<>();
-        for (Candle candle : candles) {
-            closePrices.add(candle.getTradePrice());
-        }
-
-        int period = 14;
-        List<Double> rsiValues = calculateRSI(candles, period);
-        List<Double> mfiValues = calculateMFI(candles,period);
-        List<Double> macdValues = calculateMACD(closePrices);
-        List<Double> signalValues = calculateSignal(macdValues, 9);
-
-        executeTrades(rsiValues, mfiValues, macdValues, signalValues, closePrices, IB.getInitialInvestment(), asset, IB.getInitialInvestment(), bought, IB.getTransactionFee());
-    }
-
     private static final String accessKey = "78lGs0QBrcPzJry5zDO8XhcTT7H98txHkyZBeHoT";
     private static final String secretKey = "nTOf48sFQxIyD5xwChtFxEnMKwqBsxxWCQx8G1KS";
     private static final String serverUrl = "https://api.upbit.com";
@@ -322,8 +296,28 @@ public class BacktestingIndicator  {
     }
 
     // 매수 및 매도 로직
-    public static void executeTrades(List<Double> rsiValues, List<Double> mfiValues, List<Double> macdValues, List<Double> signalValues,
-                                     List<Double> closePrices, double cash, double asset, double initialCash, boolean bought, double transactionFee) {
+    public static IndicatorBasedStrategyDTO executeTrades(StrategyCommonDTO commonDTO, IndicatorBasedStrategyDTO ind) {
+        double cash= commonDTO.getInitial_investment();
+        double asset = 0;  // 초기 자산 (BTC)
+        boolean bought = false; // 매수 상태를 추적하는 변수
+        int numberOfTrades=0;
+
+        // 캔들 데이터 가져오기
+        List<Candle> candles = getCandle("KRW-BTC", "5", 200);
+        assert candles != null;
+
+        // RSI, MFI, MACD 지표 계산
+        List<Double> closePrices = new ArrayList<>();
+        for (Candle candle : candles) {
+            closePrices.add(candle.getTradePrice());
+        }
+
+        int period = 14;
+        List<Double> rsiValues = calculateRSI(candles, period);
+        List<Double> mfiValues = calculateMFI(candles,period);
+        List<Double> macdValues = calculateMACD(closePrices);
+        List<Double> signalValues = calculateSignal(macdValues, 9);
+
         int minSize = Math.min(Math.min(rsiValues.size(), mfiValues.size()), Math.min(macdValues.size(), signalValues.size()));
         for (int i = 3; i < minSize; i++) {
             double currentPrice = closePrices.get(i + closePrices.size() - minSize - 1); // 현재 가격
@@ -344,36 +338,48 @@ public class BacktestingIndicator  {
             boolean macdSellSignal = macdValues.get(i) < 0.0 && macdValues.get(i - 1) < 0.0 && macdValues.get(i - 2) < 0.0
                     && macdValues.get(i) > macdValues.get(i - 1) && macdValues.get(i - 1) > macdValues.get(i - 2); // MACD 조건
 
-            if (mfiBuySignal && !bought) {
+            if (/*rsiBuySignal && macdBuySignal && */mfiBuySignal && !bought) {
                 System.out.println("Buy Signal at index " + (i + closePrices.size() - minSize - 1) + ", Buy at " + currentPrice);
                 // 매수 로직 (모든 자본으로 BTC 구매)
                 if (cash > 0) {
-                    double fee = cash * transactionFee; // 수수료 계산
+                    double fee = cash * commonDTO.getTax(); // 수수료 계산
                     cash -= fee; // 수수료 차감
                     asset += cash / currentPrice;
                     cash = 0;
                     bought = true; // 매수 상태로 설정
+                    numberOfTrades++;
                 }
-            } else if (mfiSellSignal&& bought) {
+            } else if (/*rsiSellSignal && macdSellSignal && */ mfiSellSignal&& bought) {
                 System.out.println("Sell Signal at index " + (i + closePrices.size() - minSize - 1) + ", Sell at " + currentPrice);
                 // 매도 로직 (모든 BTC 판매)
                 if (asset > 0) {
                     double proceeds = asset * currentPrice;
-                    double fee = proceeds * transactionFee; // 수수료 계산
+                    double fee = proceeds * commonDTO.getTax(); // 수수료 계산
                     proceeds -= fee; // 수수료 차감
                     cash += proceeds;
                     asset = 0;
                     bought = false; // 매도 상태로 설정
+                    numberOfTrades++;
                 }
             }
         }
 
         // 최종 자산 계산
         double finalBalance = cash + asset * closePrices.getLast();
-        double profitRate = ((finalBalance - initialCash) / initialCash) * 100;
-        System.out.println("Initial Cash: " + initialCash);
+        double profit=(finalBalance - commonDTO.getInitial_investment());
+        double profitRate = ((finalBalance - commonDTO.getInitial_investment()) / commonDTO.getInitial_investment()) * 100;
+        System.out.println("Initial Cash: " + commonDTO.getInitial_investment());
         System.out.println("Final Balance: " + finalBalance);
-        System.out.println("Profit: " + (finalBalance - initialCash));
+        System.out.println("Profit: " + profit);
         System.out.println("Profit Rate: " + profitRate + "%");
+
+        ind.setFinalCash(cash);
+        ind.setFinalAsset(asset);
+        ind.setFinalBalance(finalBalance);
+        ind.setProfit(profit);
+        ind.setProfitRate(profitRate);
+        ind.setNumberOfTrades(numberOfTrades);
+
+        return ind;
     }
 }

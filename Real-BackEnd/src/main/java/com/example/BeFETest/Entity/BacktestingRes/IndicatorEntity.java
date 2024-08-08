@@ -19,13 +19,13 @@ public class IndicatorEntity {
     private Long userId;
 
     //옵션 정보들
-    private double initialInvestment;
-    private double transactionFee;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private String targetItem;
-    private String tickKind;
-    private int inquiryRange;
+    private double initial_investment;
+    private double tax;
+    private LocalDate start_date;
+    private LocalDate end_date;
+    private String target_item;
+    private String tick_kind;
+    private int inq_range;
     private int rsiPeriod;
 
 
@@ -36,4 +36,26 @@ public class IndicatorEntity {
     private double profit;
     private double profitRate;
     private int numberOfTrades;
+
+    @Override
+    public String toString() {
+        return "GDEntity{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", initialInvestment=" + initial_investment +
+                ", tax=" + tax +
+                ", startDate=" + start_date +
+                ", endDate=" + end_date +
+                ", targetItem='" + target_item + '\'' +
+                ", tickKind='" + tick_kind + '\'' +
+                ", inquiryRange=" + inq_range +
+                ", rsiPeriod=" + rsiPeriod +
+                ", finalCash=" + finalCash +
+                ", finalAsset=" + finalAsset+
+                ", finalBalance=" + finalBalance+
+                ", profit=" + profit+
+                ", profitRate=" +profitRate+
+                ", numberOfTrades=" + numberOfTrades
+                ;
+    }
 }

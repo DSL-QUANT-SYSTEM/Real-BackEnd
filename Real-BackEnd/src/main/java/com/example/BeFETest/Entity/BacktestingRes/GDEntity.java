@@ -19,13 +19,13 @@ public class GDEntity {
     private Long userId;
 
     //옵션 정보들
-    private double initialInvestment;
-    private double transactionFee;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private String targetItem;
-    private String tickKind;
-    private int inquiryRange;
+    private double initial_investment;
+    private double tax;
+    private LocalDate start_date;
+    private LocalDate end_date;
+    private String target_item;
+    private String tick_kind;
+    private int inq_range;
     private int fastMovingAveragePeriod;
     private int slowMovingAveragePeriod;
 
@@ -43,15 +43,21 @@ public class GDEntity {
         return "GDEntity{" +
                 "id=" + id +
                 ", userId=" + userId +
-                ", initialInvestment=" + initialInvestment +
-                ", transactionFee=" + transactionFee +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", targetItem='" + targetItem + '\'' +
-                ", tickKind='" + tickKind + '\'' +
-                ", inquiryRange=" + inquiryRange +
+                ", initialInvestment=" + initial_investment +
+                ", tax=" + tax +
+                ", startDate=" + start_date +
+                ", endDate=" + end_date +
+                ", targetItem='" + target_item + '\'' +
+                ", tickKind='" + tick_kind + '\'' +
+                ", inquiryRange=" + inq_range +
                 ", fastMovingAveragePeriod=" + fastMovingAveragePeriod +
-                ", slowMovingAveragePeriod=" + slowMovingAveragePeriod
+                ", slowMovingAveragePeriod=" + slowMovingAveragePeriod +
+                ", finalCash=" + finalCash +
+                ", finalAsset=" + finalAsset+
+                ", finalBalance=" + finalBalance+
+                ", profit=" + profit+
+                ", profitRate=" +profitRate+
+                ", numberOfTrades=" + numberOfTrades
                 ;
     }
 }

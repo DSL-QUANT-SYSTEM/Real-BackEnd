@@ -24,7 +24,9 @@ import com.example.BeFETest.Repository.JWT.UserRepository;
 import com.example.BeFETest.Repository.Kospi.Kospi200Repository;
 import com.example.BeFETest.Repository.Kosdak.KosdakRepository;
 import com.example.BeFETest.Repository.Kospi.KospiRepository;
+import com.example.BeFETest.Strategy.BacktestingBB;
 import com.example.BeFETest.Strategy.BacktestingGD;
+import com.example.BeFETest.Strategy.BacktestingIndicator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -147,11 +149,7 @@ public class testController {
     }
 
     @PostMapping("/strategy")
-    public ResponseEntity<?> saveCommonStrategy(@RequestHeader("Authorization") String token, @RequestBody StrategyCommonDTO strategyCommonDTO){
-
-        //Long userId = jwtUtil.getUserIdFromToken(token);
-        //System.out.println("userId = " + userId);
-        //strategyService.saveGDCommonStrategyResult(strategyCommonDTO, userId);
+    public ResponseEntity<?> saveCommonStrategy(@RequestHeader("Authorization")  @RequestBody StrategyCommonDTO strategyCommonDTO){
         commonDTO = strategyService.saveCommonStrategyResult(strategyCommonDTO);
         return ResponseEntity.ok("Common strategy saved successfully");
     }
@@ -161,10 +159,11 @@ public class testController {
 
         System.out.println("FOR TEST");
         System.out.println("commonDTO = " + commonDTO.toString());
+        System.out.println("fastMoveAvg = " + gdStrategyDTO.getFastMoveAvg() + ", slowMovAvg = " + gdStrategyDTO.getSlowMoveAvg());
         Long userId = jwtUtil.getUserIdFromToken(token);
+        gdStrategyDTO.setUserId(userId);
         System.out.println("userId = " + userId);
         GoldenDeadCrossStrategyDTO gdResultDTO = BacktestingGD.executeTrades(commonDTO, gdStrategyDTO);
-        System.out.println("GDRESULTDTO:  "+ gdResultDTO);
         strategyService.saveGDStrategyResult(commonDTO, userId, gdStrategyDTO,gdResultDTO);
         //디비 저장과 프론트 표시간에 문제점발생
 
@@ -179,22 +178,28 @@ public class testController {
     @PostMapping("/strategy/bollinger")
     public ResponseEntity<?> saveBBStrategy(@RequestHeader("Authorization") String token, @RequestBody BollingerBandsStrategyDTO bbStrategyDTO){
 
+        System.out.println("FOR TEST");
+        System.out.println("commonDTO = " + commonDTO.toString());
+        System.out.println("MovingAveragePeriod= "+ bbStrategyDTO.getMoveAvg());
         Long userId = jwtUtil.getUserIdFromToken(token);
         bbStrategyDTO.setUserId(userId);
-        strategyService.saveBBStrategyResult(bbStrategyDTO);
         System.out.println("userId = " + userId);
-        System.out.println("BB = " + bbStrategyDTO.toString());
+        BollingerBandsStrategyDTO bbResultDTO = BacktestingBB.executeTrades(commonDTO, bbStrategyDTO);
+        strategyService.saveBBStrategyResult(commonDTO, userId, bbStrategyDTO,bbResultDTO);
         return ResponseEntity.ok("BB strategy saved successfully");
     }
 
     @PostMapping("/strategy/rsi")
     public ResponseEntity<?> saveRSIStrategy(@RequestHeader("Authorization") String token, @RequestBody IndicatorBasedStrategyDTO indicatorDTO){
 
+        System.out.println("FOR TEST");
+        System.out.println("commonDTO = " + commonDTO.toString());
+        System.out.println("rsiPeriod= "+ indicatorDTO.getRsiPeriod());
         Long userId = jwtUtil.getUserIdFromToken(token);
         indicatorDTO.setUserId(userId);
-        strategyService.saveIndicatorStrategyResult(indicatorDTO);
         System.out.println("userId = " + userId);
-        System.out.println("Indicator = " + indicatorDTO.toString());
+        IndicatorBasedStrategyDTO indResultDTO = BacktestingIndicator.executeTrades(commonDTO, indicatorDTO);
+        strategyService.saveIndicatorStrategyResult(commonDTO, userId, indicatorDTO, indResultDTO);
         return ResponseEntity.ok("Indicator strategy saved successfully");
     }
 

@@ -6,13 +6,13 @@ import java.time.LocalDate;
 @Setter
 public abstract class TradeStrategyDTO {
     //입력정보
-    protected double initialInvestment;
-    protected double transactionFee;
-    protected LocalDate startDate;
-    protected LocalDate endDate;
-    protected String targetItem;
-    protected String tickKind;
-    protected int inquiryRange;
+    protected double initial_investment;
+    protected double tax;
+    protected LocalDate start_date;
+    protected LocalDate end_date;
+    protected String target_item;
+    protected String tick_kind;
+    protected int inq_range;
 
     //결과정보
     protected double finalCash;
@@ -21,16 +21,16 @@ public abstract class TradeStrategyDTO {
     protected double profit;
     protected double profitRate;
     protected int numberOfTrades;
-    public TradeStrategyDTO(double initialInvestment, double transactionFee,
-                            LocalDate startDate, LocalDate endDate, String targetItem, String tickKind,
-                            int inquiryRange) {
-        this.initialInvestment = initialInvestment;
-        this.transactionFee = transactionFee;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.targetItem = targetItem;
-        this.tickKind = tickKind;
-        this.inquiryRange = inquiryRange;
+    public TradeStrategyDTO(double initial_investment, double tax,
+                            LocalDate start_date, LocalDate end_date, String target_item, String tick_kind,
+                            int inq_range) {
+        this.initial_investment = initial_investment;
+        this.tax = tax;
+        this.start_date = start_date;
+        this.end_date = end_date;
+        this.target_item = target_item;
+        this.tick_kind = tick_kind;
+        this.inq_range = inq_range;
 
     }
 

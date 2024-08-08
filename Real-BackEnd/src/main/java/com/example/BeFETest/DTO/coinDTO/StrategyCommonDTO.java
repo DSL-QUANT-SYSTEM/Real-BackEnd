@@ -16,6 +16,7 @@ public class StrategyCommonDTO {
     private String target_item;
     private String tick_kind;
     private int inq_range;
+    private String strategy;
     //결과정보
     private double finalCash;
     private double finalAsset;
@@ -26,7 +27,7 @@ public class StrategyCommonDTO {
 
     public StrategyCommonDTO(double initial_investment, double tax,
                             LocalDate start_date, LocalDate end_date, String target_item, String tick_kind,
-                            int inq_range) {
+                            int inq_range, String strategy) {
         this.initial_investment = initial_investment;
         this.tax = tax;
         this.start_date = start_date;
@@ -34,6 +35,7 @@ public class StrategyCommonDTO {
         this.target_item = target_item;
         this.tick_kind = tick_kind;
         this.inq_range = inq_range;
+        this.strategy=strategy;
     }
 
     @Override
@@ -45,7 +47,8 @@ public class StrategyCommonDTO {
                 ", end_date=" + end_date +
                 ", target_item='" + target_item + '\'' +
                 ", tick_kind='" + tick_kind + '\'' +
-                ", inq_range=" + inq_range
+                ", inq_range=" + inq_range +
+                ", strategy=" + strategy
 //                ", finalCash=" + finalCash +
 //                ", finalAsset=" + finalAsset+
 //                ", finalBalance=" + finalBalance+

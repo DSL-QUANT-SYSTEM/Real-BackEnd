@@ -32,7 +32,7 @@ public class StrategyService {
     public StrategyCommonDTO saveCommonStrategyResult(StrategyCommonDTO strategyDTO){
 
         return new StrategyCommonDTO(strategyDTO.getInitial_investment(), strategyDTO.getTax(), strategyDTO.getStart_date(),
-                strategyDTO.getEnd_date(), strategyDTO.getTarget_item(), strategyDTO.getTarget_item(), strategyDTO.getInq_range());
+                strategyDTO.getEnd_date(), strategyDTO.getTarget_item(), strategyDTO.getTarget_item(), strategyDTO.getInq_range(), strategyDTO.getStrategy());
     }
 
 

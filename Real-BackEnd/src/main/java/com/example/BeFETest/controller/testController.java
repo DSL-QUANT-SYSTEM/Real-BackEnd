@@ -208,12 +208,26 @@ public class testController {
     //@GetMapping("/strategy/golden/result")
     @GetMapping("/result")
     public ResponseEntity<?> getGDStrategyResult(@RequestHeader("Authorization") String token){
-        System.out.println("GD Strategy Result -> ");
+        System.out.println(commonDTO.getStrategy()+ "Backtesting Result -> ");
 
         try{
             Long userId = jwtUtil.getUserIdFromToken(token);
-            GoldenDeadCrossStrategyDTO gdResultDTO = strategyService.getLatestGDStrategyResultByUserId(userId);
-            return ResponseEntity.ok(gdResultDTO);
+            return switch (commonDTO.getStrategy()) {
+                case "golden" -> {
+                    GoldenDeadCrossStrategyDTO gdResultDTO = strategyService.getLatestGDStrategyResultByUserId(userId);
+                    yield ResponseEntity.ok(gdResultDTO);
+                }
+                case "bollinger" -> {
+                    BollingerBandsStrategyDTO bbResultDTO = strategyService.getLatestBBStrategyResultByUserId(userId);
+                    yield ResponseEntity.ok(bbResultDTO);
+                }
+                case "rsi" -> {
+                    IndicatorBasedStrategyDTO indResultDTO = strategyService.getLatestIndicatorStrategyResultByUserId(userId);
+                    yield ResponseEntity.ok(indResultDTO);
+                }
+                default ->
+                        throw new CustomExceptions.InternalServerErrorException("Internal Error", null, "Internal Error", ErrorCode.INTERNAL_SERVER_ERROR);
+            };
 
         } catch(CustomExceptions.ResourceNotFoundException e){
             throw e;

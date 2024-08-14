@@ -213,7 +213,7 @@ public class BacktestingBB  {
         // 밴드폭 축소 후 밀집구간 거치고 상한 돌파 시 -> 매수, 반대로 하향 이탈하면 -> 매도
         List<Boolean> buySignals = generateBuySignals(closePricesBB, upperBand, bandWidth);
         List<Boolean> sellSignals = generateSellSignals(closePricesBB, lowerBand);
-        System.out.println("////////////////////////////////////BB Data////////////////////////////////////////////");
+        System.out.println("////////////////////////////////////BB Result////////////////////////////////////////////");
         int check=0;
         // 매수 및 매도 신호 출력
         for (int i = 0; i < closePricesBB.size(); i++) {

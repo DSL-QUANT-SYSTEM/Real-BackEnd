@@ -318,6 +318,7 @@ public class BacktestingIndicator  {
         List<Double> macdValues = calculateMACD(closePrices);
         List<Double> signalValues = calculateSignal(macdValues, 9);
 
+        System.out.println("////////////////////////////////////Indicator RESULT////////////////////////////////////////////");
         int minSize = Math.min(Math.min(rsiValues.size(), mfiValues.size()), Math.min(macdValues.size(), signalValues.size()));
         for (int i = 3; i < minSize; i++) {
             double currentPrice = closePrices.get(i + closePrices.size() - minSize - 1); // 현재 가격

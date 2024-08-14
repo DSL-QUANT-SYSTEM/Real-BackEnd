@@ -224,7 +224,7 @@ public class BacktestingEnv  {
     // 매매 전략 실행 함수
     public static void executeEnvelopeStrategy(List<Double> closePrices, List<Double> movingAverage, List<Double> upperBand, List<Double> lowerBand, int period, double cash, double asset, double initialCash, double transactionFee) {
         boolean bought = false; // 매수 상태 추적 변수
-
+        System.out.println("////////////////////////////////////ENV RESULT////////////////////////////////////////////");
         for (int i = period; i < closePrices.size(); i++) {
             double currentPrice = closePrices.get(i);
             double previousPrice = closePrices.get(i - 1);

@@ -15,127 +15,124 @@ import java.util.List;
 
 
 
-@Component
-public class DataInitializer implements CommandLineRunner {
-
-    @Autowired
-    private KosdakRepository kosdakRepository;
-
-    @Override
-    public void run(String... args) throws Exception {
-        initializeKosdakData();
-    }
-
-    private void initializeKosdakData() {
-
-        kosdakRepository.deleteAll();
-
-        KosdakResponse response1 = new KosdakResponse();
-        response1.setDate("2024-07-01");
-        response1.setClosingPrice(1500.50);
-        response1.setComparison(10.20);
-        response1.setFluctuationRate(0.68);
-        response1.setOpeningPrice(1480.00);
-        response1.setHighPrice(1520.00);
-        response1.setLowPrice(1470.00);
-        response1.setTradingVolume(500000);
-        response1.setTradingAmount(750000000);
-        response1.setListedCapitalization(1000000000);
-
-        KosdakResponse response2 = new KosdakResponse();
-        response2.setDate(LocalDate.now().toString());
-        response2.setClosingPrice(1510.70);
-        response2.setComparison(10.20);
-        response2.setFluctuationRate(0.68);
-        response2.setOpeningPrice(1490.00);
-        response2.setHighPrice(1530.00);
-        response2.setLowPrice(1480.00);
-        response2.setTradingVolume(520000);
-        response2.setTradingAmount(780000000);
-        response2.setListedCapitalization(1020000000);
-
-        KosdakResponse response3 = new KosdakResponse();
-        response3.setDate("2024-07-03");
-        response3.setClosingPrice(1520.80);
-        response3.setComparison(10.10);
-        response3.setFluctuationRate(0.67);
-        response3.setOpeningPrice(1500.00);
-        response3.setHighPrice(1540.00);
-        response3.setLowPrice(1490.00);
-        response3.setTradingVolume(530000);
-        response3.setTradingAmount(790000000);
-        response3.setListedCapitalization(1030000000);
-
-        kosdakRepository.saveAll(Arrays.asList(response1, response2, response3));
-
-        System.out.println("KosdakResponse test data initialized");
-        // 기존 데이터 삭제
-        //kosdakRepository.deleteAll();
-
-        /*
-        // 데이터 리스트 생성
-        List<KosdakResponse> kosdakResponses = new ArrayList<>();
-
-        // 첫 번째 데이터 생성
-        KosdakResponse kosdakResponse1 = new KosdakResponse();
-        kosdakResponse1.setDate(LocalDate.now().toString());
-        kosdakResponse1.setCurrentPrice(737000);
-        kosdakResponse1.setAllDayRatio(2.2);
-        kosdakResponse1.setPercentChange(-3.5);
-
-        KosdakEntity kosdakEntity1 = new KosdakEntity();
-        kosdakEntity1.setTime(LocalDateTime.now().toString());
-        kosdakEntity1.setValue(737000);
-        kosdakEntity1.setResponse(kosdakResponse1);
-
-        List<KosdakEntity> kosdakEntities1 = new ArrayList<>();
-        kosdakEntities1.add(kosdakEntity1);
-        kosdakResponse1.setKosdakData(kosdakEntities1);
-
-        kosdakResponses.add(kosdakResponse1);
-
-        // 두 번째 데이터 생성
-        KosdakResponse kosdakResponse2 = new KosdakResponse();
-        kosdakResponse2.setDate(LocalDate.now().minusDays(1).toString());
-        kosdakResponse2.setCurrentPrice(745000);
-        kosdakResponse2.setAllDayRatio(1.8);
-        kosdakResponse2.setPercentChange(2.1);
-
-        KosdakEntity kosdakEntity2 = new KosdakEntity();
-        kosdakEntity2.setTime(LocalDateTime.now().toString());
-        kosdakEntity2.setValue(745000);
-        kosdakEntity2.setResponse(kosdakResponse2);
-
-        List<KosdakEntity> kosdakEntities2 = new ArrayList<>();
-        kosdakEntities2.add(kosdakEntity2);
-        kosdakResponse2.setKosdakData(kosdakEntities2);
-
-        kosdakResponses.add(kosdakResponse2);
-
-        // 세 번째 데이터 생성
-        KosdakResponse kosdakResponse3 = new KosdakResponse();
-        kosdakResponse3.setDate(LocalDate.now().minusDays(2).toString());
-        kosdakResponse3.setCurrentPrice(730000);
-        kosdakResponse3.setAllDayRatio(1.5);
-        kosdakResponse3.setPercentChange(-1.0);
-
-        KosdakEntity kosdakEntity3 = new KosdakEntity();
-        kosdakEntity3.setTime(LocalDateTime.now().toString());
-        kosdakEntity3.setValue(730000);
-        kosdakEntity3.setResponse(kosdakResponse3);
-
-        List<KosdakEntity> kosdakEntities3 = new ArrayList<>();
-        kosdakEntities3.add(kosdakEntity3);
-        kosdakResponse3.setKosdakData(kosdakEntities3);
-
-        kosdakResponses.add(kosdakResponse3);
-
-        // 데이터베이스에 저장
-        kosdakRepository.saveAll(kosdakResponses);
-        */
-
-    }
-}
+//@Component
+//public class DataInitializer implements CommandLineRunner {
+//
+//    @Autowired
+//    private KosdakRepository kosdakRepository;
+//
+//    @Override
+//    public void run(String... args) throws Exception {
+//        initializeKosdakData();
+//    }
+//
+//    private void initializeKosdakData() {
+//
+//        kosdakRepository.deleteAll();
+//
+//        KosdakResponse response1 = new KosdakResponse();
+//        response1.setDate("2024-07-01");
+//        response1.setClosingPrice(1500.50);
+//        response1.setFluctuatingRate(0.68);
+//        response1.setOpeningPrice(1480.00);
+//        response1.setHighPrice(1520.00);
+//        response1.setLowPrice(1470.00);
+//        response1.setTradingVolume(500000);
+//
+//        KosdakResponse response2 = new KosdakResponse();
+//        response2.setDate(LocalDate.now().toString());
+//        response2.setClosingPrice(1510.70);
+//        response2.setComparison(10.20);
+//        response2.setFluctuationRate(0.68);
+//        response2.setOpeningPrice(1490.00);
+//        response2.setHighPrice(1530.00);
+//        response2.setLowPrice(1480.00);
+//        response2.setTradingVolume(520000);
+//        response2.setTradingAmount(780000000);
+//        response2.setListedCapitalization(1020000000);
+//
+//        KosdakResponse response3 = new KosdakResponse();
+//        response3.setDate("2024-07-03");
+//        response3.setClosingPrice(1520.80);
+//        response3.setComparison(10.10);
+//        response3.setFluctuationRate(0.67);
+//        response3.setOpeningPrice(1500.00);
+//        response3.setHighPrice(1540.00);
+//        response3.setLowPrice(1490.00);
+//        response3.setTradingVolume(530000);
+//        response3.setTradingAmount(790000000);
+//        response3.setListedCapitalization(1030000000);
+//
+//        kosdakRepository.saveAll(Arrays.asList(response1, response2, response3));
+//
+//        System.out.println("KosdakResponse test data initialized");
+//        // 기존 데이터 삭제
+//        //kosdakRepository.deleteAll();
+//
+//        /*
+//        // 데이터 리스트 생성
+//        List<KosdakResponse> kosdakResponses = new ArrayList<>();
+//
+//        // 첫 번째 데이터 생성
+//        KosdakResponse kosdakResponse1 = new KosdakResponse();
+//        kosdakResponse1.setDate(LocalDate.now().toString());
+//        kosdakResponse1.setCurrentPrice(737000);
+//        kosdakResponse1.setAllDayRatio(2.2);
+//        kosdakResponse1.setPercentChange(-3.5);
+//
+//        KosdakEntity kosdakEntity1 = new KosdakEntity();
+//        kosdakEntity1.setTime(LocalDateTime.now().toString());
+//        kosdakEntity1.setValue(737000);
+//        kosdakEntity1.setResponse(kosdakResponse1);
+//
+//        List<KosdakEntity> kosdakEntities1 = new ArrayList<>();
+//        kosdakEntities1.add(kosdakEntity1);
+//        kosdakResponse1.setKosdakData(kosdakEntities1);
+//
+//        kosdakResponses.add(kosdakResponse1);
+//
+//        // 두 번째 데이터 생성
+//        KosdakResponse kosdakResponse2 = new KosdakResponse();
+//        kosdakResponse2.setDate(LocalDate.now().minusDays(1).toString());
+//        kosdakResponse2.setCurrentPrice(745000);
+//        kosdakResponse2.setAllDayRatio(1.8);
+//        kosdakResponse2.setPercentChange(2.1);
+//
+//        KosdakEntity kosdakEntity2 = new KosdakEntity();
+//        kosdakEntity2.setTime(LocalDateTime.now().toString());
+//        kosdakEntity2.setValue(745000);
+//        kosdakEntity2.setResponse(kosdakResponse2);
+//
+//        List<KosdakEntity> kosdakEntities2 = new ArrayList<>();
+//        kosdakEntities2.add(kosdakEntity2);
+//        kosdakResponse2.setKosdakData(kosdakEntities2);
+//
+//        kosdakResponses.add(kosdakResponse2);
+//
+//        // 세 번째 데이터 생성
+//        KosdakResponse kosdakResponse3 = new KosdakResponse();
+//        kosdakResponse3.setDate(LocalDate.now().minusDays(2).toString());
+//        kosdakResponse3.setCurrentPrice(730000);
+//        kosdakResponse3.setAllDayRatio(1.5);
+//        kosdakResponse3.setPercentChange(-1.0);
+//
+//        KosdakEntity kosdakEntity3 = new KosdakEntity();
+//        kosdakEntity3.setTime(LocalDateTime.now().toString());
+//        kosdakEntity3.setValue(730000);
+//        kosdakEntity3.setResponse(kosdakResponse3);
+//
+//        List<KosdakEntity> kosdakEntities3 = new ArrayList<>();
+//        kosdakEntities3.add(kosdakEntity3);
+//        kosdakResponse3.setKosdakData(kosdakEntities3);
+//
+//        kosdakResponses.add(kosdakResponse3);
+//
+//        // 데이터베이스에 저장
+//        kosdakRepository.saveAll(kosdakResponses);
+//        */
+//
+//    }
+//}
 
 
 

@@ -18,17 +18,13 @@ public class KospiConverter {
     public static KospiResponseDTO toDto(KospiResponse response) {
 
         return new KospiResponseDTO(
-                response.getId(),
                 response.getDate(),
                 response.getClosingPrice(),
-                response.getComparison(),
-                response.getFluctuationRate(),
+                response.getFluctuatingRate(),
                 response.getOpeningPrice(),
                 response.getHighPrice(),
                 response.getLowPrice(),
-                response.getTradingVolume(),
-                response.getTradingAmount(),
-                response.getListedCapitalization()
+                response.getTradingVolume()
         );
     }
 }

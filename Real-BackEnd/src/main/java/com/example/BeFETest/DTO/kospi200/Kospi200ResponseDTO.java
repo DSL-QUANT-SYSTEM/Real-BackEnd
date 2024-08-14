@@ -1,5 +1,7 @@
 package com.example.BeFETest.DTO.kospi200;
 
+import com.example.BeFETest.Entity.kospi.KospiResponse;
+import com.example.BeFETest.Entity.kospi200.Kospi200Response;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,37 +10,38 @@ import java.util.List;
 @Getter
 @Setter
 public class Kospi200ResponseDTO {
-
-    private Long id;
     private String date;
-    private double closingPrice;
-    private double comparison;
-    private double fluctuationRate;
-    private double openingPrice;
-    private double highPrice;
-    private double lowPrice;
-    private double tradingVolume;
-    private double tradingAmount;
-    private double listedCapitalization;
+    private String closingPrice;
+    private String openingPrice;
+    private String highPrice;
+    private String lowPrice;
+    private String tradingVolume;
+    private String fluctuatingRate;
 
 
 
 
     public Kospi200ResponseDTO() {}
 
-    public Kospi200ResponseDTO(Long id, String date, double closingPrice, double comparison, double fluctuationRate,
-                               double openingPrice, double highPrice, double lowPrice, double tradingVolume,
-                               double tradingAmount, double listedCapitalization) {
-        this.id = id;
+    public Kospi200ResponseDTO(String date, String closingPrice, String fluctuatingRate,
+                               String openingPrice, String highPrice, String lowPrice, String tradingVolume) {
         this.date = date;
         this.closingPrice = closingPrice;
-        this.comparison = comparison;
-        this.fluctuationRate = fluctuationRate;
         this.openingPrice = openingPrice;
         this.highPrice = highPrice;
         this.lowPrice = lowPrice;
         this.tradingVolume = tradingVolume;
-        this.tradingAmount = tradingAmount;
-        this.listedCapitalization = listedCapitalization;
+        this.fluctuatingRate = fluctuatingRate;
+    }
+    public Kospi200Response toEntity(){
+        return Kospi200Response.builder()
+                .date(this.date)
+                .closingPrice(this.closingPrice)
+                .openingPrice(this.openingPrice)
+                .highPrice(this.highPrice)
+                .lowPrice(this.lowPrice)
+                .tradingVolume(this.tradingVolume)
+                .fluctuatingRate(this.fluctuatingRate)
+                .build();
     }
 }

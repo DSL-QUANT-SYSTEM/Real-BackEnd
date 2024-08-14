@@ -26,17 +26,13 @@ public class Kospi200Converter {
 
 
         return new Kospi200ResponseDTO(
-                response.getId(),
                 response.getDate(),
                 response.getClosingPrice(),
-                response.getComparison(),
-                response.getFluctuationRate(),
+                response.getFluctuatingRate(),
                 response.getOpeningPrice(),
                 response.getHighPrice(),
                 response.getLowPrice(),
-                response.getTradingVolume(),
-                response.getTradingAmount(),
-                response.getListedCapitalization()
+                response.getTradingVolume()
         );
     }
 }

@@ -1,52 +1,34 @@
 package com.example.BeFETest.Entity.kospi;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
-
+@Builder
 @Getter
 @Setter
 @Entity
 @Table(name = "kospi_response")
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class KospiResponse {
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String date;
 
-    @Column(name = "closing_price", nullable = false)
-    private double closingPrice;
+    private String closingPrice;
 
-    @Column(name = "comparison", nullable = false)
-    private double comparison;
+    private String openingPrice;
 
-    @Column(name = "fluctuation_rate", nullable = false)
-    private double fluctuationRate;
+    private String highPrice;
 
-    @Column(name = "opening_price", nullable = false)
-    private double openingPrice;
+    private String lowPrice;
 
-    @Column(name = "high_price", nullable = false)
-    private double highPrice;
+    private String tradingVolume;
 
-    @Column(name = "low_price", nullable = false)
-    private double lowPrice;
-
-    @Column(name = "trading_volume", nullable = false)
-    private double tradingVolume;
-
-    @Column(name = "trading_amount", nullable = false)
-    private double tradingAmount;
-
-    @Column(name = "listed_capitalization", nullable = false)
-    private double listedCapitalization;
-
+    private String fluctuatingRate;
 
 
 

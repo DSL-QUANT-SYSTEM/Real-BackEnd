@@ -206,36 +206,27 @@ public class testController {
 
 
     //@GetMapping("/strategy/golden/result")
-    @GetMapping("/result")
+    @GetMapping("/result/golden")
     public ResponseEntity<?> getGDStrategyResult(@RequestHeader("Authorization") String token){
         System.out.println(commonDTO.getStrategy()+ "Backtesting Result -> ");
-
-        try{
-            Long userId = jwtUtil.getUserIdFromToken(token);
-            return switch (commonDTO.getStrategy()) {
-                case "golden" -> {
-                    GoldenDeadCrossStrategyDTO gdResultDTO = strategyService.getLatestGDStrategyResultByUserId(userId);
-                    yield ResponseEntity.ok(gdResultDTO);
-                }
-                case "bollinger" -> {
-                    BollingerBandsStrategyDTO bbResultDTO = strategyService.getLatestBBStrategyResultByUserId(userId);
-                    yield ResponseEntity.ok(bbResultDTO);
-                }
-                case "rsi" -> {
-                    IndicatorBasedStrategyDTO indResultDTO = strategyService.getLatestIndicatorStrategyResultByUserId(userId);
-                    yield ResponseEntity.ok(indResultDTO);
-                }
-                default ->
-                        throw new CustomExceptions.InternalServerErrorException("Internal Error", null, "Internal Error", ErrorCode.INTERNAL_SERVER_ERROR);
-            };
-
-        } catch(CustomExceptions.ResourceNotFoundException e){
-            throw e;
-        } catch(Exception e){
-            throw new CustomExceptions.InternalServerErrorException("Internal Error", e, "Internal Error", ErrorCode.INTERNAL_SERVER_ERROR);
-        }
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        GoldenDeadCrossStrategyDTO gdResultDTO = strategyService.getLatestGDStrategyResultByUserId(userId);
+        return ResponseEntity.ok(gdResultDTO);
     }
-
+    @GetMapping("/result/bollinger")
+    public ResponseEntity<?> getBBStrategyResult(@RequestHeader("Authorization") String token){
+        System.out.println(commonDTO.getStrategy()+ "Backtesting Result -> ");
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        BollingerBandsStrategyDTO bbResultDTO = strategyService.getLatestBBStrategyResultByUserId(userId);
+        return ResponseEntity.ok(bbResultDTO);
+    }
+    @GetMapping("/result/rsi")
+    public ResponseEntity<?> getIndicatorStrategyResult(@RequestHeader("Authorization") String token){
+        System.out.println(commonDTO.getStrategy()+ "Backtesting Result -> ");
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        IndicatorBasedStrategyDTO indResultDTO = strategyService.getLatestIndicatorStrategyResultByUserId(userId);
+        return ResponseEntity.ok(indResultDTO);
+    }
 
     /*
     @PostMapping("/strategy")

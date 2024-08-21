@@ -1,4 +1,4 @@
-package com.example.BeFETest.Scheduling;
+package com.example.BeFETest.Scheduling.Writer;
 
 import com.example.BeFETest.DTO.kospi200.Kospi200ResponseDTO;
 import com.example.BeFETest.Entity.kospi200.Kospi200Response;

@@ -96,7 +96,6 @@ public class authService {
             Account existOwner = accountRepo.findByKakaoId(account.getKakaoId()).orElse(null);
             //Account existOwner = accountRepo.findById(account.getId()).orElse(null);
             if (existOwner == null) {
-                System.out.println("FOR TEST!!");
                 accountRepo.save(account);
             } else {
                 account = existOwner;

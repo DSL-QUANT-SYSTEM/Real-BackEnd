@@ -28,12 +28,6 @@ public class StockScheduler {
 
     @Scheduled(fixedRate = 500000)
     public void testScheduler(){
-        //종가
-        //시가
-        //변동%
-        //고가
-        //저가
-        //거래량
         try{
             Document kospi = Jsoup.connect("https://finance.naver.com/sise/sise_index.naver?code=KOSPI").get();
             Document kosdaq = Jsoup.connect("https://finance.naver.com/sise/sise_index.naver?code=KOSDAQ").get();

@@ -65,7 +65,7 @@ public class testController {
 
     private StrategyCommonDTO commonDTO;
 
-    @PostMapping("/mypage")
+    //@PostMapping("/mypage")
     public UserInfo checkUserInfo(@RequestBody UserRequest request) {
         UserEntity userEntity = userRepository.findByBirthDate(request.getUser_birth());
         if(userEntity == null) {
@@ -92,7 +92,7 @@ public class testController {
         return userInfo;
     }
 
-    @GetMapping("/home/kosdak")
+    //@GetMapping("/home/kosdak")
     public ResponseEntity<KosdakResponseDTO> getKosdak(){
         try {
             LocalDate currentDate = LocalDate.now();
@@ -111,7 +111,7 @@ public class testController {
         }
     }
 
-    @GetMapping("/home/kospi")
+    //@GetMapping("/home/kospi")
     public ResponseEntity<KospiResponseDTO> getKospi(){
         try {
             LocalDate currentDate = LocalDate.now();
@@ -131,7 +131,7 @@ public class testController {
     }
 
 
-    @GetMapping("/home/kospi200")
+    //@GetMapping("/home/kospi200")
     public ResponseEntity<Kospi200ResponseDTO> getkospi200(){
         try {
             LocalDate currentDate = LocalDate.now();

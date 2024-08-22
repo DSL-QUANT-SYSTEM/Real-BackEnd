@@ -29,13 +29,6 @@ public class StrategyService {
     private IndicatorRepository indicatorRepository;
 
 
-    public StrategyCommonDTO saveCommonStrategyResult(StrategyCommonDTO strategyDTO){
-
-        return new StrategyCommonDTO(strategyDTO.getInitial_investment(), strategyDTO.getTax(), strategyDTO.getStart_date(),
-                strategyDTO.getEnd_date(), strategyDTO.getTarget_item(), strategyDTO.getTick_kind(), strategyDTO.getInq_range(), strategyDTO.getStrategy());
-    }
-
-
     @Transactional
     public void saveGDStrategyResult(StrategyCommonDTO strategyDTO, Long userId, GoldenDeadCrossStrategyDTO gdDTO, GoldenDeadCrossStrategyDTO gdResult){
         //해당 하는 GD entity를 DB에서 userId로 찾은 후 추가 옵션정보 저장하기
@@ -52,6 +45,7 @@ public class StrategyService {
         gdEntity.setTarget_item(strategyDTO.getTarget_item());
         gdEntity.setTick_kind(strategyDTO.getTick_kind());
         gdEntity.setInq_range(strategyDTO.getInq_range());
+        gdEntity.setStrategy(strategyDTO.getStrategy());
         //골든데드 정보 저장
         gdEntity.setFastMovingAveragePeriod(gdDTO.getFastMoveAvg());
         gdEntity.setSlowMovingAveragePeriod(gdDTO.getSlowMoveAvg());
@@ -96,7 +90,7 @@ public class StrategyService {
     public GoldenDeadCrossStrategyDTO getLatestGDStrategyResultByUserId(Long userId){
         GDEntity gdEntity = gdRepository.findTopByUserIdOrderByIdDesc(userId);
         return new GoldenDeadCrossStrategyDTO(gdEntity.getInitial_investment(), gdEntity.getTax(), gdEntity.getStart_date(),
-                gdEntity.getEnd_date(), gdEntity.getTarget_item(), gdEntity.getTick_kind(), gdEntity.getInq_range(), gdEntity.getFinalCash(), gdEntity.getFinalAsset(),
+                gdEntity.getEnd_date(), gdEntity.getTarget_item(), gdEntity.getTick_kind(), gdEntity.getInq_range(),gdEntity.getStrategy(), gdEntity.getFinalCash(), gdEntity.getFinalAsset(),
                 gdEntity.getFinalBalance(), gdEntity.getProfit(), gdEntity.getProfitRate(), gdEntity.getNumberOfTrades(), gdEntity.getFastMovingAveragePeriod(), gdEntity.getSlowMovingAveragePeriod());
     }
 
@@ -153,7 +147,7 @@ public class StrategyService {
     public BollingerBandsStrategyDTO getLatestBBStrategyResultByUserId(Long userId){
         BBEntity bbEntity = bbRepository.findTopByUserIdOrderByIdDesc(userId);
         return new BollingerBandsStrategyDTO(bbEntity.getInitial_investment(), bbEntity.getTax(), bbEntity.getStart_date(),
-                bbEntity.getEnd_date(), bbEntity.getTarget_item(), bbEntity.getTick_kind(), bbEntity.getInq_range(), bbEntity.getFinalCash(), bbEntity.getFinalAsset(),
+                bbEntity.getEnd_date(), bbEntity.getTarget_item(), bbEntity.getTick_kind(), bbEntity.getInq_range(), bbEntity.getStrategy() ,bbEntity.getFinalCash(), bbEntity.getFinalAsset(),
                 bbEntity.getFinalBalance(), bbEntity.getProfit(), bbEntity.getProfitRate(), bbEntity.getNumberOfTrades(),bbEntity.getMoveAvg());
     }
 
@@ -210,7 +204,7 @@ public class StrategyService {
     public IndicatorBasedStrategyDTO getLatestIndicatorStrategyResultByUserId(Long userId){
         IndicatorEntity indiEntity = indicatorRepository.findTopByUserIdOrderByIdDesc(userId);
         return new IndicatorBasedStrategyDTO(indiEntity.getInitial_investment(), indiEntity.getTax(), indiEntity.getStart_date(),
-                indiEntity.getEnd_date(), indiEntity.getTarget_item(), indiEntity.getTick_kind(), indiEntity.getInq_range(), indiEntity.getFinalCash(), indiEntity.getFinalAsset(),
+                indiEntity.getEnd_date(), indiEntity.getTarget_item(), indiEntity.getTick_kind(), indiEntity.getInq_range(), indiEntity.getStrategy() ,indiEntity.getFinalCash(), indiEntity.getFinalAsset(),
                 indiEntity.getFinalBalance(), indiEntity.getProfit(), indiEntity.getProfitRate(), indiEntity.getNumberOfTrades(),indiEntity.getRsiPeriod());
     }
 

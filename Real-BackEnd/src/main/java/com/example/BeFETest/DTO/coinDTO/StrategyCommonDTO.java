@@ -27,7 +27,8 @@ public class StrategyCommonDTO {
 
     public StrategyCommonDTO(double initial_investment, double tax,
                             LocalDate start_date, LocalDate end_date, String target_item, String tick_kind,
-                            int inq_range, String strategy) {
+                            int inq_range, String strategy, double finalCash, double finalAsset,
+                             double finalBalance, double profit, double profitRate, int numberOfTrades) {
         this.initial_investment = initial_investment;
         this.tax = tax;
         this.start_date = start_date;
@@ -36,6 +37,14 @@ public class StrategyCommonDTO {
         this.tick_kind = tick_kind;
         this.inq_range = inq_range;
         this.strategy=strategy;
+
+        this.finalCash=finalCash;
+        this.finalAsset=finalAsset;
+        this.finalBalance=finalBalance;
+        this.profit=profit;
+        this.profitRate=profitRate;
+        this.numberOfTrades=numberOfTrades;
+
     }
 
     @Override

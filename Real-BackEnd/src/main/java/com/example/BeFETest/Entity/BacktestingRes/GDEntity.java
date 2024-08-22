@@ -26,6 +26,7 @@ public class GDEntity {
     private String target_item;
     private String tick_kind;
     private int inq_range;
+    private String strategy;
     private int fastMovingAveragePeriod;
     private int slowMovingAveragePeriod;
 
@@ -50,6 +51,7 @@ public class GDEntity {
                 ", targetItem='" + target_item + '\'' +
                 ", tickKind='" + tick_kind + '\'' +
                 ", inquiryRange=" + inq_range +
+                ", strategy=" + strategy +
                 ", fastMovingAveragePeriod=" + fastMovingAveragePeriod +
                 ", slowMovingAveragePeriod=" + slowMovingAveragePeriod +
                 ", finalCash=" + finalCash +

@@ -25,7 +25,7 @@ public class BacktestingEnv  {
     public static void main(String[] args) {
         EnvelopeDTO Env=new EnvelopeDTO(1000000, 0.01,
                 LocalDate.of(2023, 1, 1), LocalDate.of(2024, 1, 1),
-                "KRW-STMX", "D", 200, 0,0,0,0,0,0,0.1,0.1, 20);
+                "KRW-STMX", "D", 200, "env",0,0,0,0,0,0,0.1,0.1, 20);
 
         double asset = 0;                   // 초기 자산 (BTC)
 

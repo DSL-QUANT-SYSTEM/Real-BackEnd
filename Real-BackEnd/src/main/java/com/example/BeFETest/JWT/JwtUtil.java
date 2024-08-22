@@ -57,6 +57,7 @@ public class JwtUtil {
     }
     */
 
+    /*
     public Long getUserIdFromToken(String token) {
         try {
             // Remove "Bearer " prefix if present
@@ -68,6 +69,24 @@ public class JwtUtil {
                     .parseClaimsJws(token)
                     .getBody();
 
+            return Long.parseLong(claims.getSubject());
+        } catch (Exception e) {
+            System.err.println("Error extracting user ID from token: " + e.getMessage());
+            throw new RuntimeException("Invalid token");
+        }
+    }
+    */
+
+    public Long getUserIdFromToken(String token) {
+        try {
+            System.out.println("Token received: " + token); // Add this line
+            if (token.startsWith("Bearer ")) {
+                token = token.substring(7);
+            }
+            Claims claims = Jwts.parser()
+                    .setSigningKey(jwtSecret)
+                    .parseClaimsJws(token)
+                    .getBody();
             return Long.parseLong(claims.getSubject());
         } catch (Exception e) {
             System.err.println("Error extracting user ID from token: " + e.getMessage());

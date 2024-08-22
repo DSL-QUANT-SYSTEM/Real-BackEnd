@@ -16,10 +16,11 @@ public class GoldenDeadCrossStrategyDTO extends TradeStrategyDTO{
 
 
     public GoldenDeadCrossStrategyDTO(double initial_investment, double tax, LocalDate start_date, LocalDate end_date,
-                                      String target_item, String tick_kind, int inq_range, double finalCash, double finalAsset, double finalBalance,
+                                      String target_item, String tick_kind, int inq_range, String strategy, double finalCash, double finalAsset, double finalBalance,
                                       double profit, double profitRate, int numberOfTrades,
                                       int fastMoveAvg, int slowMoveAvg) {
-        super(initial_investment, tax, start_date, end_date, target_item, tick_kind, inq_range);
+        super(initial_investment, tax, start_date, end_date, target_item, tick_kind, inq_range, strategy,finalCash, finalAsset, finalBalance,
+                profit, profitRate, numberOfTrades);
         this.fastMoveAvg = fastMoveAvg;
         this.slowMoveAvg = slowMoveAvg;
     }
@@ -44,6 +45,12 @@ public class GoldenDeadCrossStrategyDTO extends TradeStrategyDTO{
                 ", inq_range=" + inq_range +
                 ", fastMoveAvg=" + fastMoveAvg +
                 ", slowMoveAvg=" + slowMoveAvg +
+                ", finalCash=" + finalCash +
+                ", finalAsset=" + finalAsset +
+                ", finalBalance=" + finalBalance +
+                ", profit=" + profit +
+                ", profitRate=" + profitRate +
+                ", numberOfTrades=" + numberOfTrades +
                 '}';
     }
 

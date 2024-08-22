@@ -13,6 +13,7 @@ public abstract class TradeStrategyDTO {
     protected String target_item;
     protected String tick_kind;
     protected int inq_range;
+    private String strategy;
 
     //결과정보
     protected double finalCash;
@@ -23,7 +24,8 @@ public abstract class TradeStrategyDTO {
     protected int numberOfTrades;
     public TradeStrategyDTO(double initial_investment, double tax,
                             LocalDate start_date, LocalDate end_date, String target_item, String tick_kind,
-                            int inq_range) {
+                            int inq_range, String strategy, double finalCash, double finalAsset,
+                            double finalBalance, double profit, double profitRate, int numberOfTrades) {
         this.initial_investment = initial_investment;
         this.tax = tax;
         this.start_date = start_date;
@@ -31,6 +33,14 @@ public abstract class TradeStrategyDTO {
         this.target_item = target_item;
         this.tick_kind = tick_kind;
         this.inq_range = inq_range;
+        this.strategy=strategy;
+
+        this.finalCash=finalCash;
+        this.finalAsset=finalAsset;
+        this.finalBalance=finalBalance;
+        this.profit=profit;
+        this.profitRate=profitRate;
+        this.numberOfTrades=numberOfTrades;
 
     }
 

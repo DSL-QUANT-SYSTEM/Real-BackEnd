@@ -150,7 +150,7 @@ public class testController {
 
     @PostMapping("/strategy")
     public ResponseEntity<?> saveCommonStrategy(@RequestHeader("Authorization")  @RequestBody StrategyCommonDTO strategyCommonDTO){
-        commonDTO = strategyService.saveCommonStrategyResult(strategyCommonDTO);
+        commonDTO=strategyCommonDTO;
         return ResponseEntity.ok("Common strategy saved successfully");
     }
 
@@ -205,12 +205,13 @@ public class testController {
 
 
 
-    //@GetMapping("/strategy/golden/result")
+
     @GetMapping("/result/golden")
     public ResponseEntity<?> getGDStrategyResult(@RequestHeader("Authorization") String token){
         System.out.println(commonDTO.getStrategy()+ "Backtesting Result -> ");
         Long userId = jwtUtil.getUserIdFromToken(token);
         GoldenDeadCrossStrategyDTO gdResultDTO = strategyService.getLatestGDStrategyResultByUserId(userId);
+        System.out.println(gdResultDTO);
         return ResponseEntity.ok(gdResultDTO);
     }
     @GetMapping("/result/bollinger")

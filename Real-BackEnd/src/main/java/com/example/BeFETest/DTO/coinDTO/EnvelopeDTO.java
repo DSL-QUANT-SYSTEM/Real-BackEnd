@@ -12,11 +12,12 @@ public class EnvelopeDTO extends TradeStrategyDTO{
     private double moving_down;
     private int movingAveragePeriod;
 
-    public EnvelopeDTO(double initialInvestment, double tax, LocalDate start_date, LocalDate end_date,
-                       String target_item, String tick_kind, int inq_range, double finalCash, double finalAsset, double finalBalance,
+    public EnvelopeDTO(double initial_investment, double tax, LocalDate start_date, LocalDate end_date,
+                       String target_item, String tick_kind, int inq_range, String strategy,double finalCash, double finalAsset, double finalBalance,
                        double profit, double profitRate, int numberOfTrades,
                        double moving_down, double moving_up, int movingAveragePeriod) {
-        super(initialInvestment, tax, start_date, end_date, target_item, tick_kind, inq_range);
+        super(initial_investment, tax, start_date, end_date, target_item, tick_kind, inq_range, strategy,finalCash, finalAsset, finalBalance,
+                profit, profitRate, numberOfTrades);
         this.moving_down=moving_down;
         this.moving_up=moving_up;
         this.movingAveragePeriod=movingAveragePeriod;

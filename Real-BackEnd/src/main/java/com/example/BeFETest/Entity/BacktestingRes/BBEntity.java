@@ -26,6 +26,7 @@ public class BBEntity {
     private String target_item;
     private String tick_kind;
     private int inq_range;
+    private String strategy;
     private int moveAvg;
 
 
@@ -49,6 +50,7 @@ public class BBEntity {
                 ", targetItem='" + target_item + '\'' +
                 ", tickKind='" + tick_kind + '\'' +
                 ", inquiryRange=" + inq_range +
+                ", strategy=" + strategy +
                 ", moveAvg=" + moveAvg +
                 ", finalCash=" + finalCash +
                 ", finalAsset=" + finalAsset+

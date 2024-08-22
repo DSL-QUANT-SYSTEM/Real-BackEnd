@@ -71,6 +71,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/user-info").authenticated()
                                 .requestMatchers("/login/**").permitAll()
                                 .requestMatchers("/refresh-token").permitAll()
+                                .requestMatchers("/result/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling ->

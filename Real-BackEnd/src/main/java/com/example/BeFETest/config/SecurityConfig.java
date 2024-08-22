@@ -72,8 +72,12 @@ public class SecurityConfig {
                                 .requestMatchers("/login/**").permitAll()
                                 .requestMatchers("/refresh-token").permitAll()
                                 .requestMatchers("/result/**").permitAll()
+                                .requestMatchers("/user/info").permitAll()
                                 .requestMatchers("/userinfo").permitAll()
                                 .requestMatchers("/mypage").permitAll()
+                                .requestMatchers("/kospi").permitAll()
+                                .requestMatchers("/kosdaq").permitAll()
+                                .requestMatchers("/kospi200").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling ->

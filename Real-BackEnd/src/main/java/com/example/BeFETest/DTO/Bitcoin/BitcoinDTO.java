@@ -5,13 +5,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
 @Builder
 @Data
 public class BitcoinDTO {
-    private String date;
+    @DateTimeFormat(pattern = "yyyy- MM- dd")
+    private LocalDate date;
     private String closingPrice;
     private String openingPrice;
     private String highPrice;
@@ -21,7 +25,7 @@ public class BitcoinDTO {
 
     public BitcoinDTO(){}
 
-    public BitcoinDTO(String date, String closingPrice, String fluctuatingRate,
+    public BitcoinDTO(LocalDate date, String closingPrice, String fluctuatingRate,
                              String openingPrice, String highPrice, String lowPrice, String tradingVolume) {
         this.date = date;
         this.closingPrice = closingPrice;

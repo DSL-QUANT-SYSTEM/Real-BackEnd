@@ -5,7 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -13,7 +15,9 @@ import java.util.List;
 @Builder
 @Data
 public class KosdakResponseDTO {
-    private String date;
+    @DateTimeFormat(pattern = "yyyy- MM- dd")
+    private LocalDate date;
+
     private String closingPrice;
     private String openingPrice;
     private String highPrice;
@@ -24,7 +28,7 @@ public class KosdakResponseDTO {
 
     public KosdakResponseDTO() {}
 
-    public KosdakResponseDTO(String date, String closingPrice, String fluctuatingRate,
+    public KosdakResponseDTO(LocalDate date, String closingPrice, String fluctuatingRate,
                              String openingPrice, String highPrice, String lowPrice, String tradingVolume) {
         this.date = date;
         this.closingPrice = closingPrice;

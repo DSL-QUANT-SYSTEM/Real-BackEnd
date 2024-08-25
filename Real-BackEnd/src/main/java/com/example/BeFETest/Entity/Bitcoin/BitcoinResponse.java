@@ -5,6 +5,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 
 @Builder
 @Getter
@@ -17,7 +20,8 @@ public class BitcoinResponse {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String date;
+    @DateTimeFormat(pattern = "yyyy- MM- dd")
+    private LocalDate date;
 
     private String closingPrice;
 

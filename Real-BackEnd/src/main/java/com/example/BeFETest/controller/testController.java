@@ -93,60 +93,60 @@ public class testController {
     }
 
     //@GetMapping("/home/kosdak")
-    public ResponseEntity<KosdakResponseDTO> getKosdak(){
-        try {
-            LocalDate currentDate = LocalDate.now();
-            String currentDateString = currentDate.toString();
-            KosdakResponse kosdakResponse = kosdakRepository.findByDate(currentDateString);
-            if(kosdakResponse != null){
-                KosdakResponseDTO kosdakDTO = KosdakConverter.toDto(kosdakResponse);
-                return new ResponseEntity<>(kosdakDTO, HttpStatus.OK);
-            } else {
-                throw new CustomExceptions.ResourceNotFoundException("Resource Not", null, "Resource Not", ErrorCode.NOT_FOUND);
-            }
-        } catch (CustomExceptions.BadGatewayException e){//(CustomExceptions.ResourceNotFoundException e) {
-            throw e; // ResourceNotFoundException 그대로 던짐
-        } catch (Exception e) {
-            throw new CustomExceptions.InternalServerErrorException("Internal Error" + e.getMessage(), e, "Internal Error" + e.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    public ResponseEntity<KosdakResponseDTO> getKosdak(){
+//        try {
+//            LocalDate currentDate = LocalDate.now();
+//            String currentDateString = currentDate.toString();
+//            KosdakResponse kosdakResponse = kosdakRepository.findByDate(currentDateString);
+//            if(kosdakResponse != null){
+//                KosdakResponseDTO kosdakDTO = KosdakConverter.toDto(kosdakResponse);
+//                return new ResponseEntity<>(kosdakDTO, HttpStatus.OK);
+//            } else {
+//                throw new CustomExceptions.ResourceNotFoundException("Resource Not", null, "Resource Not", ErrorCode.NOT_FOUND);
+//            }
+//        } catch (CustomExceptions.BadGatewayException e){//(CustomExceptions.ResourceNotFoundException e) {
+//            throw e; // ResourceNotFoundException 그대로 던짐
+//        } catch (Exception e) {
+//            throw new CustomExceptions.InternalServerErrorException("Internal Error" + e.getMessage(), e, "Internal Error" + e.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
     //@GetMapping("/home/kospi")
-    public ResponseEntity<KospiResponseDTO> getKospi(){
-        try {
-            LocalDate currentDate = LocalDate.now();
-            String currentDateString = currentDate.toString();
-            KospiResponse kospiResponse = kospiRepository.findByDate(currentDateString);
-            if(kospiResponse != null){
-                KospiResponseDTO kospiDTO = KospiConverter.toDto(kospiResponse);
-                return new ResponseEntity<>(kospiDTO, HttpStatus.OK);
-            } else {
-                throw new CustomExceptions.ResourceNotFoundException("Resource Not", null, "Resource Not", ErrorCode.NOT_FOUND);
-            }
-        } catch (CustomExceptions.ResourceNotFoundException e) {
-            throw e; // ResourceNotFoundException 그대로
-        } catch (Exception e) {
-            throw new CustomExceptions.InternalServerErrorException("Internal Error", e, "Internal Error", ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    public ResponseEntity<KospiResponseDTO> getKospi(){
+//        try {
+//            LocalDate currentDate = LocalDate.now();
+//            String currentDateString = currentDate.toString();
+//            KospiResponse kospiResponse = kospiRepository.findByDate(currentDateString);
+//            if(kospiResponse != null){
+//                KospiResponseDTO kospiDTO = KospiConverter.toDto(kospiResponse);
+//                return new ResponseEntity<>(kospiDTO, HttpStatus.OK);
+//            } else {
+//                throw new CustomExceptions.ResourceNotFoundException("Resource Not", null, "Resource Not", ErrorCode.NOT_FOUND);
+//            }
+//        } catch (CustomExceptions.ResourceNotFoundException e) {
+//            throw e; // ResourceNotFoundException 그대로
+//        } catch (Exception e) {
+//            throw new CustomExceptions.InternalServerErrorException("Internal Error", e, "Internal Error", ErrorCode.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
 
     //@GetMapping("/home/kospi200")
-    public ResponseEntity<Kospi200ResponseDTO> getkospi200(){
-        try {
-            LocalDate currentDate = LocalDate.now();
-            String currentDateString = currentDate.toString();
-            Kospi200Response kospi200Response = kospi200Repository.findByDate(currentDateString);
-            if(kospi200Response != null){
-                Kospi200ResponseDTO kospi200DTO = Kospi200Converter.toDto(kospi200Response);
-                return new ResponseEntity<>(kospi200DTO, HttpStatus.OK);
-            } else {
-                throw new CustomExceptions.ResourceNotFoundException("Resource Not", null, "Resource Not", ErrorCode.NOT_FOUND);
-            }
-        } catch (Exception e){
-            throw new CustomExceptions.InternalServerErrorException("Internal Error", null, "Internal Error", ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    public ResponseEntity<Kospi200ResponseDTO> getkospi200(){
+//        try {
+//            LocalDate currentDate = LocalDate.now();
+//            String currentDateString = currentDate.toString();
+//            Kospi200Response kospi200Response = kospi200Repository.findByDate(currentDateString);
+//            if(kospi200Response != null){
+//                Kospi200ResponseDTO kospi200DTO = Kospi200Converter.toDto(kospi200Response);
+//                return new ResponseEntity<>(kospi200DTO, HttpStatus.OK);
+//            } else {
+//                throw new CustomExceptions.ResourceNotFoundException("Resource Not", null, "Resource Not", ErrorCode.NOT_FOUND);
+//            }
+//        } catch (Exception e){
+//            throw new CustomExceptions.InternalServerErrorException("Internal Error", null, "Internal Error", ErrorCode.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
     @PostMapping("/strategy")
     public ResponseEntity<?> saveCommonStrategy(@RequestHeader("Authorization")  @RequestBody StrategyCommonDTO strategyCommonDTO){

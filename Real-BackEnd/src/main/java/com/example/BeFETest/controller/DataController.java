@@ -37,20 +37,20 @@ public class DataController {
 
     private final accountRepo accountRepo;
 
-    @GetMapping("/kosdaq")
-    public List<KosdakResponseDTO> getKosdakYearData(){
-        return kosdakService.getResponsesByYear();
-    }
+//    @GetMapping("/kosdaq")
+//    public List<KosdakResponseDTO> getKosdakYearData(){
+//        return kosdakService.getResponsesByYear();
+//    }
 
-    @GetMapping("/kospi")
-    public List<KospiResponseDTO> getKospiYearData(){
-        return kospiService.getResponsesByYear();
-    }
+//    @GetMapping("/kospi")
+//    public List<KospiResponseDTO> getKospiYearData(){
+//        return kospiService.getResponsesByYear();
+//    }
 
-    @GetMapping("/kospi200")
-    public List<Kospi200ResponseDTO> getKospi200YearData(){
-        return kospi200Service.getResponsesByYear();
-    }
+//    @GetMapping("/kospi200")
+//    public List<Kospi200ResponseDTO> getKospi200YearData(){
+//        return kospi200Service.getResponsesByYear();
+//    }
 
     @GetMapping("/userinfo")
     public ResponseEntity<?> getUserInfo(@RequestHeader("Authorization") String token){

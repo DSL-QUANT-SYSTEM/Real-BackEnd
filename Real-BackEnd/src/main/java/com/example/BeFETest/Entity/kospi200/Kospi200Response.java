@@ -2,7 +2,9 @@ package com.example.BeFETest.Entity.kospi200;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -19,7 +21,8 @@ public class Kospi200Response {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String date;
+    @DateTimeFormat(pattern = "yyyy- MM- dd")
+    private LocalDate date;
 
     private String closingPrice;
 

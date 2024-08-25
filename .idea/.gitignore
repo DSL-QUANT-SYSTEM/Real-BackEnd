@@ -6,3 +6,9 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+
+Real-BackEnd/.gradle/
+Real-BackEnd/.idea/
+Real-BackEnd/build/
+Real-BackEnd/gradle/
+Real-BackEnd/src/main/resources/application.properties

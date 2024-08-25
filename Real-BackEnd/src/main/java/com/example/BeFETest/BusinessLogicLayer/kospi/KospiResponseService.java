@@ -21,19 +21,19 @@ public class KospiResponseService {
     @Autowired
     private KospiRepository KospiRepository;
 
-    public List<KospiResponseDTO> getResponsesByYear(){
-        LocalDate today = LocalDate.now();
-        LocalDate oneYearMinus = LocalDate.now().minusYears(1);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String formatDate = oneYearMinus.format(formatter);
-        String endDate = today.format(formatter);
-        log.info("FORMAT DATE: {}, CURRENT DATE: {}", formatDate, endDate);
-
-        List<KospiResponse> KospiResponses = KospiRepository.findResponsesByDate(formatDate);
-        //List<KospiResponse> KospiResponses = KospiRepository.findResponsesWithinDateRange(formatDate, endDate);
-        return KospiResponses.stream()
-                .map(KospiConverter::toDto)
-                .collect(Collectors.toList());
-
-    }
+//    public List<KospiResponseDTO> getResponsesByYear(){
+//        LocalDate today = LocalDate.now();
+//        LocalDate oneYearMinus = LocalDate.now().minusYears(1);
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//        String formatDate = oneYearMinus.format(formatter);
+//        String endDate = today.format(formatter);
+//        log.info("FORMAT DATE: {}, CURRENT DATE: {}", formatDate, endDate);
+//
+//        List<KospiResponse> KospiResponses = KospiRepository.findResponsesByDate(formatDate);
+//        //List<KospiResponse> KospiResponses = KospiRepository.findResponsesWithinDateRange(formatDate, endDate);
+//        return KospiResponses.stream()
+//                .map(KospiConverter::toDto)
+//                .collect(Collectors.toList());
+//
+//    }
 }

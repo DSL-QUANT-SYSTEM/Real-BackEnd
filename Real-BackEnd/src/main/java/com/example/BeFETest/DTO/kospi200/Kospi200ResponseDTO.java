@@ -2,15 +2,21 @@ package com.example.BeFETest.DTO.kospi200;
 
 import com.example.BeFETest.Entity.kospi.KospiResponse;
 import com.example.BeFETest.Entity.kospi200.Kospi200Response;
+import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.cglib.core.Local;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
 @Setter
+@Builder
+@Data
 public class Kospi200ResponseDTO {
-    private String date;
+    private LocalDate date;
     private String closingPrice;
     private String openingPrice;
     private String highPrice;
@@ -23,7 +29,7 @@ public class Kospi200ResponseDTO {
 
     public Kospi200ResponseDTO() {}
 
-    public Kospi200ResponseDTO(String date, String closingPrice, String fluctuatingRate,
+    public Kospi200ResponseDTO(LocalDate date, String closingPrice, String fluctuatingRate,
                                String openingPrice, String highPrice, String lowPrice, String tradingVolume) {
         this.date = date;
         this.closingPrice = closingPrice;

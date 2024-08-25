@@ -21,19 +21,19 @@ public class KosdakResponseService {
     @Autowired
     private KosdakRepository kosdakRepository;
 
-    public List<KosdakResponseDTO> getResponsesByYear(){
-        LocalDate today = LocalDate.now();
-        LocalDate oneYearMinus = LocalDate.now().minusYears(1);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String formatDate = oneYearMinus.format(formatter);
-        String endDate = today.format(formatter);
-        log.info("FORMAT DATE: {}, CURRENT DATE: {}", formatDate, endDate);
-
-        List<KosdakResponse> kosdakResponses = kosdakRepository.findResponsesByDate(formatDate);
-        //List<KosdakResponse> kosdakResponses = kosdakRepository.findResponsesWithinDateRange(formatDate, endDate);
-        return kosdakResponses.stream()
-                .map(KosdakConverter::toDto)
-                .collect(Collectors.toList());
-
-    }
+//    public List<KosdakResponseDTO> getResponsesByYear(){
+//        LocalDate today = LocalDate.now();
+//        LocalDate oneYearMinus = LocalDate.now().minusYears(1);
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//        String formatDate = oneYearMinus.format(formatter);
+//        String endDate = today.format(formatter);
+//        log.info("FORMAT DATE: {}, CURRENT DATE: {}", formatDate, endDate);
+//
+//        List<KosdakResponse> kosdakResponses = kosdakRepository.findResponsesByDate(formatDate);
+//        //List<KosdakResponse> kosdakResponses = kosdakRepository.findResponsesWithinDateRange(formatDate, endDate);
+//        return kosdakResponses.stream()
+//                .map(KosdakConverter::toDto)
+//                .collect(Collectors.toList());
+//
+//    }
 }

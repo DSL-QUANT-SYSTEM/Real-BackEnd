@@ -1,15 +1,12 @@
 package com.example.BeFETest.BusinessLogicLayer.Strategy;
 
-import com.example.BeFETest.DTO.coinDTO.BollingerBandsStrategyDTO;
-import com.example.BeFETest.DTO.coinDTO.GoldenDeadCrossStrategyDTO;
-import com.example.BeFETest.DTO.coinDTO.IndicatorBasedStrategyDTO;
-import com.example.BeFETest.DTO.coinDTO.StrategyCommonDTO;
+import com.example.BeFETest.DTO.coinDTO.*;
 import com.example.BeFETest.Entity.BacktestingRes.BBEntity;
+import com.example.BeFETest.Entity.BacktestingRes.EnvEntity;
 import com.example.BeFETest.Entity.BacktestingRes.GDEntity;
 import com.example.BeFETest.Entity.BacktestingRes.IndicatorEntity;
-import com.example.BeFETest.Repository.Backtesting.BBRepository;
-import com.example.BeFETest.Repository.Backtesting.GDRepository;
-import com.example.BeFETest.Repository.Backtesting.IndicatorRepository;
+import com.example.BeFETest.Entity.BacktestingRes.WEntity;
+import com.example.BeFETest.Repository.Backtesting.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +25,11 @@ public class StrategyService {
     @Autowired
     private IndicatorRepository indicatorRepository;
 
+    @Autowired
+    private EnvRepository envRepository;
+
+    @Autowired
+    private WRepository wRepository;
 
     @Transactional
     public void saveGDStrategyResult(StrategyCommonDTO strategyDTO, Long userId, GoldenDeadCrossStrategyDTO gdDTO, GoldenDeadCrossStrategyDTO gdResult){
@@ -174,7 +176,7 @@ public class StrategyService {
         indEntity.setProfitRate(indResult.getProfitRate());
         indEntity.setNumberOfTrades(indResult.getNumberOfTrades());
 
-        System.out.println("bbEntity = " + indEntity.toString());
+        System.out.println("indicatorEntity = " + indEntity.toString());
         indicatorRepository.save(indEntity);
 
         List<IndicatorEntity> indStrategies = indicatorRepository.findByUserIdOrderByIdDesc(indEntity.getUserId());
@@ -206,6 +208,122 @@ public class StrategyService {
         return new IndicatorBasedStrategyDTO(indiEntity.getInitial_investment(), indiEntity.getTax(), indiEntity.getStart_date(),
                 indiEntity.getEnd_date(), indiEntity.getTarget_item(), indiEntity.getTick_kind(), indiEntity.getInq_range(), indiEntity.getStrategy() ,indiEntity.getFinalCash(), indiEntity.getFinalAsset(),
                 indiEntity.getFinalBalance(), indiEntity.getProfit(), indiEntity.getProfitRate(), indiEntity.getNumberOfTrades(),indiEntity.getRsiPeriod());
+    }
+
+    @Transactional
+    public void saveEnvelopeStrategyResult(StrategyCommonDTO strategyDTO, Long userId, EnvelopeDTO envelopeDTO, EnvelopeDTO envResultDTO){
+
+        //공통정보 저장
+        EnvEntity envEntity = new EnvEntity();
+        envEntity.setUserId(userId);
+        envEntity.setInitial_investment(strategyDTO.getInitial_investment());
+        envEntity.setTax(strategyDTO.getTax());
+        envEntity.setStart_date(strategyDTO.getStart_date());
+        envEntity.setEnd_date(strategyDTO.getEnd_date());
+        envEntity.setTarget_item(strategyDTO.getTarget_item());
+        envEntity.setTick_kind(strategyDTO.getTick_kind());
+        envEntity.setInq_range(strategyDTO.getInq_range());
+        //엔벨로프 정보 저장
+        envEntity.setMoving_up(envelopeDTO.getMoving_up());
+        envEntity.setMoving_down(envelopeDTO.getMoving_down());
+        envEntity.setMovingAveragePeriod(envelopeDTO.getMovingAveragePeriod());
+        //백테스팅 결과 저장
+        envEntity.setFinalAsset(envResultDTO.getFinalAsset());
+        envEntity.setFinalCash(envResultDTO.getFinalCash());
+        envEntity.setFinalBalance(envResultDTO.getFinalBalance());
+        envEntity.setProfit(envResultDTO.getProfit());
+        envEntity.setProfitRate(envResultDTO.getProfitRate());
+        envEntity.setNumberOfTrades(envResultDTO.getNumberOfTrades());
+
+        System.out.println("envEntity = " + envEntity.toString());
+        envRepository.save(envEntity);
+
+        List<EnvEntity> envStrategies = envRepository.findByUserIdOrderByIdDesc(envEntity.getUserId());
+        assert envStrategies != null;
+        if (envStrategies.size() > 10) {
+            List<EnvEntity> strategiesToDelete = envStrategies.subList(10, envStrategies.size());
+            envRepository.deleteAll(strategiesToDelete);
+        }
+
+//        if(indiEntity != null){
+//            indiEntity.setRsiPeriod(strategyDTO.getRsiPeriod());
+//
+//            indicatorRepository.save(indiEntity);
+//
+//            List<IndicatorEntity> indiStrategies = indicatorRepository.findByUserIdOrderByIdDesc(indiEntity.getUserId());
+//            if (indiStrategies.size() > 10) {
+//                List<IndicatorEntity> strategiesToDelete = indiStrategies.subList(10, indiStrategies.size());
+//                indicatorRepository.deleteAll(strategiesToDelete);
+//            }
+//        }else {
+//            throw new CustomExceptions.ResourceNotFoundException("전략 데이터 없음", null, "no data in db", ErrorCode.NOT_FOUND);
+//        }
+
+
+    }
+
+    public EnvelopeDTO getLatestEnvStrategyResultByUserId(Long userId){
+        EnvEntity envEntity = envRepository.findTopByUserIdOrderByIdDesc(userId);
+        return new EnvelopeDTO(envEntity.getInitial_investment(), envEntity.getTax(), envEntity.getStart_date(),
+                envEntity.getEnd_date(), envEntity.getTarget_item(), envEntity.getTick_kind(), envEntity.getInq_range(), envEntity.getStrategy() ,envEntity.getFinalCash(), envEntity.getFinalAsset(),
+                envEntity.getFinalBalance(), envEntity.getProfit(), envEntity.getProfitRate(), envEntity.getNumberOfTrades(),envEntity.getMoving_up(), envEntity.getMoving_down(), envEntity.getMovingAveragePeriod());
+    }
+
+    @Transactional
+    public void saveWilliamsStrategyResult(StrategyCommonDTO strategyDTO, Long userId, WilliamsDTO williamsDTO, WilliamsDTO williamsResultDTO){
+
+        //공통정보 저장
+        WEntity wEntity = new WEntity();
+        wEntity.setUserId(userId);
+        wEntity.setInitial_investment(strategyDTO.getInitial_investment());
+        wEntity.setTax(strategyDTO.getTax());
+        wEntity.setStart_date(strategyDTO.getStart_date());
+        wEntity.setEnd_date(strategyDTO.getEnd_date());
+        wEntity.setTarget_item(strategyDTO.getTarget_item());
+        wEntity.setTick_kind(strategyDTO.getTick_kind());
+        wEntity.setInq_range(strategyDTO.getInq_range());
+        //골든데드 정보 저장
+        wEntity.setWilliamsPeriod(williamsDTO.getWilliamsPeriod());
+        //백테스팅 결과 저장
+        wEntity.setFinalAsset(williamsResultDTO.getFinalAsset());
+        wEntity.setFinalCash(williamsResultDTO.getFinalCash());
+        wEntity.setFinalBalance(williamsResultDTO.getFinalBalance());
+        wEntity.setProfit(williamsResultDTO.getProfit());
+        wEntity.setProfitRate(williamsResultDTO.getProfitRate());
+        wEntity.setNumberOfTrades(williamsResultDTO.getNumberOfTrades());
+
+        System.out.println("williamsEntity = " + wEntity.toString());
+        wRepository.save(wEntity);
+
+        List<WEntity> wStrategies = wRepository.findByUserIdOrderByIdDesc(wEntity.getUserId());
+        assert wStrategies != null;
+        if (wStrategies.size() > 10) {
+            List<WEntity> strategiesToDelete = wStrategies.subList(10, wStrategies.size());
+            wRepository.deleteAll(strategiesToDelete);
+        }
+
+//        if(indiEntity != null){
+//            indiEntity.setRsiPeriod(strategyDTO.getRsiPeriod());
+//
+//            indicatorRepository.save(indiEntity);
+//
+//            List<IndicatorEntity> indiStrategies = indicatorRepository.findByUserIdOrderByIdDesc(indiEntity.getUserId());
+//            if (indiStrategies.size() > 10) {
+//                List<IndicatorEntity> strategiesToDelete = indiStrategies.subList(10, indiStrategies.size());
+//                indicatorRepository.deleteAll(strategiesToDelete);
+//            }
+//        }else {
+//            throw new CustomExceptions.ResourceNotFoundException("전략 데이터 없음", null, "no data in db", ErrorCode.NOT_FOUND);
+//        }
+
+
+    }
+
+    public WilliamsDTO getLatestWilliamsStrategyResultByUserId(Long userId){
+        WEntity wEntity = wRepository.findTopByUserIdOrderByIdDesc(userId);
+        return new WilliamsDTO(wEntity.getInitial_investment(), wEntity.getTax(), wEntity.getStart_date(),
+                wEntity.getEnd_date(), wEntity.getTarget_item(), wEntity.getTick_kind(), wEntity.getInq_range(), wEntity.getStrategy() ,wEntity.getFinalCash(), wEntity.getFinalAsset(),
+                wEntity.getFinalBalance(), wEntity.getProfit(), wEntity.getProfitRate(), wEntity.getNumberOfTrades(),wEntity.getWilliamsPeriod());
     }
 
 }

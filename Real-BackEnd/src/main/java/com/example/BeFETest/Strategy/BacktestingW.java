@@ -1,7 +1,7 @@
 package com.example.BeFETest.Strategy;
-import com.example.BeFETest.DTO.coinDTO.BollingerBandsStrategyDTO;
-import com.example.BeFETest.DTO.coinDTO.EnvelopeDTO;
+import com.example.BeFETest.DTO.coinDTO.GoldenDeadCrossStrategyDTO;
 import com.example.BeFETest.DTO.coinDTO.StrategyCommonDTO;
+import com.example.BeFETest.DTO.coinDTO.WilliamsDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
@@ -16,13 +16,18 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class BacktestingEnv  {
-    private static final String accessKey = "YOUR_ACCESS_KEY";
-    private static final String secretKey = "YOUR_SECRET_KEY";
+public class BacktestingW {
+    //윌리엄스 전략 백테스팅 예시
+    private static final String accessKey = "78lGs0QBrcPzJry5zDO8XhcTT7H98txHkyZBeHoT";
+    private static final String secretKey = "nTOf48sFQxIyD5xwChtFxEnMKwqBsxxWCQx8G1KS";
     private static final String serverUrl = "https://api.upbit.com";
+
+    // Constants
+    private static final int minOrderAmt = 5000;
 
 
     //-----------------------------------------------------------------------------
@@ -136,21 +141,26 @@ public class BacktestingEnv  {
     public static List<Candle> getCandle(String targetItem, String tickKind, int inqRange) {
         try {
             String targetUrl;
-            if (tickKind.equals("1") || tickKind.equals("3") || tickKind.equals("5") || tickKind.equals("10") ||
-                    tickKind.equals("15") || tickKind.equals("30") || tickKind.equals("60") || tickKind.equals("240")) {
-                targetUrl = "minutes/" + tickKind;
-            } else if (tickKind.equals("D")) {
-                targetUrl = "days";
-            } else if (tickKind.equals("W")) {
-                targetUrl = "weeks";
-            } else if (tickKind.equals("M")) {
-                targetUrl = "months";
+            if (tickKind != null) {
+                if (tickKind.equals("1") || tickKind.equals("3") || tickKind.equals("5") || tickKind.equals("10") ||
+                        tickKind.equals("15") || tickKind.equals("30") || tickKind.equals("60") || tickKind.equals("240")) {
+                    targetUrl = "minutes/" + tickKind;
+                } else if (tickKind.equals("D")) {
+                    targetUrl = "days";
+                } else if (tickKind.equals("W")) {
+                    targetUrl = "weeks";
+                } else if (tickKind.equals("M")) {
+                    targetUrl = "months";
+                } else {
+                    throw new IllegalArgumentException("잘못된 틱 종류: " + tickKind);
+                }
             } else {
-                throw new IllegalArgumentException("잘못된 틱 종류: " + tickKind);
+                throw new IllegalArgumentException("틱 종류가 null입니다.");
             }
 
 
-            String url = serverUrl + "/v1/candles/" + targetUrl + "?market=" + targetItem + "&count=" + inqRange;
+//            String url = serverUrl + "/v1/candles/" + targetUrl + "?market=" + targetItem + "&count=" + inqRange;
+            String url = serverUrl + "/v1/candles/" + targetUrl + "?market=" + "KRW-STMX" + "&count=" + inqRange;
 
             String response = sendRequest(url);
             List<Map<String, Object>> parsedData = parseJson(response);
@@ -179,93 +189,96 @@ public class BacktestingEnv  {
         }
     }
 
-    // 이동평균 계산 함수
-    public static List<Double> calculateMovingAverage(List<Double> closePrices, int period) {
-        List<Double> movingAverage = new ArrayList<>();
-        for (int i = period - 1; i < closePrices.size(); i++) {
-            double sum = 0;
-            for (int j = i; j > i - period; j--) {
-                sum += closePrices.get(j);
+
+
+    // 윌리엄스 %R 계산
+    public static double calculateWilliamsR(List<Candle> candles, int index, int n) {
+        double high = Double.MIN_VALUE;
+        double low = Double.MAX_VALUE;
+
+        for (int i = index; i < index + n; i++) {
+            Candle candle = candles.get(i);
+            if (candle.getHighPrice() > high) {
+                high = candle.getHighPrice();
             }
-            movingAverage.add(sum / period);
+            if (candle.getLowPrice() < low) {
+                low = candle.getLowPrice();
+            }
         }
-        return movingAverage;
+        double close = candles.get(index).getTradePrice();
+        return ((high - close) / (high - low)) * (-100);
     }
 
-    // 매매 전략 실행 함수
-    public static EnvelopeDTO executeTrades(StrategyCommonDTO commonDTO, EnvelopeDTO envelopeDTO) {
+    // 매수 및 매도 로직
+    public static WilliamsDTO executeTrades(StrategyCommonDTO commonDTO, WilliamsDTO williamsDTO) {
+        List<Candle> candles = getCandle(commonDTO.getTarget_item(), commonDTO.getTick_kind(), commonDTO.getInq_range());
+
+        // 가격 데이터를 추출하여 closePrices 리스트에 추가
+        List<Double> closePricesW = new ArrayList<>();
+        assert candles != null;
+        for (Candle candle : candles) {
+            closePricesW.add(candle.getTradePrice());
+        }
+
+        boolean bought = false;
         double cash = commonDTO.getInitial_investment();
-        double transactionFee = commonDTO.getTax();
-        double asset  = 0;       // 초기 자산 (BTC)
-
-        List<Candle> candlesEnv= getCandle(commonDTO.getTarget_item(), commonDTO.getTick_kind(), commonDTO.getInq_range());
-
-        // 가격 데이터 추출
-        List<Double> closePrices = new ArrayList<>();
-        assert candlesEnv != null;
-        for (Candle candle : candlesEnv) {
-            closePrices.add(candle.getTradePrice());
-        }
-
-        // 이동평균 및 밴드 계산
-        List<Double> movingAverage = calculateMovingAverage(closePrices, envelopeDTO.getMovingAveragePeriod());
-        List<Double> upperBand = new ArrayList<>();
-        List<Double> lowerBand = new ArrayList<>();
-
-        for (Double avg : movingAverage) {
-            upperBand.add(avg + (avg * envelopeDTO.getMoving_up()));
-            lowerBand.add(avg - (avg * envelopeDTO.getMoving_down()));
-        }
-
-        boolean bought = false; // 매수 상태 추적 변수
+        double asset = 0;
+        int daysSinceExtreme = -1;
+        double extremeValue = -100;
         int numberOfTrades=0;
 
-        System.out.println("////////////////////////////////////ENV RESULT////////////////////////////////////////////");
-        for (int i = envelopeDTO.getMovingAveragePeriod(); i < closePrices.size(); i++) {
-            double currentPrice = closePrices.get(i);
-            double previousPrice = closePrices.get(i - 1);
+        for (int i = 0; i < Objects.requireNonNull(candles).size() - williamsDTO.getWilliamsPeriod(); i++) {
+            double williamsR = calculateWilliamsR(candles, i, williamsDTO.getWilliamsPeriod());
 
-            // 매수 조건: 주가가 하단 밴드를 하향 돌파 후 다시 상향 돌파할 때
-            if (!bought && previousPrice < lowerBand.get(i - envelopeDTO.getMovingAveragePeriod()) && currentPrice > lowerBand.get(i - envelopeDTO.getMovingAveragePeriod())) {
-                System.out.println("Buy at " + currentPrice);
-                if (cash > 0) {
-                    double amountToBuy = cash / currentPrice * (1 - transactionFee);
-                    asset += amountToBuy;
+            // 매수 로직
+            if (williamsR == -100) {
+                daysSinceExtreme = 0;
+                extremeValue = williamsR;
+            } else if (daysSinceExtreme >= 0) {
+                daysSinceExtreme++;
+                if (daysSinceExtreme == 5 && williamsR >= -95 && extremeValue == -100 && !bought) {
+                    double price = candles.get(i).getTradePrice();
+                    asset = cash / price;
                     cash = 0;
                     bought = true;
                     numberOfTrades++;
+                    System.out.println("매수: " + price + "에 매수");
                 }
             }
 
-            // 매도 조건: 주가가 상단 밴드를 상향 돌파 후 다시 하향 돌파할 때
-            if (bought && previousPrice > upperBand.get(i - envelopeDTO.getMovingAveragePeriod()) && currentPrice < upperBand.get(i - envelopeDTO.getMovingAveragePeriod())) {
-                System.out.println("Sell at " + currentPrice);
-                if (asset > 0) {
-                    double amountToSell = asset * currentPrice * (1 - transactionFee);
-                    cash += amountToSell;
+            // 매도 로직
+            if (williamsR == 0) {
+                daysSinceExtreme = 0;
+                extremeValue = williamsR;
+            } else if (daysSinceExtreme >= 0) {
+                daysSinceExtreme++;
+                if (daysSinceExtreme == 5 && williamsR <= -5 && extremeValue == 0 && bought) {
+                    double price = candles.get(i).getTradePrice();
+                    cash = asset * price;
                     asset = 0;
                     bought = false;
                     numberOfTrades++;
+                    System.out.println("매도: " + price + "에 매도");
                 }
             }
         }
 
         // 최종 자산 계산
-        double finalBalance = cash + asset * closePrices.getLast();
+        double finalBalance = cash + asset * closePricesW.getLast();
         double profit=(finalBalance - commonDTO.getInitial_investment());
         double profitRate = ((finalBalance - commonDTO.getInitial_investment()) / commonDTO.getInitial_investment()) * 100;
         System.out.println("Initial Cash: " + commonDTO.getInitial_investment());
         System.out.println("Final Balance: " + finalBalance);
-        System.out.println("Profit: " + (finalBalance - commonDTO.getInitial_investment()));
+        System.out.println("Profit: " + profit);
         System.out.println("Profit Rate: " + profitRate + "%");
 
-        envelopeDTO.setFinalCash(cash);
-        envelopeDTO.setFinalAsset(asset);
-        envelopeDTO.setFinalBalance(finalBalance);
-        envelopeDTO.setProfit(profit);
-        envelopeDTO.setProfitRate(profitRate);
-        envelopeDTO.setNumberOfTrades(numberOfTrades);
+        williamsDTO.setFinalCash(cash);
+        williamsDTO.setFinalAsset(asset);
+        williamsDTO.setFinalBalance(finalBalance);
+        williamsDTO.setProfit(profit);
+        williamsDTO.setProfitRate(profitRate);
+        williamsDTO.setNumberOfTrades(numberOfTrades);
 
-        return envelopeDTO;
+        return williamsDTO;
     }
 }

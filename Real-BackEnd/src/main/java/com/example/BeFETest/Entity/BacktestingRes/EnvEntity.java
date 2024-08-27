@@ -9,8 +9,8 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
-@Table(name = "bollinger_band")
-public class BBEntity {
+@Table(name = "envelope")
+public class EnvEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,9 @@ public class BBEntity {
     private String tick_kind;
     private int inq_range;
     private String strategy;
-    private int moveAvg;
+    private double moving_up;
+    private double moving_down;
+    private int movingAveragePeriod;
 
 
     //결과 정보들
@@ -40,7 +42,7 @@ public class BBEntity {
 
     @Override
     public String toString() {
-        return "BBEntity{" +
+        return "EnvEntity{" +
                 "id=" + id +
                 ", userId=" + userId +
                 ", initialInvestment=" + initial_investment +
@@ -51,7 +53,9 @@ public class BBEntity {
                 ", tickKind='" + tick_kind + '\'' +
                 ", inquiryRange=" + inq_range +
                 ", strategy=" + strategy +
-                ", moveAvg=" + moveAvg +
+                ", moving_up=" + moving_up +
+                ", moving_down=" + moving_down +
+                ", movingAveragePeriod=" + movingAveragePeriod +
                 ", finalCash=" + finalCash +
                 ", finalAsset=" + finalAsset+
                 ", finalBalance=" + finalBalance+

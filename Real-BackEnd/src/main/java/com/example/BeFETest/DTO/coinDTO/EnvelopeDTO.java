@@ -8,6 +8,7 @@ import java.time.LocalDate;
 @Setter
 public class EnvelopeDTO extends TradeStrategyDTO{
 
+    private Long userId;
     private double moving_up;
     private double moving_down;
     private int movingAveragePeriod;

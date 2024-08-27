@@ -24,9 +24,7 @@ import com.example.BeFETest.Repository.JWT.UserRepository;
 import com.example.BeFETest.Repository.Kospi.Kospi200Repository;
 import com.example.BeFETest.Repository.Kosdak.KosdakRepository;
 import com.example.BeFETest.Repository.Kospi.KospiRepository;
-import com.example.BeFETest.Strategy.BacktestingBB;
-import com.example.BeFETest.Strategy.BacktestingGD;
-import com.example.BeFETest.Strategy.BacktestingIndicator;
+import com.example.BeFETest.Strategy.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -203,6 +201,36 @@ public class testController {
         return ResponseEntity.ok("Indicator strategy saved successfully");
     }
 
+    @PostMapping("/strategy/env")
+    public ResponseEntity<?> saveEnvStrategy(@RequestHeader("Authorization") String token, @RequestBody EnvelopeDTO envelopeDTO){
+
+        System.out.println("FOR TEST");
+        System.out.println("commonDTO = " + commonDTO.toString());
+        System.out.println("Moving_up= "+ envelopeDTO.getMoving_up());
+        System.out.println("Moving_down= "+ envelopeDTO.getMoving_down());
+        System.out.println("MovingAveragePeriod= "+ envelopeDTO.getMovingAveragePeriod());
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        envelopeDTO.setUserId(userId);
+        System.out.println("userId = " + userId);
+        EnvelopeDTO envResultDTO = BacktestingEnv.executeTrades(commonDTO, envelopeDTO);
+        strategyService.saveEnvelopeStrategyResult(commonDTO, userId, envelopeDTO, envResultDTO);
+        return ResponseEntity.ok("Indicator strategy saved successfully");
+    }
+
+    @PostMapping("/strategy/williams")
+    public ResponseEntity<?> saveWStrategy(@RequestHeader("Authorization") String token, @RequestBody WilliamsDTO williamsDTO){
+
+        System.out.println("FOR TEST");
+        System.out.println("commonDTO = " + commonDTO.toString());
+        System.out.println("WilliamsPeriod= "+ williamsDTO.getWilliamsPeriod());
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        williamsDTO.setUserId(userId);
+        System.out.println("userId = " + userId);
+        WilliamsDTO williamsResultDTO = BacktestingW.executeTrades(commonDTO, williamsDTO);
+        strategyService.saveWilliamsStrategyResult(commonDTO, userId, williamsDTO, williamsResultDTO);
+        return ResponseEntity.ok("Indicator strategy saved successfully");
+    }
+
 
 
 
@@ -211,7 +239,6 @@ public class testController {
         System.out.println(commonDTO.getStrategy()+ "Backtesting Result -> ");
         Long userId = jwtUtil.getUserIdFromToken(token);
         GoldenDeadCrossStrategyDTO gdResultDTO = strategyService.getLatestGDStrategyResultByUserId(userId);
-        System.out.println(gdResultDTO);
         return ResponseEntity.ok(gdResultDTO);
     }
     @GetMapping("/result/bollinger")
@@ -227,6 +254,20 @@ public class testController {
         Long userId = jwtUtil.getUserIdFromToken(token);
         IndicatorBasedStrategyDTO indResultDTO = strategyService.getLatestIndicatorStrategyResultByUserId(userId);
         return ResponseEntity.ok(indResultDTO);
+    }
+    @GetMapping("/result/env")
+    public ResponseEntity<?> getEnvStrategyResult(@RequestHeader("Authorization") String token){
+        System.out.println(commonDTO.getStrategy()+ "Backtesting Result -> ");
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        EnvelopeDTO envelopeDTO = strategyService.getLatestEnvStrategyResultByUserId(userId);
+        return ResponseEntity.ok(envelopeDTO);
+    }
+    @GetMapping("/result/williams")
+    public ResponseEntity<?> getWilliamsStrategyResult(@RequestHeader("Authorization") String token){
+        System.out.println(commonDTO.getStrategy()+ "Backtesting Result -> ");
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        WilliamsDTO williamsDTO = strategyService.getLatestWilliamsStrategyResultByUserId(userId);
+        return ResponseEntity.ok(williamsDTO);
     }
 
     /*

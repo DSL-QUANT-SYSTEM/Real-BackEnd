@@ -40,7 +40,7 @@ public class IndicatorEntity {
 
     @Override
     public String toString() {
-        return "GDEntity{" +
+        return "IndicatorEntity{" +
                 "id=" + id +
                 ", userId=" + userId +
                 ", initialInvestment=" + initial_investment +

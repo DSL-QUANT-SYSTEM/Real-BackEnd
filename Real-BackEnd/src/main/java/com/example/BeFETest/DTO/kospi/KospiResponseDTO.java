@@ -1,16 +1,13 @@
 package com.example.BeFETest.DTO.kospi;
 
-import com.example.BeFETest.Entity.kosdak.KosdakResponse;
 import com.example.BeFETest.Entity.kospi.KospiResponse;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.cglib.core.Local;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Getter
 @Setter

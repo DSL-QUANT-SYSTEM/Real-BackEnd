@@ -1,12 +1,11 @@
 package com.example.BeFETest.Scheduling;
 
 import com.example.BeFETest.DTO.Bitcoin.BitcoinDTO;
-import com.example.BeFETest.DTO.kosdak.KosdakResponseDTO;
+import com.example.BeFETest.DTO.kosdaq.KosdaqResponseDTO;
 import com.example.BeFETest.DTO.kospi.KospiResponseDTO;
 import com.example.BeFETest.DTO.kospi200.Kospi200ResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.file.FlatFileItemReader;
-import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.separator.DefaultRecordSeparatorPolicy;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
@@ -19,8 +18,8 @@ import org.springframework.core.io.Resource;
 @RequiredArgsConstructor
 public class CsvReader {
     @Bean
-    public FlatFileItemReader<KosdakResponseDTO> KosdakReader(){
-        FlatFileItemReader<KosdakResponseDTO> flatFileItemReader = new FlatFileItemReader<>();
+    public FlatFileItemReader<KosdaqResponseDTO> KosdakReader(){
+        FlatFileItemReader<KosdaqResponseDTO> flatFileItemReader = new FlatFileItemReader<>();
 
         Resource resource = new ClassPathResource("KosdakData.csv");
 
@@ -31,7 +30,7 @@ public class CsvReader {
 
         flatFileItemReader.setRecordSeparatorPolicy(new DefaultRecordSeparatorPolicy());
 
-        DefaultLineMapper<KosdakResponseDTO> defaultLineMapper = new DefaultLineMapper<>();
+        DefaultLineMapper<KosdaqResponseDTO> defaultLineMapper = new DefaultLineMapper<>();
 
         DelimitedLineTokenizer delimitedLineTokenizer = new DelimitedLineTokenizer(",");
         delimitedLineTokenizer.setNames("date","closingPrice","openingPrice","highPrice","lowPrice","tradingVolume","fluctuatingRate");
@@ -43,7 +42,7 @@ public class CsvReader {
 //        defaultLineMapper.setFieldSetMapper(beanWrapperFieldSetMapper);
 
         //customBeanWrapperFiledSetMapper 사용(LocalDate)
-        CustomFieldSetMapper<KosdakResponseDTO> customMapper = new CustomFieldSetMapper<>(KosdakResponseDTO.class);
+        CustomFieldSetMapper<KosdaqResponseDTO> customMapper = new CustomFieldSetMapper<>(KosdaqResponseDTO.class);
         defaultLineMapper.setFieldSetMapper(customMapper);
 
         flatFileItemReader.setLineMapper(defaultLineMapper);

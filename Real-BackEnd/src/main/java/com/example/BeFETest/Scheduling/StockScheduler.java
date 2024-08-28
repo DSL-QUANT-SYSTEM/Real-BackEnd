@@ -1,9 +1,7 @@
 package com.example.BeFETest.Scheduling;
 
-import com.example.BeFETest.DTO.kosdak.KosdakResponseDTO;
-import com.example.BeFETest.DTO.kospi.KospiResponseDTO;
-import com.example.BeFETest.Entity.kosdak.KosdakResponse;
-import com.example.BeFETest.Repository.Kosdak.KosdakRepository;
+import com.example.BeFETest.Entity.kosdaq.KosdaqResponse;
+import com.example.BeFETest.Repository.Kosdaq.KosdaqRepository;
 import com.example.BeFETest.Repository.Kospi.KospiRepository;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
@@ -14,7 +12,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +19,7 @@ import java.util.List;
 @Configuration
 @RequiredArgsConstructor
 public class StockScheduler {
-    private KosdakRepository kosdakRepo;
+    private KosdaqRepository kosdakRepo;
 
     private KospiRepository kospiRepo;
 
@@ -39,7 +36,7 @@ public class StockScheduler {
 //            System.out.println(kospiElement.text());
 //            System.out.println(kosdaqElement.text());
 
-            List<KosdakResponse> kosdakList = new ArrayList<>();
+            List<KosdaqResponse> kosdakList = new ArrayList<>();
 
 //            kosdakResponse.setDate(LocalDate.now().toString());
 //            kosdakResponse.setHighPrice(kosdaqElement.text());

@@ -1,25 +1,17 @@
-package com.example.BeFETest.BusinessLogicLayer.kosdak;
+package com.example.BeFETest.BusinessLogicLayer.kosdaq;
 
 
-import com.example.BeFETest.DTO.kosdak.KosdakConverter;
-import com.example.BeFETest.DTO.kosdak.KosdakResponseDTO;
-import com.example.BeFETest.Entity.kosdak.KosdakResponse;
-import com.example.BeFETest.Repository.Kosdak.KosdakRepository;
+import com.example.BeFETest.Repository.Kosdaq.KosdaqRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Slf4j
 @Service
-public class KosdakResponseService {
+public class KosdaqResponseService {
 
     @Autowired
-    private KosdakRepository kosdakRepository;
+    private KosdaqRepository kosdaqRepository;
 
 //    public List<KosdakResponseDTO> getResponsesByYear(){
 //        LocalDate today = LocalDate.now();

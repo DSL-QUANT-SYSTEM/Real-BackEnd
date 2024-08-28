@@ -1,16 +1,13 @@
-package com.example.BeFETest.DTO.kosdak;
+package com.example.BeFETest.DTO.kosdaq;
 
-import com.example.BeFETest.Entity.kosdak.KosdakResponse;
+import com.example.BeFETest.Entity.kosdaq.KosdaqResponse;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-public class KosdakConverter {
+public class KosdaqConverter {
 
 
-    public static KosdakResponseDTO toDto(KosdakResponse response) {
+    public static KosdaqResponseDTO toDto(KosdaqResponse response) {
 
-        return new KosdakResponseDTO(
+        return new KosdaqResponseDTO(
                 response.getDate(),
                 response.getClosingPrice(),
                 response.getFluctuatingRate(),

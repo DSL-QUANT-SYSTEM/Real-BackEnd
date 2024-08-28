@@ -1,16 +1,13 @@
-package com.example.BeFETest.Repository.Kosdak;
+package com.example.BeFETest.Repository.Kosdaq;
 
-import com.example.BeFETest.Entity.kosdak.KosdakResponse;
+import com.example.BeFETest.Entity.kosdaq.KosdaqResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
-import java.util.List;
 
-public interface KosdakRepository extends JpaRepository<KosdakResponse, Long> {
+public interface KosdaqRepository extends JpaRepository<KosdaqResponse, Long> {
 
-    KosdakResponse findByDate(LocalDate date);
+    KosdaqResponse findByDate(LocalDate date);
 
 //    @Query("SELECT K FROM KosdakResponse K WHERE TRIM(K.date) >= :oneYearAgo")
 //    List<KosdakResponse> findResponsesByDate(@Param("oneYearAgo") String oneYearAgo);

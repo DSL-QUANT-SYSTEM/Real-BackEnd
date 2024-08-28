@@ -14,5 +14,12 @@ public interface Kospi200Repository extends JpaRepository<Kospi200Response, Long
 //    @Query("SELECT K FROM Kospi200Response K WHERE TRIM(K.date) >= :oneYearAgo")
 //    List<Kospi200Response> findResponsesByDate(@Param("oneYearAgo") String oneYearAgo);
 
+    @Query("SELECT K FROM Kospi200Response K WHERE K.date >= :startDate AND K.date <= :endDate")
+    List<Kospi200Response> findResponsesWithinDateRange(@Param("startDate") String startDate, @Param("endDate") String endDate);
+
+
+    List<Kospi200Response> findByDateBetween(LocalDate startDate, LocalDate endDate);
+
     Kospi200Response findByDate(LocalDate date);
 }
+

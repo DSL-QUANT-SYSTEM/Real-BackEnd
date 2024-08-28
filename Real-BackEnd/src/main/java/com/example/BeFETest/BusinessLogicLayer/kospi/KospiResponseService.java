@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.example.BeFETest.Repository.Kospi.KospiRepository;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,21 +18,17 @@ import java.util.stream.Collectors;
 public class KospiResponseService {
 
     @Autowired
-    private KospiRepository KospiRepository;
+    private KospiRepository kospiRepository;
 
-//    public List<KospiResponseDTO> getResponsesByYear(){
-//        LocalDate today = LocalDate.now();
-//        LocalDate oneYearMinus = LocalDate.now().minusYears(1);
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//        String formatDate = oneYearMinus.format(formatter);
-//        String endDate = today.format(formatter);
-//        log.info("FORMAT DATE: {}, CURRENT DATE: {}", formatDate, endDate);
-//
-//        List<KospiResponse> KospiResponses = KospiRepository.findResponsesByDate(formatDate);
-//        //List<KospiResponse> KospiResponses = KospiRepository.findResponsesWithinDateRange(formatDate, endDate);
-//        return KospiResponses.stream()
-//                .map(KospiConverter::toDto)
-//                .collect(Collectors.toList());
-//
-//    }
+    public List<KospiResponseDTO> getResponsesByYear(){
+
+        LocalDate today = LocalDate.now();
+        LocalDate oneYearMinus = LocalDate.now().minusYears(1);
+
+        List<KospiResponse> responsesData = kospiRepository.findByDateBetween(oneYearMinus, today);
+        return responsesData.stream()
+                .map(KospiConverter::toDto)
+                .collect(Collectors.toList());
+
+    }
 }

@@ -2,18 +2,9 @@ package com.example.BeFETest.controller;
 
 import com.example.BeFETest.BusinessLogicLayer.Strategy.StrategyService;
 import com.example.BeFETest.DTO.coinDTO.*;
-import com.example.BeFETest.DTO.kosdak.KosdakConverter;
-import com.example.BeFETest.DTO.kosdak.KosdakResponseDTO;
-import com.example.BeFETest.DTO.kospi200.Kospi200Converter;
-import com.example.BeFETest.DTO.kospi200.Kospi200ResponseDTO;
-import com.example.BeFETest.DTO.kospi.KospiConverter;
-import com.example.BeFETest.DTO.kospi.KospiResponseDTO;
 import com.example.BeFETest.Entity.UserEntity;
 import com.example.BeFETest.Entity.UserInfo;
 import com.example.BeFETest.Entity.UserRequest;
-import com.example.BeFETest.Entity.kosdak.KosdakResponse;
-import com.example.BeFETest.Entity.kospi200.Kospi200Response;
-import com.example.BeFETest.Entity.kospi.KospiResponse;
 import com.example.BeFETest.Error.CustomExceptions;
 
 import com.example.BeFETest.Error.ErrorCode;
@@ -22,17 +13,14 @@ import com.example.BeFETest.JWT.JwtUtil;
 import com.example.BeFETest.Repository.Backtesting.BacktestingHistoryRepository;
 import com.example.BeFETest.Repository.JWT.UserRepository;
 import com.example.BeFETest.Repository.Kospi.Kospi200Repository;
-import com.example.BeFETest.Repository.Kosdak.KosdakRepository;
+import com.example.BeFETest.Repository.Kosdaq.KosdaqRepository;
 import com.example.BeFETest.Repository.Kospi.KospiRepository;
 import com.example.BeFETest.Strategy.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
 
 
 @RestController
@@ -49,7 +37,7 @@ public class testController {
     private final Kospi200Repository kospi200Repository;
 
     @Autowired
-    private final KosdakRepository kosdakRepository;
+    private final KosdaqRepository kosdaqRepository;
 
     @Autowired
     private UserRepository userRepository;

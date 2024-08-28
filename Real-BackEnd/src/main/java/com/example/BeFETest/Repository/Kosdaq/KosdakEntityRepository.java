@@ -1,4 +1,4 @@
-package com.example.BeFETest.Repository.Kosdak;
+package com.example.BeFETest.Repository.Kosdaq;
 
 /*
 import com.example.BeFETest.Entity.kosdak.KosdakEntity;

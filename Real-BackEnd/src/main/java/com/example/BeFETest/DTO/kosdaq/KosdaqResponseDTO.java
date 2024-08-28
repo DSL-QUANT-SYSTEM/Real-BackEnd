@@ -1,6 +1,6 @@
-package com.example.BeFETest.DTO.kosdak;
+package com.example.BeFETest.DTO.kosdaq;
 
-import com.example.BeFETest.Entity.kosdak.KosdakResponse;
+import com.example.BeFETest.Entity.kosdaq.KosdaqResponse;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
@@ -8,13 +8,12 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Getter
 @Setter
 @Builder
 @Data
-public class KosdakResponseDTO {
+public class KosdaqResponseDTO {
     @DateTimeFormat(pattern = "yyyy- MM- dd")
     private LocalDate date;
 
@@ -26,9 +25,9 @@ public class KosdakResponseDTO {
     private String fluctuatingRate;
 
 
-    public KosdakResponseDTO() {}
+    public KosdaqResponseDTO() {}
 
-    public KosdakResponseDTO(LocalDate date, String closingPrice, String fluctuatingRate,
+    public KosdaqResponseDTO(LocalDate date, String closingPrice, String fluctuatingRate,
                              String openingPrice, String highPrice, String lowPrice, String tradingVolume) {
         this.date = date;
         this.closingPrice = closingPrice;
@@ -39,8 +38,8 @@ public class KosdakResponseDTO {
         this.tradingVolume = tradingVolume;
     }
 
-    public KosdakResponse toEntity(){
-        return KosdakResponse.builder()
+    public KosdaqResponse toEntity(){
+        return KosdaqResponse.builder()
                 .date(this.date)
                 .closingPrice(this.closingPrice)
                 .openingPrice(this.openingPrice)

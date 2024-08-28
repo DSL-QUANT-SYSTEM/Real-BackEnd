@@ -1,7 +1,7 @@
 package com.example.BeFETest.Scheduling;
 
 import com.example.BeFETest.DTO.Bitcoin.BitcoinDTO;
-import com.example.BeFETest.DTO.kosdak.KosdakResponseDTO;
+import com.example.BeFETest.DTO.kosdaq.KosdaqResponseDTO;
 import com.example.BeFETest.DTO.kospi.KospiResponseDTO;
 import com.example.BeFETest.DTO.kospi200.Kospi200ResponseDTO;
 import com.example.BeFETest.Scheduling.Writer.BitcoinWriter;
@@ -49,7 +49,7 @@ public class FileReaderJobConfig{
     public Step csvFileReader1(
             JobRepository jobRepository, PlatformTransactionManager platformTransactionManager){
         return new StepBuilder("csvFileReader1",jobRepository)
-                .<KosdakResponseDTO, KosdakResponseDTO>chunk(10, platformTransactionManager)
+                .<KosdaqResponseDTO, KosdaqResponseDTO>chunk(10, platformTransactionManager)
                 .reader(csvReader.KosdakReader())  // csv 파일 읽기 리더 설정
                 .writer(kosdakWriter)  // 받은 데이터 DB에 저장
                 .allowStartIfComplete(true)

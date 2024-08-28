@@ -12,9 +12,6 @@ import com.example.BeFETest.Error.ErrorCode;
 import com.example.BeFETest.JWT.JwtUtil;
 import com.example.BeFETest.Repository.Backtesting.BacktestingHistoryRepository;
 import com.example.BeFETest.Repository.JWT.UserRepository;
-import com.example.BeFETest.Repository.Kospi.Kospi200Repository;
-import com.example.BeFETest.Repository.Kosdaq.KosdaqRepository;
-import com.example.BeFETest.Repository.Kospi.KospiRepository;
 import com.example.BeFETest.Strategy.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,15 +26,6 @@ public class testController {
 
     @Autowired
     private final BacktestingHistoryRepository backtestingHistoryRepository;
-
-    @Autowired
-    private final KospiRepository kospiRepository;
-
-    @Autowired
-    private final Kospi200Repository kospi200Repository;
-
-    @Autowired
-    private final KosdaqRepository kosdaqRepository;
 
     @Autowired
     private UserRepository userRepository;

@@ -4,6 +4,9 @@ import com.example.BeFETest.BusinessLogicLayer.kosdaq.KosdaqResponseService;
 import com.example.BeFETest.BusinessLogicLayer.kospi.Kospi200ResponseService;
 import com.example.BeFETest.BusinessLogicLayer.kospi.KospiResponseService;
 import com.example.BeFETest.DTO.kakaoDTO.Account;
+import com.example.BeFETest.DTO.kosdaq.KosdaqResponseDTO;
+import com.example.BeFETest.DTO.kospi.KospiResponseDTO;
+import com.example.BeFETest.DTO.kospi200.Kospi200ResponseDTO;
 import com.example.BeFETest.DTO.user.UserDTO;
 import com.example.BeFETest.JWT.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.BeFETest.Repository.kakao.accountRepo;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -24,27 +28,31 @@ public class DataController {
 
     ///api/kosdak/last-year
 
-    private final KosdaqResponseService kosdakService;
+    private final KosdaqResponseService kosdaqService;
     private final KospiResponseService kospiService;
     private final Kospi200ResponseService kospi200Service;
     private final JwtUtil jwtUtil;
 
     private final accountRepo accountRepo;
 
-//    @GetMapping("/kosdaq")
-//    public List<KosdakResponseDTO> getKosdakYearData(){
-//        return kosdakService.getResponsesByYear();
-//    }
+    @GetMapping("/kosdaq")
+    public List<KosdaqResponseDTO> getKosdakYearData(){
+        return kosdaqService.getResponsesByYear();
+    }
 
-//    @GetMapping("/kospi")
-//    public List<KospiResponseDTO> getKospiYearData(){
-//        return kospiService.getResponsesByYear();
-//    }
 
-//    @GetMapping("/kospi200")
-//    public List<Kospi200ResponseDTO> getKospi200YearData(){
-//        return kospi200Service.getResponsesByYear();
-//    }
+    @GetMapping("/kospi")
+    public List<KospiResponseDTO> getKospiYearData(){
+        return kospiService.getResponsesByYear();
+    }
+
+    @GetMapping("/kospi200")
+    public List<Kospi200ResponseDTO> getKospi200YearData(){
+        return kospi200Service.getResponsesByYear();
+    }
+
+
+
 
     @GetMapping("/userinfo")
     public ResponseEntity<?> getUserInfo(@RequestHeader("Authorization") String token){

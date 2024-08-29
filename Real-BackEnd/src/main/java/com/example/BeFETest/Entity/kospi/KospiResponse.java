@@ -21,13 +21,13 @@ public class KospiResponse {
     @DateTimeFormat(pattern = "yyyy- MM- dd")
     private LocalDate date;
 
-    private String closingPrice;
+    private Double closingPrice;
 
-    private String openingPrice;
+    private Double openingPrice;
 
-    private String highPrice;
+    private Double highPrice;
 
-    private String lowPrice;
+    private Double lowPrice;
 
     private String tradingVolume;
 

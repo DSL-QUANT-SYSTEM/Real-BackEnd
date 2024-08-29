@@ -11,22 +11,21 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-@Builder
 @Data
 public class BitcoinDTO {
     @DateTimeFormat(pattern = "yyyy- MM- dd")
     private LocalDate date;
-    private String closingPrice;
-    private String openingPrice;
-    private String highPrice;
-    private String lowPrice;
+    private Double closingPrice;
+    private Double openingPrice;
+    private Double highPrice;
+    private Double lowPrice;
     private String tradingVolume;
     private String fluctuatingRate;
 
     public BitcoinDTO(){}
 
-    public BitcoinDTO(LocalDate date, String closingPrice, String fluctuatingRate,
-                      String openingPrice, String highPrice, String lowPrice, String tradingVolume) {
+    public BitcoinDTO(LocalDate date, Double closingPrice, String fluctuatingRate,
+                      Double openingPrice, Double highPrice, Double lowPrice, String tradingVolume) {
         this.date = date;
         this.closingPrice = closingPrice;
         this.fluctuatingRate = fluctuatingRate;

@@ -32,8 +32,16 @@ public class CustomFieldSetMapper<T> implements FieldSetMapper<T> {
             dateField.setAccessible(true);
             dateField.set(dto, localDate);
 
+            for (String fieldName : new String[]{"closingPrice", "openingPrice", "highPrice", "lowPrice"}) {
+                Field field = targetType.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                String value = fieldSet.readString(fieldName);
+                Double doubleValue = value != null && !value.isEmpty() ? Double.parseDouble(value.replace(",", "")) : null;
+                field.set(dto, doubleValue);
+            }
+
             // 나머지 필드 자동 설정
-            for (String fieldName : new String[]{"closingPrice", "openingPrice", "highPrice", "lowPrice", "tradingVolume", "fluctuatingRate"}) {
+            for (String fieldName : new String[]{"tradingVolume", "fluctuatingRate"}) {
                 Field field = targetType.getDeclaredField(fieldName);
                 field.setAccessible(true);
                 String value = fieldSet.readString(fieldName);

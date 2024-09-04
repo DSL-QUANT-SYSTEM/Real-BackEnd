@@ -1,0 +1,12 @@
+#Git IDEA
+.idea
+
+#IntelliJ IDEA
+/Real-BackEnd/.idea
+
+#Gradle
+/Real-BackEnd/build
+/Real-BackEnd/.gradle
+
+#JAVA
+/Real-BackEnd/out

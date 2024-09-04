@@ -10,3 +10,8 @@
 
 #JAVA
 /Real-BackEnd/out
+
+
+#application.properties
+/Real-BackEnd/src/main/resources/application.properties
+

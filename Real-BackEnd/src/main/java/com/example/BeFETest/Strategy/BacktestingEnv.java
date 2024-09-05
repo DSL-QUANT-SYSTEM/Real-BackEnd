@@ -213,8 +213,8 @@ public class BacktestingEnv  {
         List<Double> lowerBand = new ArrayList<>();
 
         for (Double avg : movingAverage) {
-            upperBand.add(avg + (avg * envelopeDTO.getMoving_up()));
-            lowerBand.add(avg - (avg * envelopeDTO.getMoving_down()));
+            upperBand.add(avg + (avg * envelopeDTO.getMoving_up()*(0.1)));
+            lowerBand.add(avg - (avg * envelopeDTO.getMoving_down()*(0.1)));
         }
 
         boolean bought = false; // 매수 상태 추적 변수

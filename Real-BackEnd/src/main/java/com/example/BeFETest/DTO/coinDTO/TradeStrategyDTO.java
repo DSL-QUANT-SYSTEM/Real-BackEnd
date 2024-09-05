@@ -10,6 +10,7 @@ public abstract class TradeStrategyDTO {
     protected double tax;
     protected LocalDate start_date;
     protected LocalDate end_date;
+    private LocalDate backtesting_date;
     protected String target_item;
     protected String tick_kind;
     protected int inq_range;
@@ -23,13 +24,14 @@ public abstract class TradeStrategyDTO {
     protected double profitRate;
     protected int numberOfTrades;
     public TradeStrategyDTO(double initial_investment, double tax,
-                            LocalDate start_date, LocalDate end_date, String target_item, String tick_kind,
+                            LocalDate start_date, LocalDate end_date, LocalDate backtesting_date, String target_item, String tick_kind,
                             int inq_range, String strategy, double finalCash, double finalAsset,
                             double finalBalance, double profit, double profitRate, int numberOfTrades) {
         this.initial_investment = initial_investment;
         this.tax = tax;
         this.start_date = start_date;
         this.end_date = end_date;
+        this.backtesting_date=backtesting_date;
         this.target_item = target_item;
         this.tick_kind = tick_kind;
         this.inq_range = inq_range;

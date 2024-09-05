@@ -10,7 +10,7 @@ import com.example.BeFETest.Repository.Backtesting.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -44,6 +44,7 @@ public class StrategyService {
         gdEntity.setTax(strategyDTO.getTax());
         gdEntity.setStart_date(strategyDTO.getStart_date());
         gdEntity.setEnd_date(strategyDTO.getEnd_date());
+        gdEntity.setBacktesting_date(LocalDate.now());
         gdEntity.setTarget_item(strategyDTO.getTarget_item());
         gdEntity.setTick_kind(strategyDTO.getTick_kind());
         gdEntity.setInq_range(strategyDTO.getInq_range());
@@ -92,7 +93,7 @@ public class StrategyService {
     public GoldenDeadCrossStrategyDTO getLatestGDStrategyResultByUserId(Long userId){
         GDEntity gdEntity = gdRepository.findTopByUserIdOrderByIdDesc(userId);
         return new GoldenDeadCrossStrategyDTO(gdEntity.getInitial_investment(), gdEntity.getTax(), gdEntity.getStart_date(),
-                gdEntity.getEnd_date(), gdEntity.getTarget_item(), gdEntity.getTick_kind(), gdEntity.getInq_range(),gdEntity.getStrategy(), gdEntity.getFinalCash(), gdEntity.getFinalAsset(),
+                gdEntity.getEnd_date(), gdEntity.getBacktesting_date(), gdEntity.getTarget_item(), gdEntity.getTick_kind(), gdEntity.getInq_range(),gdEntity.getStrategy(), gdEntity.getFinalCash(), gdEntity.getFinalAsset(),
                 gdEntity.getFinalBalance(), gdEntity.getProfit(), gdEntity.getProfitRate(), gdEntity.getNumberOfTrades(), gdEntity.getFastMovingAveragePeriod(), gdEntity.getSlowMovingAveragePeriod());
     }
 
@@ -107,6 +108,7 @@ public class StrategyService {
         bbEntity.setTax(strategyDTO.getTax());
         bbEntity.setStart_date(strategyDTO.getStart_date());
         bbEntity.setEnd_date(strategyDTO.getEnd_date());
+        bbEntity.setBacktesting_date(LocalDate.now());
         bbEntity.setTarget_item(strategyDTO.getTarget_item());
         bbEntity.setTick_kind(strategyDTO.getTick_kind());
         bbEntity.setInq_range(strategyDTO.getInq_range());
@@ -149,7 +151,7 @@ public class StrategyService {
     public BollingerBandsStrategyDTO getLatestBBStrategyResultByUserId(Long userId){
         BBEntity bbEntity = bbRepository.findTopByUserIdOrderByIdDesc(userId);
         return new BollingerBandsStrategyDTO(bbEntity.getInitial_investment(), bbEntity.getTax(), bbEntity.getStart_date(),
-                bbEntity.getEnd_date(), bbEntity.getTarget_item(), bbEntity.getTick_kind(), bbEntity.getInq_range(), bbEntity.getStrategy() ,bbEntity.getFinalCash(), bbEntity.getFinalAsset(),
+                bbEntity.getEnd_date(),  bbEntity.getBacktesting_date() , bbEntity.getTarget_item(), bbEntity.getTick_kind(), bbEntity.getInq_range(), bbEntity.getStrategy() ,bbEntity.getFinalCash(), bbEntity.getFinalAsset(),
                 bbEntity.getFinalBalance(), bbEntity.getProfit(), bbEntity.getProfitRate(), bbEntity.getNumberOfTrades(),bbEntity.getMoveAvg());
     }
 
@@ -163,6 +165,7 @@ public class StrategyService {
         indEntity.setTax(strategyDTO.getTax());
         indEntity.setStart_date(strategyDTO.getStart_date());
         indEntity.setEnd_date(strategyDTO.getEnd_date());
+        indEntity.setBacktesting_date(LocalDate.now());
         indEntity.setTarget_item(strategyDTO.getTarget_item());
         indEntity.setTick_kind(strategyDTO.getTick_kind());
         indEntity.setInq_range(strategyDTO.getInq_range());
@@ -206,7 +209,7 @@ public class StrategyService {
     public IndicatorBasedStrategyDTO getLatestIndicatorStrategyResultByUserId(Long userId){
         IndicatorEntity indiEntity = indicatorRepository.findTopByUserIdOrderByIdDesc(userId);
         return new IndicatorBasedStrategyDTO(indiEntity.getInitial_investment(), indiEntity.getTax(), indiEntity.getStart_date(),
-                indiEntity.getEnd_date(), indiEntity.getTarget_item(), indiEntity.getTick_kind(), indiEntity.getInq_range(), indiEntity.getStrategy() ,indiEntity.getFinalCash(), indiEntity.getFinalAsset(),
+                indiEntity.getEnd_date(), indiEntity.getBacktesting_date(), indiEntity.getTarget_item(), indiEntity.getTick_kind(), indiEntity.getInq_range(), indiEntity.getStrategy() ,indiEntity.getFinalCash(), indiEntity.getFinalAsset(),
                 indiEntity.getFinalBalance(), indiEntity.getProfit(), indiEntity.getProfitRate(), indiEntity.getNumberOfTrades(),indiEntity.getRsiPeriod());
     }
 
@@ -220,6 +223,7 @@ public class StrategyService {
         envEntity.setTax(strategyDTO.getTax());
         envEntity.setStart_date(strategyDTO.getStart_date());
         envEntity.setEnd_date(strategyDTO.getEnd_date());
+        envEntity.setBacktesting_date(LocalDate.now());
         envEntity.setTarget_item(strategyDTO.getTarget_item());
         envEntity.setTick_kind(strategyDTO.getTick_kind());
         envEntity.setInq_range(strategyDTO.getInq_range());
@@ -265,7 +269,7 @@ public class StrategyService {
     public EnvelopeDTO getLatestEnvStrategyResultByUserId(Long userId){
         EnvEntity envEntity = envRepository.findTopByUserIdOrderByIdDesc(userId);
         return new EnvelopeDTO(envEntity.getInitial_investment(), envEntity.getTax(), envEntity.getStart_date(),
-                envEntity.getEnd_date(), envEntity.getTarget_item(), envEntity.getTick_kind(), envEntity.getInq_range(), envEntity.getStrategy() ,envEntity.getFinalCash(), envEntity.getFinalAsset(),
+                envEntity.getEnd_date(), envEntity.getBacktesting_date(), envEntity.getTarget_item(), envEntity.getTick_kind(), envEntity.getInq_range(), envEntity.getStrategy() ,envEntity.getFinalCash(), envEntity.getFinalAsset(),
                 envEntity.getFinalBalance(), envEntity.getProfit(), envEntity.getProfitRate(), envEntity.getNumberOfTrades(),envEntity.getMoving_up(), envEntity.getMoving_down(), envEntity.getMovingAveragePeriod());
     }
 
@@ -279,6 +283,7 @@ public class StrategyService {
         wEntity.setTax(strategyDTO.getTax());
         wEntity.setStart_date(strategyDTO.getStart_date());
         wEntity.setEnd_date(strategyDTO.getEnd_date());
+        wEntity.setBacktesting_date(LocalDate.now());
         wEntity.setTarget_item(strategyDTO.getTarget_item());
         wEntity.setTick_kind(strategyDTO.getTick_kind());
         wEntity.setInq_range(strategyDTO.getInq_range());
@@ -322,7 +327,7 @@ public class StrategyService {
     public WilliamsDTO getLatestWilliamsStrategyResultByUserId(Long userId){
         WEntity wEntity = wRepository.findTopByUserIdOrderByIdDesc(userId);
         return new WilliamsDTO(wEntity.getInitial_investment(), wEntity.getTax(), wEntity.getStart_date(),
-                wEntity.getEnd_date(), wEntity.getTarget_item(), wEntity.getTick_kind(), wEntity.getInq_range(), wEntity.getStrategy() ,wEntity.getFinalCash(), wEntity.getFinalAsset(),
+                wEntity.getEnd_date(),wEntity.getBacktesting_date(), wEntity.getTarget_item(), wEntity.getTick_kind(), wEntity.getInq_range(), wEntity.getStrategy() ,wEntity.getFinalCash(), wEntity.getFinalAsset(),
                 wEntity.getFinalBalance(), wEntity.getProfit(), wEntity.getProfitRate(), wEntity.getNumberOfTrades(),wEntity.getWilliamsPeriod());
     }
 

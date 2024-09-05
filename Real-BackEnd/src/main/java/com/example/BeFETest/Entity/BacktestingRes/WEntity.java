@@ -23,6 +23,7 @@ public class WEntity {
     private double tax;
     private LocalDate start_date;
     private LocalDate end_date;
+    private LocalDate backtesting_date;
     private String target_item;
     private String tick_kind;
     private int inq_range;
@@ -47,6 +48,7 @@ public class WEntity {
                 ", tax=" + tax +
                 ", startDate=" + start_date +
                 ", endDate=" + end_date +
+                ", backtesting_date=" + backtesting_date +
                 ", targetItem='" + target_item + '\'' +
                 ", tickKind='" + tick_kind + '\'' +
                 ", inquiryRange=" + inq_range +

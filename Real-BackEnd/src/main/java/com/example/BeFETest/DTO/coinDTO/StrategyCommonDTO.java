@@ -13,6 +13,7 @@ public class StrategyCommonDTO {
     private double tax;
     private LocalDate start_date;
     private LocalDate end_date;
+    private LocalDate backtesting_date;
     private String target_item;
     private String tick_kind;
     private int inq_range;
@@ -26,13 +27,14 @@ public class StrategyCommonDTO {
     private int numberOfTrades;
 
     public StrategyCommonDTO(double initial_investment, double tax,
-                            LocalDate start_date, LocalDate end_date, String target_item, String tick_kind,
+                            LocalDate start_date, LocalDate end_date, LocalDate backtesting_date,String target_item, String tick_kind,
                             int inq_range, String strategy, double finalCash, double finalAsset,
                              double finalBalance, double profit, double profitRate, int numberOfTrades) {
         this.initial_investment = initial_investment;
         this.tax = tax;
         this.start_date = start_date;
         this.end_date = end_date;
+        this.backtesting_date=backtesting_date;
         this.target_item = target_item;
         this.tick_kind = tick_kind;
         this.inq_range = inq_range;

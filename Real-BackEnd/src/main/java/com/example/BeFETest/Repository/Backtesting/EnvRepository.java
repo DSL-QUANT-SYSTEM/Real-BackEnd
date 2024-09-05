@@ -9,4 +9,5 @@ public interface EnvRepository extends JpaRepository<EnvEntity, Long>{
     List<EnvEntity> findByUserIdOrderByIdDesc(Long userId);
     List<EnvEntity> findTop10ByUserIdOrderByIdDesc(Long userId);
     EnvEntity findTopByUserIdOrderByIdDesc(Long userId);
+    List<EnvEntity> findAllByUserId(Long userId);
 }

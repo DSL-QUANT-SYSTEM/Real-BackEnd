@@ -78,6 +78,7 @@ public class SecurityConfig {
                                 .requestMatchers("/kospi").permitAll()
                                 .requestMatchers("/kosdaq").permitAll()
                                 .requestMatchers("/kospi200").permitAll()
+                                .requestMatchers("/history/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling ->

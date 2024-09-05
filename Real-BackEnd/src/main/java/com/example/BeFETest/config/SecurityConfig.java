@@ -100,6 +100,8 @@ public class SecurityConfig {
                 registry.addMapping("/**")
 //                        .allowedOrigins("http://localhost:5173")
                         .allowedOrigins("http://43.200.199.72:5173")
+                        .allowedOrigins("https://dslquant.site")
+                        .allowedOrigins("https://www.dslquant.site")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);

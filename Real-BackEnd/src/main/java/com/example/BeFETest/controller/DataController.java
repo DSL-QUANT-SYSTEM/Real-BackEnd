@@ -31,9 +31,9 @@ public class DataController {
     private final KosdaqResponseService kosdaqService;
     private final KospiResponseService kospiService;
     private final Kospi200ResponseService kospi200Service;
-    private final JwtUtil jwtUtil;
+    //private final JwtUtil jwtUtil;
 
-    private final accountRepo accountRepo;
+    //private final accountRepo accountRepo;
 
     @GetMapping("/kosdaq")
     public List<KosdaqResponseDTO> getKosdakYearData(){
@@ -53,6 +53,7 @@ public class DataController {
 
 
 
+    /*
 
     @GetMapping("/userinfo")
     public ResponseEntity<?> getUserInfo(@RequestHeader("Authorization") String token){
@@ -71,8 +72,9 @@ public class DataController {
 
         return ResponseEntity.ok(userDTO);
     }
+*/
 
-
+    /*
     @GetMapping("/user/info")
     public ResponseEntity<UserDTO> getMyPage(@RequestHeader("Authorization") String token){
         Long userId = jwtUtil.getUserIdFromToken(token);
@@ -88,5 +90,6 @@ public class DataController {
 
         return ResponseEntity.ok(userDTO);
     }
+    */
 
 }

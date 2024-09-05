@@ -35,18 +35,18 @@ public class DataController {
 
     //private final accountRepo accountRepo;
 
-    @GetMapping("/kosdaq")
+    @GetMapping("/home/kosdaq")
     public List<KosdaqResponseDTO> getKosdakYearData(){
         return kosdaqService.getResponsesByYear();
     }
 
 
-    @GetMapping("/kospi")
+    @GetMapping("/home/kospi")
     public List<KospiResponseDTO> getKospiYearData(){
         return kospiService.getResponsesByYear();
     }
 
-    @GetMapping("/kospi200")
+    @GetMapping("/home/kospi200")
     public List<Kospi200ResponseDTO> getKospi200YearData(){
         return kospi200Service.getResponsesByYear();
     }

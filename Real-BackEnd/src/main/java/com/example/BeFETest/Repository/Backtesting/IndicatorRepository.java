@@ -10,4 +10,5 @@ public interface IndicatorRepository extends JpaRepository<IndicatorEntity, Long
     List<IndicatorEntity> findByUserIdOrderByIdDesc(Long userId);
     List<IndicatorEntity> findTop10ByUserIdOrderByIdDesc(Long userId);
     IndicatorEntity findTopByUserIdOrderByIdDesc(Long userId);
+    List<IndicatorEntity> findAllByUserId(Long userId);
 }

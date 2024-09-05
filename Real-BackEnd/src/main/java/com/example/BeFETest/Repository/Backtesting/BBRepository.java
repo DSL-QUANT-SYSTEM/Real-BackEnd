@@ -10,4 +10,6 @@ public interface BBRepository extends JpaRepository<BBEntity, Long> {
     List<BBEntity> findByUserIdOrderByIdDesc(Long userId);
     List<BBEntity> findTop10ByUserIdOrderByIdDesc(Long userId);
     BBEntity findTopByUserIdOrderByIdDesc(Long userId);
+
+    List<BBEntity> findAllByUserId(Long userId);
 }

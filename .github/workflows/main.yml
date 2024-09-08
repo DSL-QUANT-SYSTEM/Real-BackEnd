@@ -29,8 +29,8 @@ jobs:
               shell: bash
 
             - name: Build with Gradle
-              run: 
-                cd ./Real-BackEnd
+              run: |
+                cd "Real-BackEnd"
                 ./gradlew build
               shell: bash
 

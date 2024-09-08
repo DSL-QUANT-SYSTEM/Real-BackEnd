@@ -41,7 +41,7 @@ jobs:
               shell: bash
 
             - name: Make zip file
-              run: zip -r ./$GITHUB_SHA.zip Real-BackEnd/build/libs
+              run: zip -r ./$GITHUB_SHA.zip ./Real-Backend
               shell: bash
 
             - name: Configure AWS credentials

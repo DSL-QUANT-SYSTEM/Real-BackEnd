@@ -8,9 +8,6 @@ on:
     pull_request:
         branches: [main]
 
-    #수동으로 해당 workflow 실행 지정
-    workflow_dispatch:
-
 jobs:
     build:
         #아래 os 환경에서 실행
@@ -27,10 +24,13 @@ jobs:
                 java-version: '21'
 
             - name: Grant execute permission for gradlew
-              run: chmod +x ./Real-BackEnd/gradlew
+              run:
+                chmod +x ./Real-BackEnd/gradlew
               shell: bash
 
             - name: Build with Gradle
-              run: ./Real-BackEnd/gradlew build
+              run: 
+                cd ./Real-BackEnd
+                ./gradlew build
               shell: bash
 

@@ -2,7 +2,7 @@
 
 PROJECT_ROOT="/home/ubuntu/app/back/Real-BackEnd"
 
-BUILD_JAR=$(ls $PROJECT_ROOT/Real-BackEnd/build/libs/*.jar)
+BUILD_JAR=$(ls $PROJECT_ROOT/Real-BackEnd/build/libs/Be-FE-Test-0.0.1-SNAPSHOT.jar)
 JAR_NAME=$(basename $BUILD_JAR)
 echo ">>> build 파일명: $JAR_NAME" >> $PROJECT_ROOT/deploy.log
 
@@ -22,6 +22,6 @@ else
   sleep 5
 fi
 
-DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
+DEPLOY_JAR=$DEPLOY_PATH/$JAR_NAME
 echo ">>> DEPLOY_JAR 배포"    >> $PROJECT_ROOT/deploy.log
 nohup java -jar $DEPLOY_JAR >> $PROJECT_ROOT/deploy.log 2>$PROJECT_ROOT/deploy_err.log &

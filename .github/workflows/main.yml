@@ -9,7 +9,7 @@ on:
         branches: [main]
 
 env:
-    S3_BUCKET_NAME: S3_test
+    S3_BUCKET_NAME: quantback
     AWS_REGION: ap-northeast-2
         
 jobs:

@@ -5,6 +5,7 @@ files:
   - source:  /
     destination: /home/ubuntu/app/back/Real-BackEnd
     overwrite: yes
+file_exists_behavior: OVERWRITE
 
 permissions:
   - object: /

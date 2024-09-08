@@ -11,6 +11,8 @@ on:
 env:
     S3_BUCKET_NAME: quantback
     AWS_REGION: ap-northeast-2
+    CODE_DEPLOY_APPLICATION_NAME: backend_deploy
+    CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: deploy-group
         
 jobs:
     build:
@@ -39,7 +41,7 @@ jobs:
               shell: bash
 
             - name: Make zip file
-              run: zip -r ./$GITHUB_SHA.zip Real-BackEnd/build
+              run: zip -r ./$GITHUB_SHA.zip Real-BackEnd/build/libs
               shell: bash
 
             - name: Configure AWS credentials
@@ -49,7 +51,14 @@ jobs:
                 aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
                 aws-region: ${{ env.AWS_REGION }}
 
+                #빌드 결과물 s3버킷에 업로드
             - name: Upload to S3
-              run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip
+              #run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip
+              run: |
+                aws deploy push \
+                    --application-name ${{env.CODE_DEPLOY_APPLICATION_NAME}} \
+                    --ignore-hidden-files \
+                    --s3-location s3://$s3_BUCKET_NAME/$GITHUB_SHA.zip \
+                    --source .
 
 

@@ -2,6 +2,7 @@ package com.example.BeFETest.BusinessLogicLayer.myPage;
 
 import com.example.BeFETest.DTO.kakaoDTO.Account;
 import com.example.BeFETest.DTO.user.UserDTO;
+import com.example.BeFETest.Entity.BacktestingRes.BBEntity;
 import com.example.BeFETest.Entity.BacktestingRes.GDEntity;
 import com.example.BeFETest.JWT.JwtUtil;
 import com.example.BeFETest.Repository.Backtesting.*;
@@ -41,7 +42,17 @@ public class MypageService {
 
     public List<GDEntity> getTop10GD(String token){
         Long userId = jwtUtil.getUserIdFromToken(token);
-        List<GDEntity> results = gdRepository.findAllByUserId(userId);
+        List<GDEntity> results = gdRepository.findTop10ByUserIdOrderByIdDesc(userId);
+        if(results != null){
+            return results.stream().collect(Collectors.toList());
+        }else{
+            return null;
+        }
+    }
+
+    public List<BBEntity> getTop10BB(String token){
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        List<BBEntity> results = bbRepository.findTop10ByUserIdOrderByIdDesc(userId);
         if(results != null){
             return results.stream().collect(Collectors.toList());
         }else{

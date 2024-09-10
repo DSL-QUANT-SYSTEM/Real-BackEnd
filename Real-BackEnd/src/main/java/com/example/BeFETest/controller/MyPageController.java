@@ -3,6 +3,7 @@ package com.example.BeFETest.controller;
 import com.example.BeFETest.BusinessLogicLayer.Strategy.StrategyService;
 import com.example.BeFETest.BusinessLogicLayer.myPage.MypageService;
 import com.example.BeFETest.DTO.user.UserDTO;
+import com.example.BeFETest.Entity.BacktestingRes.BBEntity;
 import com.example.BeFETest.Entity.BacktestingRes.GDEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +51,22 @@ public class MyPageController {
             List<GDEntity> goldenData = mypageService.getTop10GD(token);
             if (goldenData != null && !goldenData.isEmpty()) {
                 return ResponseEntity.ok(goldenData);
+            } else {
+                return ResponseEntity.status(404).body("데이터를 찾을 수 없습니다.");
+            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(400).body("잘못된 요청입니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("서버 오류가 발생했습니다.");
+        }
+    }
+
+    @GetMapping("/history/bollinger")
+    public ResponseEntity<?> getMyBollinger(@RequestHeader("Authorization") String token){
+        try {
+            List<BBEntity> bollingerData = mypageService.getTop10BB(token);
+            if (bollingerData != null && !bollingerData.isEmpty()) {
+                return ResponseEntity.ok(bollingerData);
             } else {
                 return ResponseEntity.status(404).body("데이터를 찾을 수 없습니다.");
             }

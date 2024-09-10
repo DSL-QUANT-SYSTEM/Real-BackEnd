@@ -63,11 +63,11 @@ public class StrategyService {
         System.out.println("gdEntity = " + gdEntity.toString());
         gdRepository.save(gdEntity);
 
-        List<GDEntity> gdStrategies = gdRepository.findByUserIdOrderByIdDesc(gdEntity.getUserId());
-        if (gdStrategies.size() > 10) {
-            List<GDEntity> strategiesToDelete = gdStrategies.subList(10, gdStrategies.size());
-            gdRepository.deleteAll(strategiesToDelete);
-        }
+        //List<GDEntity> gdStrategies = gdRepository.findByUserIdOrderByIdDesc(gdEntity.getUserId());
+        //if (gdStrategies.size() > 10) {
+        //    List<GDEntity> strategiesToDelete = gdStrategies.subList(10, gdStrategies.size());
+        //    gdRepository.deleteAll(strategiesToDelete);
+        //}
 
         //if(gdEntity != null){
         //    gdEntity.setFastMovingAveragePeriod(strategyDTO.getFastMovingAveragePeriod());
@@ -125,11 +125,11 @@ public class StrategyService {
         System.out.println("bbEntity = " + bbEntity.toString());
         bbRepository.save(bbEntity);
 
-        List<BBEntity> bbStrategies = bbRepository.findByUserIdOrderByIdDesc(bbEntity.getUserId());
-        if (bbStrategies.size() > 10) {
-            List<BBEntity> strategiesToDelete = bbStrategies.subList(10, bbStrategies.size());
-            bbRepository.deleteAll(strategiesToDelete);
-        }
+        //List<BBEntity> bbStrategies = bbRepository.findByUserIdOrderByIdDesc(bbEntity.getUserId());
+        //if (bbStrategies.size() > 10) {
+        //    List<BBEntity> strategiesToDelete = bbStrategies.subList(10, bbStrategies.size());
+        //    bbRepository.deleteAll(strategiesToDelete);
+        //}
 //
 //        if(bbEntity != null){
 //            bbEntity.setMovingAveragePeriod(strategyDTO.getMovingAveragePeriod());

@@ -17,3 +17,12 @@
 
 /Real-BackEnd/HELP.md
 
+#jar file
+*.jar
+
+#log file
+*.log
+
+
+./appspec.yml
+

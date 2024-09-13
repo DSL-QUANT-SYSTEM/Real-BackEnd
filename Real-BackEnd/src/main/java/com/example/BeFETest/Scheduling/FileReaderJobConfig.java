@@ -37,7 +37,7 @@ public class FileReaderJobConfig{
                 .start(csvFileReader1)
                 .next(csvFileReader2)
                 .next(csvFileReader3)
-                .next(csvFileReader4)
+                //.next(csvFileReader4)
                 .build();
     }
     //csvFileReader1 --> kosdaq

@@ -74,6 +74,7 @@ public class SecurityConfig {
                                 .requestMatchers("/result/**").permitAll()
                                 .requestMatchers("/user/info").permitAll()
                                 .requestMatchers("/userinfo").permitAll()
+                                .requestMatchers("/mypage/user").permitAll()
                                 .requestMatchers("/mypage").permitAll()
                                 .requestMatchers("/home/kospi").permitAll()
                                 .requestMatchers("/home/kosdaq").permitAll()

@@ -22,10 +22,22 @@ public class MyPageController {
     private final MypageService mypageService;
 
     @GetMapping("/userinfo")
-    public ResponseEntity<String> getUserInfo(@RequestHeader("Authorization") String token){
+    public ResponseEntity<String> getUserName(@RequestHeader("Authorization") String token){
         try {
             UserDTO userInfo = mypageService.getUserInfo(token);
             return ResponseEntity.ok(userInfo.getName());
+        } catch (IllegalArgumentException e){
+            return ResponseEntity.status(400).body("사용자 정보가 없습니다.");
+        } catch (Exception e){
+            return ResponseEntity.status(500).body("사용자 정보를 가져오는 도중 오류가 발생했습니다.");
+        }
+    }
+
+    @GetMapping("/mypage/user")
+    public ResponseEntity<?> getUserInfo(@RequestHeader("Authorization") String token){
+        try {
+            UserDTO userInfo = mypageService.getUserInfo(token);
+            return ResponseEntity.ok(userInfo);
         } catch (IllegalArgumentException e){
             return ResponseEntity.status(400).body("사용자 정보가 없습니다.");
         } catch (Exception e){

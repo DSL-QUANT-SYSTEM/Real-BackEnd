@@ -79,7 +79,7 @@ public class SecurityConfig {
                                 .requestMatchers("/home/kospi").permitAll()
                                 .requestMatchers("/home/kosdaq").permitAll()
                                 .requestMatchers("/home/kospi200").permitAll()
-                                .requestMatchers("/history/**").permitAll()
+                                .requestMatchers("/backtest/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling ->

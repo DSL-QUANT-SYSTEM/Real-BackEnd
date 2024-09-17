@@ -1,10 +1,8 @@
 package com.example.BeFETest.controller;
 
-import com.example.BeFETest.BusinessLogicLayer.Strategy.StrategyService;
 import com.example.BeFETest.BusinessLogicLayer.myPage.MypageService;
 import com.example.BeFETest.DTO.user.UserDTO;
-import com.example.BeFETest.Entity.BacktestingRes.BBEntity;
-import com.example.BeFETest.Entity.BacktestingRes.GDEntity;
+import com.example.BeFETest.Entity.BacktestingRes.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +39,7 @@ public class MyPageController {
         } catch (IllegalArgumentException e){
             return ResponseEntity.status(400).body("사용자 정보가 없습니다.");
         } catch (Exception e){
+            e.printStackTrace();
             return ResponseEntity.status(500).body("사용자 정보를 가져오는 도중 오류가 발생했습니다.");
         }
     }
@@ -57,7 +56,8 @@ public class MyPageController {
         }
     }
 
-    @GetMapping("/history/golden")
+
+    @GetMapping("backtest/history/golden")
     public ResponseEntity<?> getMyGolden(@RequestHeader("Authorization") String token){
         try {
             List<GDEntity> goldenData = mypageService.getTop10GD(token);
@@ -69,11 +69,13 @@ public class MyPageController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(400).body("잘못된 요청입니다.");
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(500).body("서버 오류가 발생했습니다.");
         }
     }
 
-    @GetMapping("/history/bollinger")
+
+    @GetMapping("/backtest/history/bollinger")
     public ResponseEntity<?> getMyBollinger(@RequestHeader("Authorization") String token){
         try {
             List<BBEntity> bollingerData = mypageService.getTop10BB(token);
@@ -85,9 +87,62 @@ public class MyPageController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(400).body("잘못된 요청입니다.");
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(500).body("서버 오류가 발생했습니다.");
         }
     }
 
+
+
+    @GetMapping("/backtest/history/rsi")
+    public ResponseEntity<?> getMyRsi(@RequestHeader("Authorization") String token){
+        try {
+            List<IndicatorEntity> indicatorData = mypageService.getTop10Indi(token);
+            if (indicatorData != null && !indicatorData.isEmpty()) {
+                return ResponseEntity.ok(indicatorData);
+            } else {
+                return ResponseEntity.status(404).body("데이터를 찾을 수 없습니다.");
+            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(400).body("잘못된 요청입니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("서버 오류가 발생했습니다.");
+        }
+    }
+
+    @GetMapping("/backtest/history/env")
+    public ResponseEntity<?> getMyEnv(@RequestHeader("Authorization") String token){
+        try {
+            List<EnvEntity> envData = mypageService.getTop10Env(token);
+            if (envData != null && !envData.isEmpty()) {
+                return ResponseEntity.ok(envData);
+            } else {
+                return ResponseEntity.status(404).body("데이터를 찾을 수 없습니다.");
+            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(400).body("잘못된 요청입니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("서버 오류가 발생했습니다.");
+        }
+    }
+
+    @GetMapping("/backtest/history/w")
+    public ResponseEntity<?> getMyW(@RequestHeader("Authorization") String token){
+        try {
+            List<WEntity> wData = mypageService.getTop10W(token);
+            if (wData != null && !wData.isEmpty()) {
+                return ResponseEntity.ok(wData);
+            } else {
+                return ResponseEntity.status(404).body("데이터를 찾을 수 없습니다.");
+            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(400).body("잘못된 요청입니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("서버 오류가 발생했습니다.");
+        }
+    }
 
 }

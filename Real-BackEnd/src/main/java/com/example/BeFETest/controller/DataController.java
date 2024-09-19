@@ -1,8 +1,10 @@
 package com.example.BeFETest.controller;
 
+import com.example.BeFETest.BusinessLogicLayer.coin.CoinService;
 import com.example.BeFETest.BusinessLogicLayer.kosdaq.KosdaqResponseService;
 import com.example.BeFETest.BusinessLogicLayer.kospi.Kospi200ResponseService;
 import com.example.BeFETest.BusinessLogicLayer.kospi.KospiResponseService;
+import com.example.BeFETest.DTO.SchedulingCoin.SchedulingCoinDTO;
 import com.example.BeFETest.DTO.kakaoDTO.Account;
 import com.example.BeFETest.DTO.kosdaq.KosdaqResponseDTO;
 import com.example.BeFETest.DTO.kospi.KospiResponseDTO;
@@ -31,6 +33,8 @@ public class DataController {
     private final KosdaqResponseService kosdaqService;
     private final KospiResponseService kospiService;
     private final Kospi200ResponseService kospi200Service;
+
+    private final CoinService coinService;
     //private final JwtUtil jwtUtil;
 
     //private final accountRepo accountRepo;
@@ -52,6 +56,9 @@ public class DataController {
     }
 
 
+    @GetMapping("/home/top20")
+    public List<SchedulingCoinDTO> getTop20Coin(){return coinService.getTop20Coin();}
+    
 
     /*
 

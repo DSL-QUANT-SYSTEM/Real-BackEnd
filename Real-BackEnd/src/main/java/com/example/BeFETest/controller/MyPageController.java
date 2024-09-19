@@ -57,7 +57,7 @@ public class MyPageController {
     }
 
 
-    @GetMapping("backtest/history/golden")
+    @GetMapping("/history/golden")
     public ResponseEntity<?> getMyGolden(@RequestHeader("Authorization") String token){
         try {
             List<GDEntity> goldenData = mypageService.getTop10GD(token);
@@ -75,7 +75,7 @@ public class MyPageController {
     }
 
 
-    @GetMapping("/backtest/history/bollinger")
+    @GetMapping("/history/bollinger")
     public ResponseEntity<?> getMyBollinger(@RequestHeader("Authorization") String token){
         try {
             List<BBEntity> bollingerData = mypageService.getTop10BB(token);
@@ -94,7 +94,7 @@ public class MyPageController {
 
 
 
-    @GetMapping("/backtest/history/rsi")
+    @GetMapping("/history/rsi")
     public ResponseEntity<?> getMyRsi(@RequestHeader("Authorization") String token){
         try {
             List<IndicatorEntity> indicatorData = mypageService.getTop10Indi(token);
@@ -111,7 +111,7 @@ public class MyPageController {
         }
     }
 
-    @GetMapping("/backtest/history/env")
+    @GetMapping("/history/env")
     public ResponseEntity<?> getMyEnv(@RequestHeader("Authorization") String token){
         try {
             List<EnvEntity> envData = mypageService.getTop10Env(token);
@@ -128,7 +128,7 @@ public class MyPageController {
         }
     }
 
-    @GetMapping("/backtest/history/w")
+    @GetMapping("/history/w")
     public ResponseEntity<?> getMyW(@RequestHeader("Authorization") String token){
         try {
             List<WEntity> wData = mypageService.getTop10W(token);

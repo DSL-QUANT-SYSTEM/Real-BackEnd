@@ -3,7 +3,7 @@ package com.example.BeFETest.DTO.coinDTO;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -13,11 +13,11 @@ public class BollingerBandsStrategyDTO extends TradeStrategyDTO{
 
     private int moveAvg;
 
-    public BollingerBandsStrategyDTO(double initial_investment, double tax, LocalDate start_date, LocalDate end_date, LocalDate backtesting_date,
+    public BollingerBandsStrategyDTO(double initial_investment, double tax, LocalDateTime backtesting_date,
                                      String target_item, String tick_kind, int inq_range, String strategy,double finalCash, double finalAsset, double finalBalance,
                                      double profit, double profitRate, int numberOfTrades,
                                      int moveAvg) {
-        super(initial_investment, tax, start_date, end_date, backtesting_date, target_item, tick_kind, inq_range, strategy, finalCash, finalAsset, finalBalance,
+        super(initial_investment, tax, backtesting_date, target_item, tick_kind, inq_range, strategy, finalCash, finalAsset, finalBalance,
                 profit, profitRate, numberOfTrades);
         this.moveAvg = moveAvg;
     }

@@ -11,7 +11,7 @@ DEPLOY_PATH=$PROJECT_ROOT
 cp $BUILD_JAR $DEPLOY_PATH
 
 echo ">>> 현재 실행중인 애플리케이션 pid 확인" >> $PROJECT_ROOT/deploy.log
-CURRENT_PID=$(pgrep -f $JAR_NAME)
+CURRENT_PID=$(pgrep -fl $JAR_NAME | grep java | awk '{print $1}')
 
 if [ -z $CURRENT_PID ]
 then

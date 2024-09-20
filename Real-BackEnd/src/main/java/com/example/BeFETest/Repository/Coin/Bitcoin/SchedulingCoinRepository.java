@@ -7,5 +7,8 @@ import java.util.List;
 
 public interface SchedulingCoinRepository extends JpaRepository<SchedulingCoinResponse,Long> {
 
+
     List<SchedulingCoinResponse> findTop20ByOrderByIdDesc();
+
+    List<SchedulingCoinResponse> findAll();
 }

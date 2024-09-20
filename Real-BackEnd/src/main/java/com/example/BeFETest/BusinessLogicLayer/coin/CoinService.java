@@ -4,6 +4,7 @@ import com.example.BeFETest.DTO.SchedulingCoin.SchedulingCoinConverter;
 import com.example.BeFETest.DTO.SchedulingCoin.SchedulingCoinDTO;
 import com.example.BeFETest.DTO.kosdaq.KosdaqConverter;
 import com.example.BeFETest.Entity.SchedulingCoin.SchedulingCoinResponse;
+import com.example.BeFETest.Entity.convert.FluctuatingRateUtils;
 import com.example.BeFETest.Repository.Coin.Bitcoin.SchedulingCoinRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,20 @@ public class CoinService {
     public List<SchedulingCoinDTO> getTop20Coin(){
         List<SchedulingCoinResponse> top20Data = repository.findTop20ByOrderByIdDesc();
         return top20Data.stream().map(SchedulingCoinConverter::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<SchedulingCoinDTO> getTop20CoinByFluctuating(){
+        List<SchedulingCoinResponse> coinResponses = repository.findAll();
+
+        return coinResponses.stream()
+                .sorted((a,b) -> {
+                    Double rateA = FluctuatingRateUtils.convertFluctuatingRate(a.getFluctuatingRate());
+                    Double rateB = FluctuatingRateUtils.convertFluctuatingRate(b.getFluctuatingRate());
+                    return rateB.compareTo(rateA);
+                })
+                .limit(20)
+                .map(SchedulingCoinConverter::toDto)
                 .collect(Collectors.toList());
     }
 }

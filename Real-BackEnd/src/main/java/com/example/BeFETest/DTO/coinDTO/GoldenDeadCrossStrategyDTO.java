@@ -3,7 +3,7 @@ package com.example.BeFETest.DTO.coinDTO;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -15,11 +15,11 @@ public class GoldenDeadCrossStrategyDTO extends TradeStrategyDTO{
 
 
 
-    public GoldenDeadCrossStrategyDTO(double initial_investment, double tax, LocalDate start_date, LocalDate end_date, LocalDate backtesting_date,
+    public GoldenDeadCrossStrategyDTO(double initial_investment, double tax, LocalDateTime backtesting_date,
                                       String target_item, String tick_kind, int inq_range, String strategy, double finalCash, double finalAsset, double finalBalance,
                                       double profit, double profitRate, int numberOfTrades,
                                       int fastMoveAvg, int slowMoveAvg) {
-        super(initial_investment, tax, start_date, end_date, backtesting_date, target_item, tick_kind, inq_range, strategy,finalCash, finalAsset, finalBalance,
+        super(initial_investment, tax, backtesting_date, target_item, tick_kind, inq_range, strategy,finalCash, finalAsset, finalBalance,
                 profit, profitRate, numberOfTrades);
         this.fastMoveAvg = fastMoveAvg;
         this.slowMoveAvg = slowMoveAvg;
@@ -38,8 +38,6 @@ public class GoldenDeadCrossStrategyDTO extends TradeStrategyDTO{
         return "GoldenDeadCrossStrategyDTO{" +
                 "initial_investment=" + initial_investment +
                 ", tax=" + tax +
-                ", start_date=" + start_date +
-                ", end_date=" + end_date +
                 ", target_item='" + target_item + '\'' +
                 ", tick_kind='" + tick_kind + '\'' +
                 ", inq_range=" + inq_range +

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -21,9 +21,7 @@ public class EnvEntity {
     //옵션 정보들
     private double initial_investment;
     private double tax;
-    private LocalDate start_date;
-    private LocalDate end_date;
-    private LocalDate backtesting_date;
+    private LocalDateTime backtesting_date;
     private String target_item;
     private String tick_kind;
     private int inq_range;
@@ -48,8 +46,6 @@ public class EnvEntity {
                 ", userId=" + userId +
                 ", initialInvestment=" + initial_investment +
                 ", tax=" + tax +
-                ", startDate=" + start_date +
-                ", endDate=" + end_date +
                 ", backtesting_date=" + backtesting_date +
                 ", targetItem='" + target_item + '\'' +
                 ", tickKind='" + tick_kind + '\'' +

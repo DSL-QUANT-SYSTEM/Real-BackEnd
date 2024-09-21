@@ -80,7 +80,6 @@ public class SecurityConfig {
                                 .requestMatchers("/home/kosdaq").permitAll()
                                 .requestMatchers("/home/kospi200").permitAll()
                                 .requestMatchers("/home/top20").permitAll()
-                                .requestMatchers("/home/top20test").permitAll()
                                 .requestMatchers("/backtest/**").permitAll()
                                 .anyRequest().authenticated()
                 )

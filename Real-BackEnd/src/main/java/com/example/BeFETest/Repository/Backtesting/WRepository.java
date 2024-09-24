@@ -8,6 +8,7 @@ import java.util.List;
 public interface WRepository extends JpaRepository<WEntity, Long>{
     List<WEntity> findByUserIdOrderByIdDesc(Long userId);
     List<WEntity> findTop10ByUserIdOrderByIdDesc(Long userId);
+    List<WEntity> findTop100ByUserIdOrderByIdDesc(Long userId);
     WEntity findTopByUserIdOrderByIdDesc(Long userId);
     List<WEntity> findAllByUserId(Long userId);
 }

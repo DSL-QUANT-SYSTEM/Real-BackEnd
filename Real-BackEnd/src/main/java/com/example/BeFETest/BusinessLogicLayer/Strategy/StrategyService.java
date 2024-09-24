@@ -84,8 +84,12 @@ public class StrategyService {
 
     }
 
-    public List<GDEntity> getRecentGDStrategies(Long userId){
+    public List<GDEntity> getRecent10GDStrategies(Long userId){
         return gdRepository.findTop10ByUserIdOrderByIdDesc(userId);
+    }
+
+    public List<GDEntity> getRecent100GDStrategies(Long userId){
+        return gdRepository.findTop100ByUserIdOrderByIdDesc(userId);
     }
 
     public GoldenDeadCrossStrategyDTO getLatestGDStrategyResultByUserId(Long userId){
@@ -103,7 +107,7 @@ public class StrategyService {
         bbEntity.setUserId(userId);
         bbEntity.setInitial_investment(strategyDTO.getInitial_investment());
         bbEntity.setTax(strategyDTO.getTax());
-        bbEntity.setBacktesting_date(LocalDateTime.now());
+        bbEntity.setBacktesting_date(strategyDTO.getBacktesting_date());
         bbEntity.setTarget_item(strategyDTO.getTarget_item());
         bbEntity.setTick_kind(strategyDTO.getTick_kind());
         bbEntity.setInq_range(strategyDTO.getInq_range());
@@ -143,6 +147,10 @@ public class StrategyService {
 
     }
 
+    public List<BBEntity> getRecent100BBStrategies(Long userId){
+        return bbRepository.findTop100ByUserIdOrderByIdDesc(userId);
+    }
+
     public BollingerBandsStrategyDTO getLatestBBStrategyResultByUserId(Long userId){
         BBEntity bbEntity = bbRepository.findTopByUserIdOrderByIdDesc(userId);
         return new BollingerBandsStrategyDTO(bbEntity.getInitial_investment(), bbEntity.getTax(), bbEntity.getBacktesting_date() , bbEntity.getTarget_item(), bbEntity.getTick_kind(), bbEntity.getInq_range(), bbEntity.getStrategy() ,bbEntity.getFinalCash(), bbEntity.getFinalAsset(),
@@ -157,7 +165,7 @@ public class StrategyService {
         indEntity.setUserId(userId);
         indEntity.setInitial_investment(strategyDTO.getInitial_investment());
         indEntity.setTax(strategyDTO.getTax());
-        indEntity.setBacktesting_date(LocalDateTime.now());
+        indEntity.setBacktesting_date(strategyDTO.getBacktesting_date());
         indEntity.setTarget_item(strategyDTO.getTarget_item());
         indEntity.setTick_kind(strategyDTO.getTick_kind());
         indEntity.setInq_range(strategyDTO.getInq_range());
@@ -174,12 +182,12 @@ public class StrategyService {
         System.out.println("indicatorEntity = " + indEntity.toString());
         indicatorRepository.save(indEntity);
 
-        List<IndicatorEntity> indStrategies = indicatorRepository.findByUserIdOrderByIdDesc(indEntity.getUserId());
-        assert indStrategies != null;
-        if (indStrategies.size() > 10) {
-            List<IndicatorEntity> strategiesToDelete = indStrategies.subList(10, indStrategies.size());
-            indicatorRepository.deleteAll(strategiesToDelete);
-        }
+//        List<IndicatorEntity> indStrategies = indicatorRepository.findByUserIdOrderByIdDesc(indEntity.getUserId());
+//        assert indStrategies != null;
+//        if (indStrategies.size() > 10) {
+//            List<IndicatorEntity> strategiesToDelete = indStrategies.subList(10, indStrategies.size());
+//            indicatorRepository.deleteAll(strategiesToDelete);
+//        }
 
 //        if(indiEntity != null){
 //            indiEntity.setRsiPeriod(strategyDTO.getRsiPeriod());
@@ -198,6 +206,10 @@ public class StrategyService {
 
     }
 
+    public List<IndicatorEntity> getRecent100IndStrategies(Long userId){
+        return indicatorRepository.findTop100ByUserIdOrderByIdDesc(userId);
+    }
+
     public IndicatorBasedStrategyDTO getLatestIndicatorStrategyResultByUserId(Long userId){
         IndicatorEntity indiEntity = indicatorRepository.findTopByUserIdOrderByIdDesc(userId);
         return new IndicatorBasedStrategyDTO(indiEntity.getInitial_investment(), indiEntity.getTax(), indiEntity.getBacktesting_date(), indiEntity.getTarget_item(), indiEntity.getTick_kind(), indiEntity.getInq_range(), indiEntity.getStrategy() ,indiEntity.getFinalCash(), indiEntity.getFinalAsset(),
@@ -212,7 +224,7 @@ public class StrategyService {
         envEntity.setUserId(userId);
         envEntity.setInitial_investment(strategyDTO.getInitial_investment());
         envEntity.setTax(strategyDTO.getTax());
-        envEntity.setBacktesting_date(LocalDateTime.now());
+        envEntity.setBacktesting_date(strategyDTO.getBacktesting_date());
         envEntity.setTarget_item(strategyDTO.getTarget_item());
         envEntity.setTick_kind(strategyDTO.getTick_kind());
         envEntity.setInq_range(strategyDTO.getInq_range());
@@ -231,12 +243,12 @@ public class StrategyService {
         System.out.println("envEntity = " + envEntity.toString());
         envRepository.save(envEntity);
 
-        List<EnvEntity> envStrategies = envRepository.findByUserIdOrderByIdDesc(envEntity.getUserId());
-        assert envStrategies != null;
-        if (envStrategies.size() > 10) {
-            List<EnvEntity> strategiesToDelete = envStrategies.subList(10, envStrategies.size());
-            envRepository.deleteAll(strategiesToDelete);
-        }
+//        List<EnvEntity> envStrategies = envRepository.findByUserIdOrderByIdDesc(envEntity.getUserId());
+//        assert envStrategies != null;
+//        if (envStrategies.size() > 10) {
+//            List<EnvEntity> strategiesToDelete = envStrategies.subList(10, envStrategies.size());
+//            envRepository.deleteAll(strategiesToDelete);
+//        }
 
 //        if(indiEntity != null){
 //            indiEntity.setRsiPeriod(strategyDTO.getRsiPeriod());
@@ -253,6 +265,10 @@ public class StrategyService {
 //        }
 
 
+    }
+
+    public List<EnvEntity> getRecent100EnvStrategies(Long userId){
+        return envRepository.findTop100ByUserIdOrderByIdDesc(userId);
     }
 
     public EnvelopeDTO getLatestEnvStrategyResultByUserId(Long userId){
@@ -269,7 +285,7 @@ public class StrategyService {
         wEntity.setUserId(userId);
         wEntity.setInitial_investment(strategyDTO.getInitial_investment());
         wEntity.setTax(strategyDTO.getTax());
-        wEntity.setBacktesting_date(LocalDateTime.now());
+        wEntity.setBacktesting_date(strategyDTO.getBacktesting_date());
         wEntity.setTarget_item(strategyDTO.getTarget_item());
         wEntity.setTick_kind(strategyDTO.getTick_kind());
         wEntity.setInq_range(strategyDTO.getInq_range());
@@ -285,13 +301,13 @@ public class StrategyService {
 
         System.out.println("williamsEntity = " + wEntity.toString());
         wRepository.save(wEntity);
-
-        List<WEntity> wStrategies = wRepository.findByUserIdOrderByIdDesc(wEntity.getUserId());
-        assert wStrategies != null;
-        if (wStrategies.size() > 10) {
-            List<WEntity> strategiesToDelete = wStrategies.subList(10, wStrategies.size());
-            wRepository.deleteAll(strategiesToDelete);
-        }
+//
+//        List<WEntity> wStrategies = wRepository.findByUserIdOrderByIdDesc(wEntity.getUserId());
+//        assert wStrategies != null;
+//        if (wStrategies.size() > 10) {
+//            List<WEntity> strategiesToDelete = wStrategies.subList(10, wStrategies.size());
+//            wRepository.deleteAll(strategiesToDelete);
+//        }
 
 //        if(indiEntity != null){
 //            indiEntity.setRsiPeriod(strategyDTO.getRsiPeriod());
@@ -308,6 +324,10 @@ public class StrategyService {
 //        }
 
 
+    }
+
+    public List<WEntity> getRecent100WStrategies(Long userId){
+        return wRepository.findTop100ByUserIdOrderByIdDesc(userId);
     }
 
     public WilliamsDTO getLatestWilliamsStrategyResultByUserId(Long userId){

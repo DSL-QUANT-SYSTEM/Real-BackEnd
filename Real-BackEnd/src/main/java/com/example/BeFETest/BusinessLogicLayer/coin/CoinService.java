@@ -37,4 +37,43 @@ public class CoinService {
                 .map(SchedulingCoinConverter::toDto)
                 .collect(Collectors.toList());
     }
+
+    public List<SchedulingCoinDTO> getCoinByFluctuating(){
+        List<SchedulingCoinResponse> coinResponses = repository.findAll();
+
+        return coinResponses.stream()
+                .sorted((a,b) ->{
+                    Double rateA = FluctuatingRateUtils.convertFluctuatingRate(a.getFluctuatingRate());
+                    Double rateB = FluctuatingRateUtils.convertFluctuatingRate(b.getFluctuatingRate());
+                    return rateB.compareTo(rateA);
+                })
+                .map(SchedulingCoinConverter::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<SchedulingCoinDTO> getCoinByClosingPrice(){
+        List<SchedulingCoinResponse> coinResponses = repository.findAll();
+
+        return coinResponses.stream()
+                .sorted((a,b)->{
+                    Double priceA = a.getClosingPrice();
+                    Double priceB = b.getClosingPrice();
+                    return priceB.compareTo(priceA);
+                })
+                .map(SchedulingCoinConverter::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<SchedulingCoinDTO> getCoinByTradingVolume(){
+        List<SchedulingCoinResponse> coinResponses = repository.findAll();
+
+        return coinResponses.stream()
+                .sorted((a,b) ->{
+                    Double amountA = Double.parseDouble(a.getTradingVolume());
+                    Double amountB = Double.parseDouble(b.getTradingVolume());
+                    return amountB.compareTo(amountA);
+                })
+                .map(SchedulingCoinConverter::toDto)
+                .collect(Collectors.toList());
+    }
 }

@@ -11,4 +11,6 @@ public interface SchedulingCoinRepository extends JpaRepository<SchedulingCoinRe
     List<SchedulingCoinResponse> findTop20ByOrderByIdDesc();
 
     List<SchedulingCoinResponse> findAll();
+
+
 }

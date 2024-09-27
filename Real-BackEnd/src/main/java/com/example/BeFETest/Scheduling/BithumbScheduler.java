@@ -80,11 +80,11 @@ public class BithumbScheduler {
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");//빗썸 api로 들어오는 data가 20240104형태이므로
                     String dateStr = node.get("trade_date").asText();
                     LocalDate date = LocalDate.parse(dateStr, formatter);
-                    String closingPrice = node.get("prev_closing_price").asText();
+                    String closingPrice = node.get("trade_price").asText();//종가(현재가)
                     String openingPrice = node.get("opening_price").asText();
                     String highPrice = node.get("high_price").asText();
                     String lowPrice = node.get("low_price").asText();
-                    String tradingVolume = node.get("trade_volume").asText();
+                    String tradingVolume = node.get("acc_trade_price_24h").asText();//24시간 누적 거래금액
                     String fluctuatingRate = "";
                     if(node.get("change").asText() == "FALL"){
                         fluctuatingRate = "-" + node.get("change_rate");

@@ -66,6 +66,22 @@ public class DataController {
         return coinService.getTop20CoinByFluctuating();
     }
 
+    @GetMapping("/home/coinByFluctuating")
+    public List<SchedulingCoinDTO> getCoinByFluctuating(){
+        return coinService.getCoinByFluctuating();
+    }
+
+    @GetMapping("/home/coinByClosingPrice")
+    public List<SchedulingCoinDTO> getCoinByClosingPrice(){
+        return coinService.getCoinByClosingPrice();
+    }
+
+    @GetMapping("/home/coinByTradingVolume")
+    public List<SchedulingCoinDTO> getCoinByTradingVolume(){
+        return coinService.getCoinByTradingVolume();
+    }
+
+
 
     // 백테스팅 기록을 가져오는 API
     @GetMapping("/home/backtesting_gd")

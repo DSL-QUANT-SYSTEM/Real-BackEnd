@@ -29,8 +29,6 @@ public class SecurityConfig {
 
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    //private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-    //private final CustomAccessDeniedHandler customAccessDeniedHandler;
     private final AccessDeniedHandler accessDeniedHandler;
     private final AuthenticationEntryPoint authenticationEntryPoint;
 
@@ -68,7 +66,7 @@ public class SecurityConfig {
                                 .requestMatchers("/fortest").permitAll()
                                 //.requestMatchers("/home/**").authenticated()
                                 .requestMatchers("/logout").authenticated()
-                                .requestMatchers("/api/user-info").authenticated()
+                                .requestMatchers("/api/user-info").permitAll()  //후에 check
                                 .requestMatchers("/login/**").permitAll()
                                 .requestMatchers("/refresh-token").permitAll()
                                 .requestMatchers("/result/**").permitAll()
@@ -101,7 +99,9 @@ public class SecurityConfig {
 
         return http.build();
     }
+}
 
+    /*
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
@@ -119,6 +119,8 @@ public class SecurityConfig {
         };
     }
 }
+
+     */
 
 /*
 @RequiredArgsConstructor
@@ -213,3 +215,7 @@ public class SecurityConfig {
 /*
 }
 */
+
+
+
+

@@ -20,6 +20,8 @@ public class CorsConfig {
         config.addAllowedOrigin("https://www.dslquant.site");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
+        config.addExposedHeader("authorization");
+        config.addExposedHeader("Authorization");
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }

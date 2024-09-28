@@ -1,11 +1,14 @@
 package com.example.BeFETest.controller;
 
 import com.example.BeFETest.BusinessLogicLayer.kakao.authService;
+import com.example.BeFETest.DTO.kakaoDTO.Account;
 import com.example.BeFETest.DTO.kakaoDTO.LoginResponseDto;
 import com.example.BeFETest.DTO.kakaoDTO.RefreshTokenRequest;
+import com.example.BeFETest.DTO.user.UserDTO;
 import com.example.BeFETest.Entity.RefreshToken;
 import com.example.BeFETest.Error.CustomExceptions;
 import com.example.BeFETest.Error.ErrorCode;
+import com.example.BeFETest.Repository.kakao.accountRepo;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,6 +26,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URISyntaxException;
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 public class loginController {
@@ -33,29 +37,9 @@ public class loginController {
     @Autowired
     private authService authService;
 
+    @Autowired
+    private accountRepo accountRepository;
 
-
-    /*
-    @GetMapping("/login/oauth2/code/kakao")
-    public ResponseEntity<LoginResponseDto> login(@RequestParam("code") String code, HttpServletResponse response) {
-        try {
-            String kakaoAccessToken = authService.getKakaoAccessToken(code);
-            ResponseEntity<LoginResponseDto> loginResponse = authService.kakaoLogin(kakaoAccessToken);
-
-            if(loginResponse.getBody().isLoginSuccess()) {
-                //헤더에 JWT 토큰 설정
-                String jwtToken = loginResponse.getHeaders().getFirst("Authorization");
-                response.setHeader("Authorization", jwtToken);
-                return loginResponse;
-            } else {
-                throw new CustomExceptions.UnauthorizedException("Unathorized Error", null, "Unathorized Error", ErrorCode.UNAUTHORIZED);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new CustomExceptions.InternalServerErrorException("Error message : " + e.getMessage(), e, "Error message : " + e.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-    }
-    */
 
     @GetMapping("/login/oauth2/code/kakao")
     public ResponseEntity<LoginResponseDto> login(@RequestParam("code") String code, HttpServletResponse response) {
@@ -81,33 +65,6 @@ public class loginController {
 
 
 
-
-            
-
-    
-    /*
-    @GetMapping("/login/oauth2/code/kakao")
-    public ResponseEntity<LoginResponseDto> login(@RequestParam("code") String code, HttpServletResponse response) {
-        try {
-            String kakaoAccessToken = authService.getKakaoAccessToken(code);
-            ResponseEntity<LoginResponseDto> loginResponse = authService.kakaoLogin(kakaoAccessToken);
-
-            if (loginResponse.getBody().isLoginSuccess()) {
-                // 헤더에 JWT 토큰 설정
-                String jwtToken = loginResponse.getHeaders().getFirst("Authorization");
-                System.out.println("Generated JWT: " + jwtToken); // 디버깅용 출력
-                response.setHeader("Authorization", jwtToken);
-                return loginResponse;
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(loginResponse.getBody());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new LoginResponseDto());
-        }
-    }
-    */
-
     @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
         try {
@@ -117,25 +74,28 @@ public class loginController {
             throw new CustomExceptions.InternalServerErrorException("Error message : " + e.getMessage(), e, "Error message : " + e.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
-        
 
-    /*
-    @PostMapping("/refresh-token")
-    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
-        return authService.refreshToken(refreshTokenRequest.getRefreshToken());
-    }
-    */
+
 
     @GetMapping("/api/user-info")
-    public UserInfo getUserInfo() {
+    public ResponseEntity<?> getUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication != null && authentication.getPrincipal() instanceof String) {
-            String username = (String) authentication.getPrincipal();
-            Claims claims = (Claims) authentication.getDetails();
-            String email = claims.get("email", String.class);
-            return new UserInfo(username, email);
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
+
+        String username = authentication.getName();  // SecurityContext에서 사용자 이름을 가져옴
+
+        // 사용자 정보를 조회하고 반환
+        Optional<Account> accountOptional = accountRepository.findByUsername(username);
+
+        if (accountOptional.isPresent()) {
+            Account account = accountOptional.get();
+            UserDTO userDTO = new UserDTO(account.getUsername(), account.getEmail());
+            return ResponseEntity.ok(userDTO);
         } else {
-            throw new CustomExceptions.ForbiddenException("Forbidden Error", null, "Forbidden Error", ErrorCode.FORBIDDEN);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
     }
 
@@ -155,24 +115,6 @@ public class loginController {
     }
 
 
-    /*
-    @GetMapping("/api/user-info")
-    public UserInfo getUserInfo() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof String) {
-            String username = (String) authentication.getPrincipal();
-            Claims claims = (Claims) authentication.getDetails();
-
-            //logger.info("Received claims: " + claims);
-            //System.out.println("Received claims: " + claims);
-            
-            String email = claims.get("email", String.class);
-            return new UserInfo(username, email);
-        } else {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
-        }
-    }
-    */
 
     @Getter
     @Setter
@@ -187,5 +129,5 @@ public class loginController {
 
     }
 
-   
+
 }

@@ -24,6 +24,8 @@ public class StrategyCommonDTO {
     private double profitRate;
     private int numberOfTrades;
 
+    public StrategyCommonDTO(){}
+
     public StrategyCommonDTO(double initial_investment, double tax, LocalDateTime backtesting_date,String target_item, String tick_kind,
                             int inq_range, String strategy, double finalCash, double finalAsset,
                              double finalBalance, double profit, double profitRate, int numberOfTrades) {

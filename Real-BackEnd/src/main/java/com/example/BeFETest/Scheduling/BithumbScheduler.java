@@ -4,6 +4,7 @@ import com.example.BeFETest.Entity.SchedulingCoin.SchedulingCoinResponse;
 import com.example.BeFETest.Repository.Coin.Bitcoin.SchedulingCoinRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @EnableScheduling
 @Configuration
@@ -28,6 +30,11 @@ public class BithumbScheduler {
     List<String> marketList = new ArrayList<>();
 
     private final SchedulingCoinRepository schedulingCoinRepository;
+
+    @PostConstruct
+    public void init(){
+        fetchCoinData();//애플리케이션 시작 시 처음 한번 실행
+    }
 
     @Scheduled(cron = "0 0 */2 * * *")//매 2시간 정각에 실행
     @Transactional
@@ -69,7 +76,6 @@ public class BithumbScheduler {
                     .build();
             try(Response priceResponse = client.newCall(priceRequest).execute()){
                 String priceData = priceResponse.body().string();
-                //System.out.println(priceData);
 
                 //JSON 파싱
                 ObjectMapper objectMapper = new ObjectMapper();
@@ -85,30 +91,47 @@ public class BithumbScheduler {
                     String highPrice = node.get("high_price").asText();
                     String lowPrice = node.get("low_price").asText();
                     String tradingVolume = node.get("acc_trade_price_24h").asText();//24시간 누적 거래금액
-                    String fluctuatingRate = "";
-                    if(node.get("change").asText() == "FALL"){
-                        fluctuatingRate = "-" + node.get("change_rate");
+                    String fluctuatingRate = node.get("change").asText().equals("FALL") ?
+                            "-" + node.get("change_rate").asText() :
+                            "+" + node.get("change_rate").asText();
+
+//                    String fluctuatingRate = "";
+//                    if(node.get("change").asText() == "FALL"){
+//                        fluctuatingRate = "-" + node.get("change_rate");
+//                    }
+//                    else{
+//                        fluctuatingRate = "+" + node.get("change_rate");
+//                    }
+                    Optional<SchedulingCoinResponse> existCoinData = schedulingCoinRepository.findByMarket(market);
+
+                    if(existCoinData.isPresent()){
+                        //기존 데이터가 있으면 업데이트
+                        SchedulingCoinResponse coinData = existCoinData.get();
+                        coinData.setDate(date);
+                        coinData.setClosingPrice(Double.parseDouble(closingPrice));
+                        coinData.setOpeningPrice(Double.parseDouble(openingPrice));
+                        coinData.setHighPrice(Double.parseDouble(highPrice));
+                        coinData.setLowPrice(Double.parseDouble(lowPrice));
+                        coinData.setTradingVolume(tradingVolume);
+                        coinData.setFluctuatingRate(fluctuatingRate);
+                        schedulingCoinRepository.save(coinData);
+                    }else{
+                        //기존 데이터가 없으면 새로 저장
+                        SchedulingCoinResponse coinData =  SchedulingCoinResponse.builder()
+                                .market(market)
+                                .date(date)
+                                .closingPrice(Double.parseDouble(closingPrice))
+                                .openingPrice(Double.parseDouble(openingPrice))
+                                .highPrice(Double.parseDouble(highPrice))
+                                .lowPrice(Double.parseDouble(lowPrice))
+                                .tradingVolume(tradingVolume)
+                                .fluctuatingRate(fluctuatingRate)
+                                .build();
+
+                        schedulingCoinRepository.save(coinData);
                     }
-                    else{
-                        fluctuatingRate = "+" + node.get("change_rate");
-                    }
-
-                    SchedulingCoinResponse coinData =  SchedulingCoinResponse.builder()
-                            .market(market)
-                            .date(date)
-                            .closingPrice(Double.parseDouble(closingPrice))
-                            .openingPrice(Double.parseDouble(openingPrice))
-                            .highPrice(Double.parseDouble(highPrice))
-                            .lowPrice(Double.parseDouble(lowPrice))
-                            .tradingVolume(tradingVolume)
-                            .fluctuatingRate(fluctuatingRate)
-                            .build();
-
-                    schedulingCoinRepository.save(coinData);
-
                 }
-            }
-            catch(Exception e){
+            } catch(Exception e){
                 e.printStackTrace();
             }
         }

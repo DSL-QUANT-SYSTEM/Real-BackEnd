@@ -63,7 +63,7 @@ public class DataController {
 
     @GetMapping("/home/top20")
     public List<SchedulingCoinDTO> getTop20Coin(){
-        return coinService.getTop20CoinByFluctuating();
+        return coinService.getTop20CoinByClosingPrice();
     }
 
     @GetMapping("/home/coinByFluctuating")

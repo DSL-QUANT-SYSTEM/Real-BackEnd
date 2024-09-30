@@ -24,13 +24,13 @@ public class CoinService {
                 .collect(Collectors.toList());
     }
 
-    public List<SchedulingCoinDTO> getTop20CoinByFluctuating(){
+    public List<SchedulingCoinDTO> getTop20CoinByClosingPrice(){//현재가로 바꿔야함
         List<SchedulingCoinResponse> coinResponses = repository.findAll();
 
         return coinResponses.stream()
                 .sorted((a,b) -> {
-                    Double rateA = FluctuatingRateUtils.convertFluctuatingRate(a.getFluctuatingRate());
-                    Double rateB = FluctuatingRateUtils.convertFluctuatingRate(b.getFluctuatingRate());
+                    Double rateA = FluctuatingRateUtils.convertFluctuatingRate(String.valueOf(a.getClosingPrice()));
+                    Double rateB = FluctuatingRateUtils.convertFluctuatingRate(String.valueOf(b.getClosingPrice()));
                     return rateB.compareTo(rateA);
                 })
                 .limit(20)

@@ -65,7 +65,7 @@ public class SecurityConfig {
                                 .requestMatchers("/strategy/**").permitAll()
                                 .requestMatchers("/fortest").permitAll()
                                 //.requestMatchers("/home/**").authenticated()
-                                .requestMatchers("/logout").authenticated()
+                                .requestMatchers("/logout").permitAll()
                                 .requestMatchers("/api/user-info").permitAll()  //후에 check
                                 .requestMatchers("/login/**").permitAll()
                                 .requestMatchers("/refresh-token").permitAll()

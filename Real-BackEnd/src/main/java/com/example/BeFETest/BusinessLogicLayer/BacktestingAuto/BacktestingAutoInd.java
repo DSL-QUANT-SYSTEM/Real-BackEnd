@@ -64,7 +64,7 @@ public class BacktestingAutoInd {
     }
 
     // 자동 백테스팅 실행
-    public void runAutomaticBacktesting(int numberOfTests) {
+    public void runAutomaticBacktesting(int numberOfTests, int count, Long userId) {
         for (int i = 0; i < numberOfTests; i++) {
             // 1. 랜덤 전략 생성
             IndicatorBasedStrategyDTO strategy = generateRandomInd();
@@ -92,7 +92,11 @@ public class BacktestingAutoInd {
             // 4. 백테스트 결과 저장
             logBacktestIndResult(result);
 
-            strategyService.saveIndicatorStrategyResult(commonDTO, (long) -3, strategy,result);
+            //system 백테스팅=> count=1 , 사용자 더미 데이터용 백테스팅 => count=2
+            if(count==1)
+                strategyService.saveIndicatorStrategyResult(commonDTO, (long) -3, strategy,result);
+            else
+                strategyService.saveIndicatorStrategyResult(commonDTO, userId, strategy,result);
         }
     }
 }

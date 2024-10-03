@@ -87,6 +87,7 @@ public class SecurityConfig {
                                 .requestMatchers("/home/backtesting_env").permitAll()
                                 .requestMatchers("/home/backtesting_w").permitAll()
                                 .requestMatchers("/backtest/**").permitAll()
+                                .requestMatchers("/backtesting_mine_/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling ->

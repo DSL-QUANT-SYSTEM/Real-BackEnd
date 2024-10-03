@@ -3,13 +3,15 @@ package com.example.BeFETest.controller;
 import com.example.BeFETest.BusinessLogicLayer.myPage.MypageService;
 import com.example.BeFETest.DTO.user.UserDTO;
 import com.example.BeFETest.Entity.BacktestingRes.*;
+import com.example.BeFETest.JWT.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.example.BeFETest.BusinessLogicLayer.BacktestingAuto.*;
 import java.util.List;
 
 @Slf4j
@@ -17,7 +19,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MyPageController {
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     private final MypageService mypageService;
+    private final BacktestingAutoGD backtestingAutoGD;
+    private final BacktestingAutoBB backtestingAutoBB;
+    private final BacktestingAutoInd backtestingAutoInd;
+    private final BacktestingAutoEnv backtestingAutoEnv;
+    private final BacktestingAutoWilliams backtestingAutoW;
 
     @GetMapping("/userinfo")
     public ResponseEntity<String> getUserName(@RequestHeader("Authorization") String token){
@@ -54,6 +64,37 @@ public class MyPageController {
         } catch (Exception e){
             return ResponseEntity.status(500).body("사용자 정보를 가져오는 도중 오류가 발생했습니다.");
         }
+    }
+
+    // 본인 DB에 백테스팅 더미데이터 넣기
+    @GetMapping("/backtesting_mine_gd")
+    public void getBacktestingResultsGD(@RequestHeader("Authorization") String token) {
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        backtestingAutoGD.runAutomaticBacktesting(10,2, userId);
+    }
+    // 본인 DB에 백테스팅 더미데이터 넣기
+    @GetMapping("/backtesting_mine_bb")
+    public void getBacktestingResultsBB(@RequestHeader("Authorization") String token) {
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        backtestingAutoBB.runAutomaticBacktesting(10,2,userId);
+    }
+    // 본인 DB에 백테스팅 더미데이터 넣기
+    @GetMapping("/backtesting_mine_ind")
+    public void getBacktestingResultsInd(@RequestHeader("Authorization") String token) {
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        backtestingAutoInd.runAutomaticBacktesting(10,2,userId);
+    }
+    // 본인 DB에 백테스팅 더미데이터 넣기
+    @GetMapping("/backtesting_mine_env")
+    public void getBacktestingResultsEnv(@RequestHeader("Authorization") String token) {
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        backtestingAutoEnv.runAutomaticBacktesting(10,2,userId);
+    }
+    // 본인 DB에 백테스팅 더미데이터 넣기
+    @GetMapping("/backtesting_mine_williams")
+    public void getBacktestingResultsW(@RequestHeader("Authorization") String token) {
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        backtestingAutoW.runAutomaticBacktesting(10,2,userId);
     }
 
 
@@ -128,7 +169,7 @@ public class MyPageController {
         }
     }
 
-    @GetMapping("/history/w")
+    @GetMapping("/history/williams")
     public ResponseEntity<?> getMyW(@RequestHeader("Authorization") String token){
         try {
             List<WEntity> wData = mypageService.getTop10W(token);

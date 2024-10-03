@@ -11,9 +11,13 @@ import com.example.BeFETest.DTO.kosdaq.KosdaqResponseDTO;
 import com.example.BeFETest.DTO.kospi.KospiResponseDTO;
 import com.example.BeFETest.DTO.kospi200.Kospi200ResponseDTO;
 import com.example.BeFETest.Entity.BacktestingRes.*;
+import com.example.BeFETest.JWT.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -22,7 +26,6 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class DataController {
-
     ///api/kosdak/last-year
 
     private final KosdaqResponseService kosdaqService;
@@ -81,32 +84,30 @@ public class DataController {
         return coinService.getCoinByTradingVolume();
     }
 
-
-
-    // 백테스팅 기록을 가져오는 API
+    // 시스템 백테스팅 기록을 가져오는 API
     @GetMapping("/home/backtesting_gd")
     public List<GDEntity> getBacktestingResultsGD() {
-        backtestingAutoGD.runAutomaticBacktesting(10);
+        backtestingAutoGD.runAutomaticBacktesting(10,1, 0L);
         return strategyService.getRecent100GDStrategies((long) -1);
     }
     @GetMapping("/home/backtesting_bb")
     public List<BBEntity> getBacktestingResultsBB() {
-        backtestingAutoBB.runAutomaticBacktesting(10);
+        backtestingAutoBB.runAutomaticBacktesting(10,1,0L);
         return strategyService.getRecent100BBStrategies((long) -2);
     }
     @GetMapping("/home/backtesting_ind")
     public List<IndicatorEntity> getBacktestingResultsInd() {
-        backtestingAutoInd.runAutomaticBacktesting(10);
+        backtestingAutoInd.runAutomaticBacktesting(10,1,0L);
         return strategyService.getRecent100IndStrategies((long) -3);
     }
     @GetMapping("/home/backtesting_env")
     public List<EnvEntity> getBacktestingResultsEnv() {
-        backtestingAutoEnv.runAutomaticBacktesting(10);
+        backtestingAutoEnv.runAutomaticBacktesting(10,1,0L);
         return strategyService.getRecent100EnvStrategies((long) -4);
     }
     @GetMapping("/home/backtesting_w")
     public List<WEntity> getBacktestingResultsW() {
-        backtestingAutoW.runAutomaticBacktesting(10);
+        backtestingAutoW.runAutomaticBacktesting(10,1,0L);
         return strategyService.getRecent100WStrategies((long) -5);
     }
     /*

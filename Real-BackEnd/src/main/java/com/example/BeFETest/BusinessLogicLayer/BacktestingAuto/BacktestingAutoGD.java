@@ -41,7 +41,6 @@ public class BacktestingAutoGD {
     // 랜덤한 전략 조건 생성
     public static GoldenDeadCrossStrategyDTO generateRandomGD() {
         Random rand = new Random();
-
 //        // 랜덤한 이동평균
 //        int fastMoveAvg = 5 + rand.nextInt(10); // 5 ~ 15 사이의 값
 //        int slowMoveAvg = 20 + rand.nextInt(20); // 20 ~ 40 사이의 값
@@ -67,7 +66,7 @@ public class BacktestingAutoGD {
     }
 
     // 자동 백테스팅 실행
-    public void runAutomaticBacktesting(int numberOfTests) {
+    public void runAutomaticBacktesting(int numberOfTests, int count, Long userId) {
         for (int i = 0; i < numberOfTests; i++) {
             // 1. 랜덤 전략 생성
             GoldenDeadCrossStrategyDTO strategy = generateRandomGD();
@@ -88,15 +87,17 @@ public class BacktestingAutoGD {
                     strategy.getProfitRate(),
                     strategy.getNumberOfTrades()
             );
-
+            System.out.println("체크포인트: "+i+"번쨰"+ commonDTO);
             // 3. 백테스팅 실행
             GoldenDeadCrossStrategyDTO result = BacktestingGD.executeTrades(commonDTO, strategy);
 
             logBacktestGDResult(result);
-
-            strategyService.saveGDStrategyResult(commonDTO, (long) -1, strategy,result);
+            //system 백테스팅=> count=1 , 사용자 더미 데이터용 백테스팅 => count=2
+            if(count==1)
+                strategyService.saveGDStrategyResult(commonDTO, (long) -1, strategy,result);
+            else
+                strategyService.saveGDStrategyResult(commonDTO, userId, strategy,result);
         }
     }
-
 }
 

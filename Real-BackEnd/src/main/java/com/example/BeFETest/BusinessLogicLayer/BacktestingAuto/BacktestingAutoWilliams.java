@@ -63,7 +63,7 @@ public class BacktestingAutoWilliams {
     }
 
     // 자동 백테스팅 실행
-    public void runAutomaticBacktesting(int numberOfTests) {
+    public void runAutomaticBacktesting(int numberOfTests, int count, Long userId) {
         for (int i = 0; i < numberOfTests; i++) {
             // 1. 랜덤 전략 생성
             WilliamsDTO strategy = generateRandomW();
@@ -91,7 +91,11 @@ public class BacktestingAutoWilliams {
             // 4. 백테스트 결과 저장
             logBacktestWResult(result);
 
-            strategyService.saveWilliamsStrategyResult(commonDTO, (long) -5, strategy,result);
+            //system 백테스팅=> count=1 , 사용자 더미 데이터용 백테스팅 => count=2
+            if(count==1)
+                strategyService.saveWilliamsStrategyResult(commonDTO, (long) -5, strategy,result);
+            else
+                strategyService.saveWilliamsStrategyResult(commonDTO, userId, strategy,result);
         }
     }
 }

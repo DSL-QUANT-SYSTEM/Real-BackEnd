@@ -69,7 +69,7 @@ public class BacktestingAutoEnv {
     }
 
     // 자동 백테스팅 실행
-    public  void runAutomaticBacktesting(int numberOfTests) {
+    public  void runAutomaticBacktesting(int numberOfTests, int count, Long userId) {
         for (int i = 0; i < numberOfTests; i++) {
             // 1. 랜덤 전략 생성
             EnvelopeDTO strategy = generateRandomEnv();
@@ -97,7 +97,11 @@ public class BacktestingAutoEnv {
             // 4. 백테스트 결과 저장
             logBacktestEnvResult(result);
 
-            strategyService.saveEnvelopeStrategyResult(commonDTO, (long) -4, strategy,result);
+            //system 백테스팅=> count=1 , 사용자 더미 데이터용 백테스팅 => count=2
+            if(count==1)
+                strategyService.saveEnvelopeStrategyResult(commonDTO, (long) -4, strategy,result);
+            else
+                strategyService.saveEnvelopeStrategyResult(commonDTO, userId, strategy,result);
         }
     }
 }

@@ -339,7 +339,7 @@ public class BacktestingIndicator  {
             boolean macdSellSignal = macdValues.get(i) < 0.0 && macdValues.get(i - 1) < 0.0 && macdValues.get(i - 2) < 0.0
                     && macdValues.get(i) > macdValues.get(i - 1) && macdValues.get(i - 1) > macdValues.get(i - 2); // MACD 조건
 
-            if (/*rsiBuySignal && macdBuySignal && */mfiBuySignal && !bought) {
+            if (rsiBuySignal && macdBuySignal && mfiBuySignal && !bought) {
                 System.out.println("Buy Signal at index " + (i + closePrices.size() - minSize - 1) + ", Buy at " + currentPrice);
                 // 매수 로직 (모든 자본으로 BTC 구매)
                 if (cash > 0) {
@@ -350,7 +350,7 @@ public class BacktestingIndicator  {
                     bought = true; // 매수 상태로 설정
                     numberOfTrades++;
                 }
-            } else if (/*rsiSellSignal && macdSellSignal && */ mfiSellSignal&& bought) {
+            } else if (rsiSellSignal && macdSellSignal &&  mfiSellSignal&& bought) {
                 System.out.println("Sell Signal at index " + (i + closePrices.size() - minSize - 1) + ", Sell at " + currentPrice);
                 // 매도 로직 (모든 BTC 판매)
                 if (asset > 0) {

@@ -101,7 +101,7 @@ public class MyPageController {
     @GetMapping("/history/golden")
     public ResponseEntity<?> getMyGolden(@RequestHeader("Authorization") String token){
         try {
-            List<GDEntity> goldenData = mypageService.getTop10GD(token);
+            List<GDEntity> goldenData = mypageService.getAllGD(token);
             if (goldenData != null && !goldenData.isEmpty()) {
                 return ResponseEntity.ok(goldenData);
             } else {
@@ -119,7 +119,7 @@ public class MyPageController {
     @GetMapping("/history/bollinger")
     public ResponseEntity<?> getMyBollinger(@RequestHeader("Authorization") String token){
         try {
-            List<BBEntity> bollingerData = mypageService.getTop10BB(token);
+            List<BBEntity> bollingerData = mypageService.getAllBB(token);
             if (bollingerData != null && !bollingerData.isEmpty()) {
                 return ResponseEntity.ok(bollingerData);
             } else {
@@ -138,7 +138,7 @@ public class MyPageController {
     @GetMapping("/history/rsi")
     public ResponseEntity<?> getMyRsi(@RequestHeader("Authorization") String token){
         try {
-            List<IndicatorEntity> indicatorData = mypageService.getTop10Indi(token);
+            List<IndicatorEntity> indicatorData = mypageService.getAllIndi(token);
             if (indicatorData != null && !indicatorData.isEmpty()) {
                 return ResponseEntity.ok(indicatorData);
             } else {
@@ -155,7 +155,7 @@ public class MyPageController {
     @GetMapping("/history/env")
     public ResponseEntity<?> getMyEnv(@RequestHeader("Authorization") String token){
         try {
-            List<EnvEntity> envData = mypageService.getTop10Env(token);
+            List<EnvEntity> envData = mypageService.getAllEnv(token);
             if (envData != null && !envData.isEmpty()) {
                 return ResponseEntity.ok(envData);
             } else {
@@ -172,7 +172,7 @@ public class MyPageController {
     @GetMapping("/history/williams")
     public ResponseEntity<?> getMyW(@RequestHeader("Authorization") String token){
         try {
-            List<WEntity> wData = mypageService.getTop10W(token);
+            List<WEntity> wData = mypageService.getAllW(token);
             if (wData != null && !wData.isEmpty()) {
                 return ResponseEntity.ok(wData);
             } else {

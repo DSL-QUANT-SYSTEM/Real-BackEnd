@@ -90,4 +90,56 @@ public class MypageService {
     }
 
 
+    public List<GDEntity> getAllGD(String token){
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        List<GDEntity> results = gdRepository.findByUserIdOrderByIdDesc(userId);
+        if(results != null && !results.isEmpty()){
+            return results.stream().collect(Collectors.toList());
+        }else{
+            return null;
+        }
+
+    }
+
+    public List<BBEntity> getAllBB(String token){
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        List<BBEntity> results = bbRepository.findByUserIdOrderByIdDesc(userId);
+        if(results != null && !results.isEmpty()){
+            return results.stream().collect(Collectors.toList());
+        }else{
+            return null;
+        }
+    }
+
+    public List<EnvEntity> getAllEnv(String token){
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        List<EnvEntity> results = envRepository.findByUserIdOrderByIdDesc(userId);
+        if(results != null && !results.isEmpty()){
+            return results.stream().collect(Collectors.toList());
+        }else{
+            return null;
+        }
+    }
+
+    public List<WEntity> getAllW(String token){
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        List<WEntity> results = wRepository.findByUserIdOrderByIdDesc(userId);
+        if(results != null && !results.isEmpty()){
+            return results.stream().collect(Collectors.toList());
+        }else{
+            return null;
+        }
+    }
+
+    public List<IndicatorEntity> getAllIndi(String token){
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        List<IndicatorEntity> results = indicatorRepository.findByUserIdOrderByIdDesc(userId);
+        if(results != null && !results.isEmpty()){
+            return results.stream().collect(Collectors.toList());
+        }else{
+            return null;
+        }
+    }
+
+
 }

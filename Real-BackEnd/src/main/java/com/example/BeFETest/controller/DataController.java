@@ -6,20 +6,28 @@ import com.example.BeFETest.BusinessLogicLayer.coin.CoinService;
 import com.example.BeFETest.BusinessLogicLayer.kosdaq.KosdaqResponseService;
 import com.example.BeFETest.BusinessLogicLayer.kospi.Kospi200ResponseService;
 import com.example.BeFETest.BusinessLogicLayer.kospi.KospiResponseService;
+import com.example.BeFETest.DTO.CoinDetailsDTO;
 import com.example.BeFETest.DTO.SchedulingCoin.SchedulingCoinDTO;
 import com.example.BeFETest.DTO.kosdaq.KosdaqResponseDTO;
 import com.example.BeFETest.DTO.kospi.KospiResponseDTO;
 import com.example.BeFETest.DTO.kospi200.Kospi200ResponseDTO;
 import com.example.BeFETest.Entity.BacktestingRes.*;
 import com.example.BeFETest.JWT.JwtUtil;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -109,6 +117,66 @@ public class DataController {
     public List<WEntity> getBacktestingResultsW() {
         backtestingAutoW.runAutomaticBacktesting(10,1,0L);
         return strategyService.getRecent100WStrategies((long) -5);
+    }
+//    @GetMapping("/home/coin/{market}")
+//    public String getMarketData(@PathVariable("market") String market){
+//        final OkHttpClient client = new OkHttpClient();
+//        String currentPrice = "https://api.bithumb.com/v1/ticker";
+//        String urlWithMarket = currentPrice + "?markets=" + market;
+//        Request priceRequest = new Request.Builder()
+//                .url(urlWithMarket)
+//                .get()
+//                .addHeader("accept", "application/json")
+//                .build();
+//        try (Response priceResponse = client.newCall(priceRequest).execute()) {
+//            // API 응답을 JSON 형식 그대로 반환
+//            return priceResponse.body().string();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return "{\"error\": \"API 요청에 실패하였습니다.\"}";
+//        }
+//
+//    }
+    @GetMapping("/home/coin/{market}")
+    public List<CoinDetailsDTO> getCandles(@PathVariable("market") String market) {
+        final OkHttpClient client = new OkHttpClient();
+        String candleUrl = "https://api.bithumb.com/v1/candles/days";
+        List<CoinDetailsDTO> coinDetailsList = new ArrayList<>();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        // URL을 구성하여 요청
+        String urlWithParams = candleUrl + "?market=" + market + "&count=200";
+        Request candleRequest = new Request.Builder()
+                .url(urlWithParams)
+                .get()
+                .addHeader("accept", "application/json")
+                .build();
+
+        try (Response candleResponse = client.newCall(candleRequest).execute()) {
+            // 응답 데이터를 JSON 형식으로 반환
+            String jsonData = candleResponse.body().string();
+
+            JsonNode rootNode = objectMapper.readTree(jsonData);
+            for(JsonNode node : rootNode){
+                CoinDetailsDTO coinDetails = new CoinDetailsDTO();
+                coinDetails.setMarket(node.get("market").asText());
+
+                String candleDateKST = node.get("candle_date_time_kst").asText();
+                LocalDate date = LocalDate.parse(candleDateKST.substring(0, 10));  // yyyy-MM-dd 형태로 변환
+                coinDetails.setDate(date);
+
+                coinDetails.setClosingPrice(node.get("trade_price").asDouble()); // 종가
+                coinDetails.setOpeningPrice(node.get("opening_price").asDouble()); // 시가
+                coinDetails.setHighPrice(node.get("high_price").asDouble()); // 고가
+                coinDetails.setLowPrice(node.get("low_price").asDouble()); // 저가
+                coinDetails.setTradingVolume(node.get("candle_acc_trade_volume").asText()); // 거래량
+                coinDetails.setFluctuatingRate(node.get("change_rate").asText()); // 변화율
+                coinDetailsList.add(coinDetails);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return coinDetailsList;
     }
     /*
 

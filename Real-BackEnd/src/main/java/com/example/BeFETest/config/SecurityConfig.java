@@ -88,6 +88,7 @@ public class SecurityConfig {
                                 .requestMatchers("/home/backtesting_w").permitAll()
                                 .requestMatchers("/backtest/**").permitAll()
                                 .requestMatchers("/backtesting_mine_/**").permitAll()
+                                .requestMatchers("/home/coin/*").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling ->

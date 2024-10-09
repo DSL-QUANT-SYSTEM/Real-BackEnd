@@ -1,4 +1,4 @@
-package com.example.BeFETest.Scheduling;
+package com.example.BeFETest.Scheduling.Scheduler;
 
 import com.example.BeFETest.Entity.SchedulingCoin.SchedulingCoinResponse;
 import com.example.BeFETest.Repository.Coin.Bitcoin.SchedulingCoinRepository;
@@ -94,14 +94,6 @@ public class BithumbScheduler {
                     String fluctuatingRate = node.get("change").asText().equals("FALL") ?
                             "-" + node.get("change_rate").asText() :
                             "+" + node.get("change_rate").asText();
-
-//                    String fluctuatingRate = "";
-//                    if(node.get("change").asText() == "FALL"){
-//                        fluctuatingRate = "-" + node.get("change_rate");
-//                    }
-//                    else{
-//                        fluctuatingRate = "+" + node.get("change_rate");
-//                    }
                     Optional<SchedulingCoinResponse> existCoinData = schedulingCoinRepository.findByMarket(market);
 
                     if(existCoinData.isPresent()){

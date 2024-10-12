@@ -13,12 +13,12 @@ import java.time.LocalDate;
 public class CoinDetailsDTO {
     @DateTimeFormat(pattern = "yyyy- MM- dd")
     private LocalDate date;
-    private Double closingPrice;
-    private Double openingPrice;
-    private Double highPrice;
-    private Double lowPrice;
-    private String tradingVolume;
-    private String fluctuatingRate;
+    private Double closing_price;
+    private Double opening_price;
+    private Double high_price;
+    private Double low_price;
+    private String trading_volume;
+    private String fluctuating_rate;
     private String market;
 
     public CoinDetailsDTO(){}
@@ -26,12 +26,12 @@ public class CoinDetailsDTO {
     public CoinDetailsDTO(LocalDate date, Double closingPrice, String fluctuatingRate,
                           Double openingPrice, Double highPrice, Double lowPrice, String tradingVolume, String market) {
         this.date = date;
-        this.closingPrice = closingPrice;
-        this.openingPrice = openingPrice;
-        this.highPrice = highPrice;
-        this.lowPrice = lowPrice;
-        this.tradingVolume = tradingVolume;
-        this.fluctuatingRate = fluctuatingRate;
+        this.closing_price = closingPrice;
+        this.opening_price = openingPrice;
+        this.high_price = highPrice;
+        this.low_price = lowPrice;
+        this.trading_volume = tradingVolume;
+        this.fluctuating_rate = fluctuatingRate;
         this.market = market;
     }
 

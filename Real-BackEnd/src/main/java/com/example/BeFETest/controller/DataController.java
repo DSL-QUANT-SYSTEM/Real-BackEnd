@@ -165,12 +165,12 @@ public class DataController {
                 LocalDate date = LocalDate.parse(candleDateKST.substring(0, 10));  // yyyy-MM-dd 형태로 변환
                 coinDetails.setDate(date);
 
-                coinDetails.setClosingPrice(node.get("trade_price").asDouble()); // 종가
-                coinDetails.setOpeningPrice(node.get("opening_price").asDouble()); // 시가
-                coinDetails.setHighPrice(node.get("high_price").asDouble()); // 고가
-                coinDetails.setLowPrice(node.get("low_price").asDouble()); // 저가
-                coinDetails.setTradingVolume(node.get("candle_acc_trade_volume").asText()); // 거래량
-                coinDetails.setFluctuatingRate(node.get("change_rate").asText()); // 변화율
+                coinDetails.setClosing_price(node.get("trade_price").asDouble()); // 종가
+                coinDetails.setOpening_price(node.get("opening_price").asDouble()); // 시가
+                coinDetails.setHigh_price(node.get("high_price").asDouble()); // 고가
+                coinDetails.setLow_price(node.get("low_price").asDouble()); // 저가
+                coinDetails.setTrading_volume(node.get("candle_acc_trade_volume").asText()); // 거래량
+                coinDetails.setFluctuating_rate(node.get("change_rate").asText()); // 변화율
                 coinDetailsList.add(coinDetails);
             }
         } catch (Exception e) {

@@ -336,4 +336,9 @@ public class StrategyService {
                 wEntity.getFinalBalance(), wEntity.getProfit(), wEntity.getProfitRate(), wEntity.getNumberOfTrades(),wEntity.getWilliamsPeriod());
     }
 
+    @Transactional
+    public void saveMultiStrategyResult(StrategyCommonDTO strategyDTO, Long userId, WilliamsDTO williamsDTO, WilliamsDTO williamsResultDTO){
+
+    }
+
 }

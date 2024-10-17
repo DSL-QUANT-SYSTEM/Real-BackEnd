@@ -1,11 +1,7 @@
 package com.example.BeFETest.BusinessLogicLayer.Strategy;
 
 import com.example.BeFETest.DTO.coinDTO.*;
-import com.example.BeFETest.Entity.BacktestingRes.BBEntity;
-import com.example.BeFETest.Entity.BacktestingRes.EnvEntity;
-import com.example.BeFETest.Entity.BacktestingRes.GDEntity;
-import com.example.BeFETest.Entity.BacktestingRes.IndicatorEntity;
-import com.example.BeFETest.Entity.BacktestingRes.WEntity;
+import com.example.BeFETest.Entity.BacktestingRes.*;
 import com.example.BeFETest.Repository.Backtesting.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +26,9 @@ public class StrategyService {
 
     @Autowired
     private WRepository wRepository;
+
+    @Autowired
+    private MultiStrategyRepository MRepository;
 
     @Transactional
     public void saveGDStrategyResult(StrategyCommonDTO strategyDTO, Long userId, GoldenDeadCrossStrategyDTO gdDTO, GoldenDeadCrossStrategyDTO gdResult){
@@ -337,8 +336,43 @@ public class StrategyService {
     }
 
     @Transactional
-    public void saveMultiStrategyResult(StrategyCommonDTO strategyDTO, Long userId, WilliamsDTO williamsDTO, WilliamsDTO williamsResultDTO){
+    public void saveMultiStrategyResult(StrategyCommonDTO strategyDTO, Long userId, MultiStrategyDTO multiStrategyDTO, MultiStrategyDTO multiStrategyResultDTO){
+        //공통정보 저장
+        MultiStrategyEntity MEntity = new MultiStrategyEntity();
+        MEntity.setUserId(userId);
+        MEntity.setInitial_investment(strategyDTO.getInitial_investment());
+        MEntity.setTax(strategyDTO.getTax());
+        MEntity.setBacktesting_date(strategyDTO.getBacktesting_date());
+        MEntity.setTarget_item(strategyDTO.getTarget_item());
+        MEntity.setTick_kind(strategyDTO.getTick_kind());
+        MEntity.setInq_range(strategyDTO.getInq_range());
+        //중복전략 정보 저장
+        MEntity.setWilliamsPeriod(multiStrategyDTO.getWilliamsPeriod());
+        //중복전략 결과 저장
+        MEntity.setFinalAsset(multiStrategyResultDTO.getFinalAsset());
+        MEntity.setFinalCash(multiStrategyResultDTO.getFinalCash());
+        MEntity.setFinalBalance(multiStrategyResultDTO.getFinalBalance());
+        MEntity.setProfit(multiStrategyResultDTO.getProfit());
+        MEntity.setProfitRate(multiStrategyResultDTO.getProfitRate());
+        MEntity.setNumberOfTrades(multiStrategyResultDTO.getNumberOfTrades());
 
+        System.out.println("MultiStrategyEntity = " + MEntity);
+
+        MRepository.save(MEntity);
     }
+
+    public List<MultiStrategyEntity> getRecent100MStrategies(Long userId){
+        return MRepository.findTop100ByUserIdOrderByIdDesc(userId);
+    }
+
+    public MultiStrategyDTO getLatestMultiStrategyResultByUserId(Long userId){
+        MultiStrategyEntity MEntity = MRepository.findTopByUserIdOrderByIdDesc(userId);
+        return new MultiStrategyDTO(MEntity.getInitial_investment(), MEntity.getTax(),MEntity.getBacktesting_date(), MEntity.getTarget_item(), MEntity.getTick_kind(), MEntity.getInq_range(), MEntity.getStrategy() ,MEntity.getFinalCash(), MEntity.getFinalAsset(),
+                MEntity.getFinalBalance(), MEntity.getProfit(), MEntity.getProfitRate(), MEntity.getNumberOfTrades(),MEntity.getMoveAvg(),MEntity.getMoving_up(),MEntity.getMoving_down(),
+                MEntity.getMovingAveragePeriod(),MEntity.getFastMovingAveragePeriod(), MEntity.getSlowMovingAveragePeriod(),
+                MEntity.getRsiPeriod(), MEntity.getWilliamsPeriod());
+    }
+
+
 
 }

@@ -39,4 +39,5 @@ public class MultiStrategyDTO extends TradeStrategyDTO{
         this.rsiPeriod = rsiPeriod;
         this.williamsPeriod = williamsPeriod;
     }
+
 }

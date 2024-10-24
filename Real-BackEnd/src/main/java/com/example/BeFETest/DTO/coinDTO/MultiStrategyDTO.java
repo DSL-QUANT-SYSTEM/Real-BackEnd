@@ -98,4 +98,5 @@ public class MultiStrategyDTO extends TradeStrategyDTO{
                 ", finalProfitRate=" + finalProfitRate + // 추가된 필드
                 '}';
     }
+
 }

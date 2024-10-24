@@ -32,7 +32,7 @@ public class StrategyService {
     private WRepository wRepository;
 
     @Autowired
-    private MultiStrategyRepository multiRepository;
+    private MultiStrategyRepository MRepository;
 
     @Transactional
     public void saveGDStrategyResult(StrategyCommonDTO strategyDTO, Long userId, GoldenDeadCrossStrategyDTO gdDTO, GoldenDeadCrossStrategyDTO gdResult){

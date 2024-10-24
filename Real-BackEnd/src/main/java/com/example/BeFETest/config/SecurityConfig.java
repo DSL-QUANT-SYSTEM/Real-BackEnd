@@ -70,6 +70,7 @@ public class SecurityConfig {
                                 .requestMatchers("/login/**").permitAll()
                                 .requestMatchers("/refresh-token").permitAll()
                                 .requestMatchers("/result/**").permitAll()
+                                .requestMatchers("/multi_result/**").permitAll()
                                 .requestMatchers("/user/info").permitAll()
                                 .requestMatchers("/userinfo").permitAll()
                                 .requestMatchers("/mypage/user").permitAll()

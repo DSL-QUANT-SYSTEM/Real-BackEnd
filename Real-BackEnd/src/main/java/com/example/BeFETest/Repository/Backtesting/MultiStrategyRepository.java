@@ -1,8 +1,6 @@
 package com.example.BeFETest.Repository.Backtesting;
 
-import com.example.BeFETest.Entity.BacktestingRes.IndicatorEntity;
 import com.example.BeFETest.Entity.BacktestingRes.MultiStrategyEntity;
-import com.example.BeFETest.Entity.BacktestingRes.WEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

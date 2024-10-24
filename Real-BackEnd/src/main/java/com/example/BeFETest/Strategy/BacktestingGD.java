@@ -279,7 +279,11 @@ public class BacktestingGD {
         // 최종 자산 계산
         double finalBalance = cash + asset * closePricesGD.getLast();
         double profit=(finalBalance - commonDTO.getInitial_investment());
-        double profitRate = ((finalBalance - commonDTO.getInitial_investment()) / commonDTO.getInitial_investment()) * 100;
+        double profitRate;
+        if(commonDTO.getInitial_investment()==0)
+            profitRate=0;
+        else
+            profitRate = (profit / commonDTO.getInitial_investment()) * 100;
         System.out.println("Initial Cash: " + commonDTO.getInitial_investment());
         System.out.println("Final Balance: " + finalBalance);
         System.out.println("Profit: " + profit);

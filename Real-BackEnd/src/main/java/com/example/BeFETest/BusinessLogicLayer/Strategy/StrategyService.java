@@ -3,6 +3,10 @@ package com.example.BeFETest.BusinessLogicLayer.Strategy;
 import com.example.BeFETest.DTO.coinDTO.*;
 import com.example.BeFETest.Entity.BacktestingRes.*;
 import com.example.BeFETest.Repository.Backtesting.*;
+import com.example.BeFETest.Strategy.BacktestingEnv;
+import com.example.BeFETest.Strategy.BacktestingIndicator;
+import com.example.BeFETest.Strategy.BacktestingW;
+import com.example.BeFETest.controller.StrategyController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -336,43 +340,150 @@ public class StrategyService {
     }
 
     @Transactional
-    public void saveMultiStrategyResult(StrategyCommonDTO strategyDTO, Long userId, MultiStrategyDTO multiStrategyDTO, MultiStrategyDTO multiStrategyResultDTO){
+    public void saveMultiStrategyResult(StrategyCommonDTO strategyDTO, Long userId, String firstStrategy,String secondStrategy,MultiStrategyDTO mulStrategy1, MultiStrategyDTO mulStrategy2 ,
+                                        MultiStrategyDTO mulResult1, MultiStrategyDTO mulResult2, double profitVsRate, double finalProfitRate){
         //공통정보 저장
-        MultiStrategyEntity MEntity = new MultiStrategyEntity();
-        MEntity.setUserId(userId);
-        MEntity.setInitial_investment(strategyDTO.getInitial_investment());
-        MEntity.setTax(strategyDTO.getTax());
-        MEntity.setBacktesting_date(strategyDTO.getBacktesting_date());
-        MEntity.setTarget_item(strategyDTO.getTarget_item());
-        MEntity.setTick_kind(strategyDTO.getTick_kind());
-        MEntity.setInq_range(strategyDTO.getInq_range());
-        //중복전략 정보 저장
-        MEntity.setWilliamsPeriod(multiStrategyDTO.getWilliamsPeriod());
-        //중복전략 결과 저장
-        MEntity.setFinalAsset(multiStrategyResultDTO.getFinalAsset());
-        MEntity.setFinalCash(multiStrategyResultDTO.getFinalCash());
-        MEntity.setFinalBalance(multiStrategyResultDTO.getFinalBalance());
-        MEntity.setProfit(multiStrategyResultDTO.getProfit());
-        MEntity.setProfitRate(multiStrategyResultDTO.getProfitRate());
-        MEntity.setNumberOfTrades(multiStrategyResultDTO.getNumberOfTrades());
+        MultiStrategyEntity mulEntity = new MultiStrategyEntity();
+        mulEntity.setUserId(userId);
+        mulEntity.setInitial_investment(strategyDTO.getInitial_investment());
+        mulEntity.setTax(strategyDTO.getTax());
+        mulEntity.setBacktesting_date(LocalDateTime.now());
+        mulEntity.setTarget_item(strategyDTO.getTarget_item());
+        mulEntity.setTick_kind(strategyDTO.getTick_kind());
+        mulEntity.setInq_range(strategyDTO.getInq_range());
+        mulEntity.setStrategy(firstStrategy);
+        mulEntity.setSecond_strategy(secondStrategy);
 
-        System.out.println("MultiStrategyEntity = " + MEntity);
+        //case별로 세부 전략 저장
+        switch (firstStrategy) {
+            case "golden" -> {
+                mulEntity.setFastMovingAveragePeriod(mulStrategy1.getFastMoveAvg());
+                mulEntity.setSlowMovingAveragePeriod(mulStrategy1.getSlowMoveAvg());
+                switch (secondStrategy) {
+                    case "rsi" -> mulEntity.setRsiPeriod(mulStrategy2.getRsiPeriod());
+                    case "williams" -> mulEntity.setWilliamsPeriod(mulStrategy2.getWilliamsPeriod());
+                }
+            }
+            case "bollinger" -> {
+                mulEntity.setMoveAvg(mulStrategy1.getMoveAvg());
+                switch (secondStrategy) {
+                    case "golden" -> {
+                        mulEntity.setFastMovingAveragePeriod(mulStrategy2.getFastMoveAvg());
+                        mulEntity.setSlowMovingAveragePeriod(mulStrategy2.getSlowMoveAvg());
+                    }
+                    case "rsi" -> mulEntity.setRsiPeriod(mulStrategy2.getRsiPeriod());
+                    case "env" -> {
+                        mulEntity.setMoving_up(mulStrategy2.getMoving_up());
+                        mulEntity.setMoving_down(mulStrategy2.getMoving_down());
+                        mulEntity.setMovingAveragePeriod(mulStrategy2.getMovingAveragePeriod());
+                    }
+                    case "williams" -> mulEntity.setWilliamsPeriod(mulStrategy2.getWilliamsPeriod());
+                }
+            }
+            case "rsi" -> {
+                mulEntity.setRsiPeriod(mulStrategy1.getRsiPeriod());
+                mulEntity.setWilliamsPeriod(mulStrategy2.getWilliamsPeriod());
+            }
+            case "env" -> {
+                mulEntity.setMoving_up(mulStrategy1.getMoving_up());
+                mulEntity.setMoving_down(mulStrategy1.getMoving_down());
+                mulEntity.setMovingAveragePeriod(mulStrategy1.getMovingAveragePeriod());
+                switch (secondStrategy) {
+                    case "golden" -> {
+                        mulEntity.setFastMovingAveragePeriod(mulStrategy2.getFastMoveAvg());
+                        mulEntity.setSlowMovingAveragePeriod(mulStrategy2.getSlowMoveAvg());
+                    }
+                    case "rsi" -> mulEntity.setRsiPeriod(mulStrategy2.getRsiPeriod());
+                    case "williams" -> mulEntity.setWilliamsPeriod(mulStrategy2.getWilliamsPeriod());
+                }
+            }
+        }
+        //복합전략 결과 정보 저장
+        mulEntity.setFinalCash(mulResult1.getFinalCash());
+        mulEntity.setFinalAsset(mulResult1.getFinalAsset());
+        mulEntity.setFinalBalance(mulResult1.getFinalBalance());
+        mulEntity.setProfit(mulResult1.getProfit());
+        mulEntity.setProfitRate(mulResult1.getProfitRate());
+        mulEntity.setNumberOfTrades(mulResult1.getNumberOfTrades());
+        mulEntity.setSecond_finalCash(mulResult2.getFinalCash());
+        mulEntity.setSecond_finalAsset(mulResult2.getFinalAsset());
+        mulEntity.setSecond_finalBalance(mulResult2.getFinalBalance());
+        mulEntity.setSecond_profit(mulResult2.getProfit());
+        mulEntity.setSecond_profitRate(mulResult2.getProfitRate());
+        mulEntity.setSecond_numberOfTrades(mulResult2.getNumberOfTrades());
+        //복합전략 최종 정보 저장
+        mulEntity.setProfitVsRate(profitVsRate);
+        mulEntity.setFinalProfitRate(finalProfitRate);
+        System.out.println("mulEntity = " + mulEntity.toString());
+        multiRepository.save(mulEntity);
+//
+//        List<WEntity> wStrategies = wRepository.findByUserIdOrderByIdDesc(wEntity.getUserId());
+//        assert wStrategies != null;
+//        if (wStrategies.size() > 10) {
+//            List<WEntity> strategiesToDelete = wStrategies.subList(10, wStrategies.size());
+//            wRepository.deleteAll(strategiesToDelete);
+//        }
 
-        MRepository.save(MEntity);
+//        if(indiEntity != null){
+//            indiEntity.setRsiPeriod(strategyDTO.getRsiPeriod());
+//
+//            indicatorRepository.save(indiEntity);
+//
+//            List<IndicatorEntity> indiStrategies = indicatorRepository.findByUserIdOrderByIdDesc(indiEntity.getUserId());
+//            if (indiStrategies.size() > 10) {
+//                List<IndicatorEntity> strategiesToDelete = indiStrategies.subList(10, indiStrategies.size());
+//                indicatorRepository.deleteAll(strategiesToDelete);
+//            }
+//        }else {
+//            throw new CustomExceptions.ResourceNotFoundException("전략 데이터 없음", null, "no data in db", ErrorCode.NOT_FOUND);
+//        }
     }
 
-    public List<MultiStrategyEntity> getRecent100MStrategies(Long userId){
-        return MRepository.findTop100ByUserIdOrderByIdDesc(userId);
+    public List<MultiStrategyEntity> getRecent100MultiStrategies(Long userId){
+        return multiRepository.findTop100ByUserIdOrderByIdDesc(userId);
     }
 
     public MultiStrategyDTO getLatestMultiStrategyResultByUserId(Long userId){
-        MultiStrategyEntity MEntity = MRepository.findTopByUserIdOrderByIdDesc(userId);
-        return new MultiStrategyDTO(MEntity.getInitial_investment(), MEntity.getTax(),MEntity.getBacktesting_date(), MEntity.getTarget_item(), MEntity.getTick_kind(), MEntity.getInq_range(), MEntity.getStrategy() ,MEntity.getFinalCash(), MEntity.getFinalAsset(),
-                MEntity.getFinalBalance(), MEntity.getProfit(), MEntity.getProfitRate(), MEntity.getNumberOfTrades(),MEntity.getMoveAvg(),MEntity.getMoving_up(),MEntity.getMoving_down(),
-                MEntity.getMovingAveragePeriod(),MEntity.getFastMovingAveragePeriod(), MEntity.getSlowMovingAveragePeriod(),
-                MEntity.getRsiPeriod(), MEntity.getWilliamsPeriod());
+        MultiStrategyEntity multiEntity = multiRepository.findTopByUserIdOrderByIdDesc(userId);
+        return new MultiStrategyDTO(
+                multiEntity.getInitial_investment(),
+                multiEntity.getTax(),
+                multiEntity.getBacktesting_date(),
+                multiEntity.getTarget_item(),
+                multiEntity.getTick_kind(),
+                multiEntity.getInq_range(),
+                multiEntity.getStrategy(),
+                multiEntity.getSecond_strategy(),
+
+                multiEntity.getFinalCash(),
+                multiEntity.getFinalAsset(),
+                multiEntity.getFinalBalance(),
+                multiEntity.getProfit(),
+                multiEntity.getProfitRate(),
+                multiEntity.getNumberOfTrades(),
+
+                multiEntity.getMoveAvg(),
+                multiEntity.getMoving_up(),
+                multiEntity.getMoving_down(),
+                multiEntity.getMovingAveragePeriod(),
+
+                multiEntity.getFastMovingAveragePeriod(),
+                multiEntity.getSlowMovingAveragePeriod(),
+
+                multiEntity.getRsiPeriod(),
+
+                multiEntity.getWilliamsPeriod(),
+
+                multiEntity.getSecond_finalCash(),
+                multiEntity.getSecond_finalAsset(),
+                multiEntity.getSecond_finalBalance(),
+                multiEntity.getSecond_profit(),
+                multiEntity.getSecond_profitRate(),
+                multiEntity.getSecond_numberOfTrades(),
+
+                multiEntity.getProfitVsRate(),
+                multiEntity.getFinalProfitRate()
+        );
+
     }
-
-
-
 }

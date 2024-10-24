@@ -265,7 +265,11 @@ public class BacktestingBB  {
 
         double finalBalance = cash + asset * closePricesBB.getLast();
         double profit = finalBalance - commonDTO.getInitial_investment();
-        double profitRate = (profit / commonDTO.getInitial_investment()) * 100;
+        double profitRate;
+        if(commonDTO.getInitial_investment()==0)
+            profitRate=0;
+        else 
+            profitRate = (profit / commonDTO.getInitial_investment()) * 100;
 
         // 결과 출력
         System.out.println("Initial Cash: " + commonDTO.getInitial_investment());

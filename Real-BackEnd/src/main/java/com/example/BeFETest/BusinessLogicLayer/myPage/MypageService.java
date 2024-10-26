@@ -26,6 +26,7 @@ public class MypageService {
 
     private final EnvRepository envRepository;
     private final WRepository wRepository;
+    private final MultiStrategyRepository multiStrategyRepository;
 
 
     public UserDTO getUserInfo(String token){
@@ -134,6 +135,16 @@ public class MypageService {
     public List<IndicatorEntity> getAllIndi(String token){
         Long userId = jwtUtil.getUserIdFromToken(token);
         List<IndicatorEntity> results = indicatorRepository.findByUserIdOrderByIdDesc(userId);
+        if(results != null && !results.isEmpty()){
+            return results.stream().collect(Collectors.toList());
+        }else{
+            return null;
+        }
+    }
+
+    public List<MultiStrategyEntity> getAllMulti(String token){
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        List<MultiStrategyEntity> results = multiStrategyRepository.findByUserIdOrderByIdDesc(userId);
         if(results != null && !results.isEmpty()){
             return results.stream().collect(Collectors.toList());
         }else{

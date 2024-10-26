@@ -186,4 +186,22 @@ public class MyPageController {
         }
     }
 
+    @GetMapping("/history/multi")
+    public ResponseEntity<?> getMyMulti(@RequestHeader("Authorization") String token){
+        try {
+            //List<WEntity> wData = mypageService.getAllW(token);
+            List<MultiStrategyEntity> allMulti = mypageService.getAllMulti(token);
+            if (allMulti != null && !allMulti.isEmpty()) {
+                return ResponseEntity.ok(allMulti);
+            } else {
+                return ResponseEntity.status(404).body("데이터를 찾을 수 없습니다.");
+            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(400).body("잘못된 요청입니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("서버 오류가 발생했습니다.");
+        }
+    }
+
 }

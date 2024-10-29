@@ -35,6 +35,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DataController {
     ///api/kosdak/last-year
+    @Autowired
+    private JwtUtil jwtUtil;
 
     private final KosdaqResponseService kosdaqService;
     private final KospiResponseService kospiService;
@@ -48,6 +50,8 @@ public class DataController {
     private final BacktestingAutoInd backtestingAutoInd;
     private final BacktestingAutoEnv backtestingAutoEnv;
     private final BacktestingAutoWilliams backtestingAutoW;
+
+
 
 
     //private final JwtUtil jwtUtil;
@@ -117,6 +121,11 @@ public class DataController {
     public List<WEntity> getBacktestingResultsW() {
         backtestingAutoW.runAutomaticBacktesting(10,1,0L);
         return strategyService.getRecent100WStrategies((long) -5);
+    }
+    @GetMapping("/home/backtesting_multi")
+    public List<MultiStrategyEntity> getMultiBacktestingResults(@RequestHeader("Authorization") String token){
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        return strategyService.getRecent100MultiStrategies(userId);
     }
 //    @GetMapping("/home/coin/{market}")
 //    public String getMarketData(@PathVariable("market") String market){

@@ -189,7 +189,6 @@ public class MyPageController {
     @GetMapping("/history/multi")
     public ResponseEntity<?> getMyMulti(@RequestHeader("Authorization") String token){
         try {
-            //List<WEntity> wData = mypageService.getAllW(token);
             List<MultiStrategyEntity> allMulti = mypageService.getAllMulti(token);
             if (allMulti != null && !allMulti.isEmpty()) {
                 return ResponseEntity.ok(allMulti);
@@ -203,5 +202,4 @@ public class MyPageController {
             return ResponseEntity.status(500).body("서버 오류가 발생했습니다.");
         }
     }
-
 }

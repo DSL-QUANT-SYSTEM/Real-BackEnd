@@ -87,6 +87,7 @@ public class SecurityConfig {
                                 .requestMatchers("/home/backtesting_ind").permitAll()
                                 .requestMatchers("/home/backtesting_env").permitAll()
                                 .requestMatchers("/home/backtesting_w").permitAll()
+                                .requestMatchers("/home/backtesting_multi").permitAll()
                                 .requestMatchers("/backtest/**").permitAll()
                                 .requestMatchers("/backtesting_mine_/**").permitAll()
                                 .requestMatchers("/home/coin/*").permitAll()

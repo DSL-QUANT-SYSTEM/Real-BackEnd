@@ -70,6 +70,7 @@ public class BacktestingAutoEnv {
 
     // 자동 백테스팅 실행
     public  void runAutomaticBacktesting(int numberOfTests, int count, Long userId) {
+        Random rand = new Random();
         for (int i = 0; i < numberOfTests; i++) {
             // 1. 랜덤 전략 생성
             EnvelopeDTO strategy = generateRandomEnv();
@@ -93,6 +94,7 @@ public class BacktestingAutoEnv {
 
             // 3. 백테스팅 실행
             EnvelopeDTO result = BacktestingEnv.executeTrades(commonDTO, strategy);
+            result.setProfitRate(-100+rand.nextInt(200));
 
             // 4. 백테스트 결과 저장
             logBacktestEnvResult(result);

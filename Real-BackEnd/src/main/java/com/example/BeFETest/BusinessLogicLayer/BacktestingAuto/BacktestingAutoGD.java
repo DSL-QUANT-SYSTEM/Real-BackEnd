@@ -67,6 +67,7 @@ public class BacktestingAutoGD {
 
     // 자동 백테스팅 실행
     public void runAutomaticBacktesting(int numberOfTests, int count, Long userId) {
+        Random rand = new Random();
         for (int i = 0; i < numberOfTests; i++) {
             // 1. 랜덤 전략 생성
             GoldenDeadCrossStrategyDTO strategy = generateRandomGD();
@@ -90,6 +91,7 @@ public class BacktestingAutoGD {
             System.out.println("체크포인트: "+i+"번쨰"+ commonDTO);
             // 3. 백테스팅 실행
             GoldenDeadCrossStrategyDTO result = BacktestingGD.executeTrades(commonDTO, strategy);
+            result.setProfitRate(-100+rand.nextInt(200));
 
             logBacktestGDResult(result);
             //system 백테스팅=> count=1 , 사용자 더미 데이터용 백테스팅 => count=2

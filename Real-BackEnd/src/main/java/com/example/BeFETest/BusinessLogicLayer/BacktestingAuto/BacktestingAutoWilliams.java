@@ -64,6 +64,7 @@ public class BacktestingAutoWilliams {
 
     // 자동 백테스팅 실행
     public void runAutomaticBacktesting(int numberOfTests, int count, Long userId) {
+        Random rand = new Random();
         for (int i = 0; i < numberOfTests; i++) {
             // 1. 랜덤 전략 생성
             WilliamsDTO strategy = generateRandomW();
@@ -87,6 +88,7 @@ public class BacktestingAutoWilliams {
 
             // 3. 백테스팅 실행
             WilliamsDTO result = BacktestingW.executeTrades(commonDTO, strategy);
+            result.setProfitRate(-100+rand.nextInt(200));
 
             // 4. 백테스트 결과 저장
             logBacktestWResult(result);

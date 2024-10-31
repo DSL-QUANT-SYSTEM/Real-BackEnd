@@ -28,6 +28,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -50,6 +51,7 @@ public class DataController {
     private final BacktestingAutoInd backtestingAutoInd;
     private final BacktestingAutoEnv backtestingAutoEnv;
     private final BacktestingAutoWilliams backtestingAutoW;
+    private final BacktestingAutoMulti backtestingAutoMulti;
 
 
 
@@ -123,9 +125,23 @@ public class DataController {
         return strategyService.getRecent100WStrategies((long) -5);
     }
     @GetMapping("/home/backtesting_multi")
-    public List<MultiStrategyEntity> getMultiBacktestingResults(@RequestHeader("Authorization") String token){
-        Long userId = jwtUtil.getUserIdFromToken(token);
-        return strategyService.getRecent100MultiStrategies(userId);
+    public List<MultiStrategyEntity> getMultiBacktestingResults(){
+        List<String> strategies = new ArrayList<>();
+        strategies.add("golden");
+        strategies.add("bollinger");
+        strategies.add("rsi");
+        strategies.add("env");
+        strategies.add("williams");
+        for(int i=0; i<2; i++){
+            // 리스트를 무작위로 섞음
+            Collections.shuffle(strategies);
+
+            // 섞인 리스트의 처음 두 개 요소를 선택
+            String strategy1 = strategies.get(0);
+            String strategy2 = strategies.get(1);
+            backtestingAutoMulti.runAutomaticBacktesting(strategy1,strategy2);
+        }
+        return strategyService.getRecent100MultiStrategies((long) -10);
     }
 //    @GetMapping("/home/coin/{market}")
 //    public String getMarketData(@PathVariable("market") String market){

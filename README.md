@@ -7,6 +7,8 @@
 
 -----
 
+시중에 존재하는 전략들의 단일 실행 && 두 전략 실행을 통한 벡테스팅을 진행 할 수 있는 사이트
+
 ##### [시스템 내 무작위 전략 실행]
 ![image](https://github.com/user-attachments/assets/520b6475-9170-44b3-aac3-ca1b926dc466)
 
